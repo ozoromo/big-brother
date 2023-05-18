@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Our Algorithms{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="card text-center" style="margin-right: 15%; margin-left: 15%;">
+        <div class="card-body" style="margin-top: 0%">
+            <h3 class="card-title">Our Algorithms</h3>
+            <div class="center" style="margin-left: 0%; margin-right: 0%">
+                <div class="" id="accordion">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    WiRe: Hauptkomponentenanalyse (PCA)
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                    Der WiRe Algorithmus arbeitet mit den Eigengesichtern welche aus den Eigenvektoren der Korrelationsmatrix resultieren.
+                                    Durch Linearkombinationen der Eigengesichter werden tatsächliche gesichter konstruiert.
+                                    Ist also ein ausreichen großer Datensatz gegeben ist es dem Algorithmus möglich jedes menschliche Gesicht durch eine
+                                    kombination von standardisierten Gesichtern darzustellen.
+                                    Der Algorithmus projiziert Bilder aus dem Datensatz auf die des Eigengesichtes erzeugten Eigenraum,
+                                    der daraus resultierende Vektor kann dann mittels vektorieller Abstandsmessung (euklidische Norm) mit den Bildern
+                                    aus der Trainingsdatenbank verglichen werden und gibt auf übereinstimmung dann die erkannte Person zurück.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    OpenCV: Haar Cascade und Local Binary Patterns Histogram (LBPH)
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                <h3>Face Detection mit Haar Cascade</h3>
+                                Haar Cascade ist ein Machine Learning Ansatz von Paul Viola und Michael Jones, welches sie in deren Paper
+                                "Rapid Object Detection using a Boosted Cascade of Simple Features" in 2001 veröffentlicht haben.
+                                Für den Algorithmus braucht man Trainingsdaten in Form von Bildern mit und ohne Gesichtern, wovon wir die Features extrahieren
+                                Jedes einzelne Feature hat einen Wert, welches man erhält indem man die Summe der Weißen Pixel mit der Summe der Schwarzen Pixel subtrahieren.
+                                Da selbst ein kleines Bild sehr viele Berechnungen braucht, wird ein Integralbild verwendet, welches diese
+                                deutlich reduziert.
+                                Dennoch erhält man zu viele Features, wovon viele irrelevant sind.
+                                Um das zu lösen benutzt man Adaboost.
+                                <h3>Face Recognition mit Local Binary Patterns Histograms (LBPH)</h3>
+                                Das local binary pattern oder auch LBP ist eine Technik die für die Gesichtsrepresentation und Klassifikation verwendet wird.
+                                Ist das LBP kombiniert mit einem Histogrammdeskriptor steigert sich die Performance enorm bei vielen Datensätze.
+                                Wir operieren in einer 3x3 Nachbarschaft von Pixeln in der wir den center pixel mit all seinen Nachbarn vergleichen.
+                                Ist die Intensität des center pixels größer oder gleich dem eines Nachbarpixels, dann setzen wir dessen Wert auf 1 andernfalls
+                                setzen wir ihn auf 0.
+                                Die erhaltenen Werte werden dann der Reihenfolge nach angefangen bei einem beliebigen Nachbar in ein 8-bit array gespeichert
+                                und dann der Binärwert ermittelt (das Array: 0 0 0 0 1 0 1 1 hätte also den wert 11), dieser Vorgang wird dann für alle
+                                anderen pixel wiederholt und deren resultierenden Werte dann in dem LBP array gespeichert.
+                                Das Histogramm zählt dann das Auftreten der LBP pattern und wir können somit oft eine genauere Aussage für die Gesichtserkennung treffen.
+                                LBPH kann sowohl Gesichter von der Seite als auch von Vorne erkennen und wird nicht von unterschiedlichen Lichtverhältnissen beeinflusst.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    OpenCV: Ultra-Light und OpenFace
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                                <h3>Face Detection mit Ultra-Light</h3>
+                                Ultralight fungiert als HTML Renderer welcher für die Darstellung von HTML in einer existierenden App designed ist statt
+                                als standalone Browser.
+                                Die API erlaubt einem die Integration von vollständigem java code und damit eine benutzerdefiniertere Darstellung,
+                                indem er Sachen wie z.B. clipboard integration und zeichnen selbst ermöglicht.
+                                Er ist ein lightweight und pure GPU HTML UI Renderer welcher für Spiele und Desktop Applikationen verwendet wird.
+                                <h3>Face Recognition mit OpenFace</h3>
+                                Der OpenFace Algorithmus arbeitet indem er zuerst das Gesicht aus dem Input-image erkennt,
+                                dann wird das Bild so transformiert, dass die Augen und die untere Lippe möglichst in der gleichen Position sind auf jedem Bild.
+                                Verwendet wird dafür dlib's real-time pose estimation mit OpenCV's affine transformation.
+                                Es verwendet dann mit dem gecropten Bild eine deep neural network Repräsentation auf einem 128-Dimensionalen hypersphere.
+                                Zuletzt wird dann ein Clustering oder eine Klassifizierung, um Ähnlichkeiten in den Gesichtern zu erkennen,
+                                verwendet um die Gesichtserkennung abzuschließen.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}
+

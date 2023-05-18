@@ -1,0 +1,232 @@
+/**
+ * @Author: Julius U. Heller
+ * @Date:   2021-05-17T16:09:26+02:00
+ * @Project: ODS-Praktikum-Big-Brother
+ * @Filename: style.css
+ * @Last modified by:   Julius U. Heller
+ * @Last modified time: 2021-06-15T15:51:23+02:00
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:300,600');
+
+body {
+    color: black;
+	background: #ffffff url(https://norbertbiedrzycki.pl/wp-content/uploads/2020/09/You_face_Norbert_Biedrzycki.jpg) no-repeat fixed center center;
+	background-size: cover;
+}
+
+.content{
+	margin: 10px;
+}
+
+h1{
+    text-align: center;
+}
+
+#center{
+    text-align: center;
+}
+
+input{
+    text-align: center;
+    width: 50%;
+    display: block;
+    box-sizing:border-box;
+}
+
+#button{
+    border-color: #426DFF;
+    background-color: #426DFF;
+}
+
+/*meet the team layout*/
+
+
+table tr td img {
+    height:150px;
+	width: auto;
+	margin-right: 12px;
+	grid-area: p;
+}
+
+.chirp{
+	grid-area: ci;
+}
+
+.cols{
+	display: grid;
+}
+.col:first-child{
+	grid-area: a;
+}
+.col:nth-child(2){
+	grid-area: b;
+}
+
+.card{
+	grid-template-areas:
+	"p ci";
+}
+
+.col:first-child{
+	grid-area: a;
+}
+.col:nth-child(2){
+	grid-area: b;
+}
+
+
+
+
+@media (max-width: 768px){
+	.cols{
+		grid-template-areas:
+		"a"
+		"b";
+	}
+}
+
+@media (min-width: 768px){
+	.cols{
+		grid-template-areas:
+		"a b";
+	}
+}
+
+/*tabelle userpage*/
+
+table {
+	text-align: center;
+	background-color: white;
+	margin: 10px;
+	border-radius: 5px;
+	width: 400px;
+}
+
+td{
+	padding: 20px;
+}
+
+
+.col:first-child{
+	grid-area: a;
+}
+
+@media (min-width: 768px){
+	.part{
+		grid-template-areas:
+		"a b";
+	}
+}
+
+
+/*sign in with camera*/
+/*
+#container{
+	text-align: center;
+}
+*/
+
+video{
+	width: 640px;
+	height: 480px;
+	border-color: #FFFFFF;
+	padding: 10px;
+	background-color: #FFFFFF;
+
+	display: block;
+	margin: 10px auto;
+}
+
+.gesichtserkennung{
+	display: grid;
+	grid-template-areas:
+			"a b";
+}
+
+
+/*
+canvas{
+
+	border-color: #FFFFFF;
+	padding: 10px;
+	background-color: #FFFFFF;
+
+	display: block;
+	margin: 0 auto;
+}
+
+img{
+	border-color: #FFFFFF;
+	padding: 10px;
+	background-color: #FFFFFF;
+
+	display: block;
+	margin: 0 auto;
+}
+*/
+
+
+
+/*dropdown menu*/
+.dropdown {list-style: none; background: #2170BA; padding: 0;}
+.dropdown .nav-link {color:#fff; text-decoration: none;}
+.dropdown .dropdown-menu a{color: #000; text-decoration: none;}
+.dropdown .btn {background: #336EFF; color:#fff;}
+.dropdown .btn:hover {background: #5486FF; color:#00040D;}
+.dropdown .btn:active {background: #5486FF; color:#00040D;}
+.dropdown .btn:focus {background: #5486FF; color:#00040D;}
+.dropdown-menu .dropdown-item {display: inline-block; width: 100%; padding: 10px 5px;}
+.dropdown-menu-right {
+    right: 0;
+    left: auto;
+}
+.container .dropdown .dropdown-menu a:hover
+{
+  color: #fff;
+  background-color: #b91773;
+  border-color: #fff;
+}
+
+/* DROP DOWN HOVER LIST*/
+/* Dropdown Button */
+.dropbtn {
+ background-color: #336EFF;
+ color: white;
+ padding: 16px;
+ font-size: 16px;
+ border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+ position: relative;
+ display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+ display: none;
+ position: absolute;
+ background-color: #f1f1f1;
+ min-width: 160px;
+ box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+ z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+ color: black;
+ padding: 12px 16px;
+ text-decoration: none;
+ display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}

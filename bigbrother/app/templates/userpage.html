@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Your History{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+            <!-- User ist ein Admin:-->
+            {%if current_user.admin%}
+                <form>
+
+                        <div class="dropdown">
+                          <button class="dropbtn">Select A User to Display</button>
+                          <div class="dropdown-content">
+
+                          {%for user in BigBrotherUserList%}
+
+                            <a href="\userpage?usr={{ user.uuid }}">{{ user.name }}</a>
+
+                          {%endfor%}
+
+                          </div>
+                        </div>
+
+                        <div class="dropdown">
+                          <button class="dropbtn">Select One of your Child Users</button>
+                          <div class="dropdown-content">
+
+                          {%for childUser in current_user.childUser%}
+
+                            {%for bbUser in BigBrotherUserList if bbUser.uuid == childUser%}
+
+                                <a href="\userpage?usr={{ bbUser.uuid }}">{{ bbUser.name }}</a>
+
+                            {%endfor%}
+
+                          {%endfor%}
+
+                          </div>
+                        </div>
+
+                </form>
+
+                <table class="table table-light" style="width: 70%">
+                        <thead>
+                            <tr>
+                                <th scope="col"> Picture</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {%if displayUser%}
+
+                            {%for pic in displayUser.trainingPicturesWebsiteFormat%}
+                                <tr>
+                                    <td><img width="auto" height="150" src="{{ pic[1] }}"></td>
+                                    <td>
+                                    {%for data in displayUser.logData%}
+                                        {% if pic[0] == data[1] %}
+                                           {{ data[0] }}
+                                        {% endif %}
+                                    {%endfor%}
+                                    </td>
+                                </tr>
+                            {%endfor%}
+
+                        {%endif%}
+                        </tbody>
+                    </table>
+
+
+            <!-- User ist kein Admin:-->
+            {% else %}
+                <center>
+                    <h1>Your Log In History</h1>
+                    <table class="table table-light" style="width: 70%">
+                        <thead>
+                            <tr>
+                                <th scope="col"> Picture</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {%for user in BigBrotherUserList%}
+                            {%if user.uuid == current_user.uuid%}
+                                {%for pic in user.trainingPicturesWebsiteFormat%}
+                                    <tr>
+                                        <td><img width="auto" height="150" src="{{ pic[1] }}"></td>
+                                        <td>
+                                        {%for data in user.logData%}
+                                            {% if pic[0] == data[1] %}
+                                               {{ data[0] }}
+                                            {% endif %}
+                                        {%endfor%}
+                                        </td>
+                                    </tr>
+                                {%endfor%}
+                            {%endif%}
+                        {%endfor%}
+                        </tbody>
+                    </table>
+                </center>
+        {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}

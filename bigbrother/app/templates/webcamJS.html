@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Log in with Camera{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div id="container">
+        <video  autoplay="true" id="videoElement"></video>
+    </div>
+    <div id="container">
+        <!-- kim: beim auskommentieren von dem zweiten video ging nichts kaputt und es hat beim style anpassen gestört-->
+        <!-- <video autoplay="true" id="videoElement"></video> -->
+        <div class="gesichtserkennung">
+            <canvas class="col" id="canvasElement"></canvas>
+            <img class="col" id="photo">
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+{% endblock %}

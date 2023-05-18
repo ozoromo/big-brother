@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
+        <div class="card-body">
+            <h3 class="card-title">Log in</h3>
+            <form  action="" method="post" role="form" enctype='multipart/form-data'>
+                {{ form.csrf_token }}
+                <div style="margin-left: 0%; margin-right: 0%">
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <div class="">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pic">Pictures</label>
+                        <div class="">
+                            <input type="file" class="form-control" id="pic" name="pic" accept="image/*" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="">
+                            <button id ="button" type="submit" class="btn btn-success">Log In</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}

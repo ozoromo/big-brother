@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Validation{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <h1>You have been successfully authenticated, {{current_user.name}}.</h1>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}
+

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Test{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{rejectionDict['reason']}}</h1>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}
