@@ -10,21 +10,11 @@
 Manages Database Requests
 can Import and Export Pictures from Database
 """
-# previous imports
 import numpy as np
-import psycopg2 as psy
 import pickle
 import uuid
-import time
-import traceback
-import cv2
 import datetime as dt
 from pytz import timezone
-import pytz
-
-#my imports
-from datetime import datetime
-import uuid
 import pymongo
 
 class BBDB:
