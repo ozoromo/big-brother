@@ -1,0 +1,34 @@
+loaders:
+  - type: python
+    search_path: [
+      ../../src/DBM/,
+      ../../src/FaceRecognition/haar_and_lbph/,
+      ../../src/FaceRecognition/openface/,
+      ../../src/FaceRecognition/,
+      ../../src/bigbrother/
+      ../../src/bigbrother/app/
+    ]
+    modules:
+      - DatabaseManagement
+processors:
+  - type: filter
+    exclude_private: true
+    documented_only: false
+  - type: smart
+  - type: crossref
+renderer:
+  type: mkdocs
+  output_directory: ..
+  content_directory_name: 'API documentation'
+  clean_render: true
+  pages:
+    - title: Home
+      name: README
+      source: README.md
+    - title: 'DatabaseManagement'
+      contents:
+        - 'DatabaseManagement.*'
+  mkdocs_config:
+    site_name: My Project
+    theme: readthedocs
+    repo_url: https://github.com/Me/my-project
