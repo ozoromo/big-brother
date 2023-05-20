@@ -155,16 +155,11 @@ class websiteSystem:
             return self.WEBCAM_IMAGE_QUEUE_LOGIN_DICT[session_uuid]
 
     def emptyQueue(self,session_uuid):
-
         self.WEBCAM_IMAGE_QUEUE_LOGIN_DICT[session_uuid] = queue.Queue()
 
-
     def authenticatePicture(self,user,pic,cookie):
-
-
         #self.authorizedFlag = False
         self.setAuthorizedFlag(cookie,False)
-
 
         user_uuid = user['uuid']
 

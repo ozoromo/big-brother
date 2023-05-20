@@ -218,18 +218,22 @@ class BBDB:
         Exception:  
         Raises an exception if the username already exists.
         """
+        # TODO: maybe change type?
         users = self.getUsers()
-        new_uuid = uuid.uuid1()
+        new_uuid = str(uuid.uuid1())
 
         # makes sure that the new uuid is unique
         for existing_uuid in users:
             while existing_uuid == new_uuid:
-                new_uuid = uuid.uuid1()
+                new_uuid = str(uuid.uuid1())
 
         if self.user_table.find_one({"username" : username}):
             raise UsernameExists("Username in use!")
         else:
-            self.user_table.insert_one({"username":username,"user_uuid":new_uuid,"is_admin":False})
+            self.user_table.insert_one({
+                "username" : username, 
+                "user_uuid" : new_uuid,
+                "is_admin" : False})
             return new_uuid
 
     def getUsers(self,limit = -1):
@@ -256,7 +260,7 @@ class BBDB:
             user_dict[user["user_uuid"]] = user["username"]
         return user_dict
             
-    def getUserWithId(self,user_uuid): 
+    def getUserWithId(self, user_uuid): 
         """
         Returns the username corresponding to the user_uuid.
 
@@ -264,13 +268,15 @@ class BBDB:
         user_uuid -- The user_uuid.
 
         Return:  
-        Returns the username corresponding to the user_uuid.
+        Returns the username corresponding to the user_uuid. If the user with the
+        given ID doesn't exist then None gets returned.
         """
         # TODO: REMOVEABLE
         # TODO: It might make the code cleaner to leave it there.
-        # TODO: What happends if the user doesn't exist? => Test whether
-        # it would return None and write it into the doc-string.
-        return self.user_table.find_one({"user_uuid" : user_uuid})["username"] 
+        user_entry = self.user_table.find_one({"user_uuid" : user_uuid})
+        if user_entry is None: 
+            return None
+        return user_entry["username"]
 
     def deleteUserWithId(self,user_uuid):
         """
@@ -302,11 +308,13 @@ class BBDB:
         username -- The username of the user.
 
         Return:  
-        Returns the uuid corresponding to the username.
+        Returns the uuid corresponding to the username. If the username 
+        doesn't exist then it returns None.
         """
-        # TODO: What happends if the user doesn't exist? => Test whether
-        # it would return None and write it into the doc-string
-        return self.user_table.find_one({"username" : username})["user_uuid"]
+        user_entry = self.user_table.find_one({"username" : username})
+        if user_entry is None: 
+            return None
+        return user_entry["user_uuid"]
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
         # TODO: Take a look at what this funciton is supposed to do. 
@@ -360,13 +368,15 @@ class wire_DB(BBDB):
         Exception:
         TypeError -- Gets risen if the type of the input isn't the expected type.
         """
-        if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
-            raise TypeError
+        # TODO: Only commented out for testing purposes
+        #if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
+        #    raise TypeError
         
+        # TODO: Make sure pic_uuid is unique?
         pic_uuid = str(uuid.uuid1())
         self.wire_train_pictures.insert_one({
-            "user_uuid" : user_uuid, 
-            "pic_data" : pic,
+            "user_uuid" : user_uuid,
+            "pic_data" : pickle.dumps(pic),
             "pic_uuid" : pic_uuid})
         return pic_uuid
 
@@ -384,10 +394,11 @@ class wire_DB(BBDB):
                 pics.append(pickle.loads(pic["pic_data"]))
                 uuids.append(pic["pic_uuid"])
         else:
+            pass
             #assuming that where is always of the format """WHERE 'name' = 'John Doe' """
-            self.wire_train_pictures.find({"name":where.split("='")[1].split("'")[0]})
-            pics.append(pickle.loads(pic["pic_data"]))
-            uuids.append(pic["pic_uuid"])
+            #self.wire_train_pictures.find({"name":where.split("='")[1].split("'")[0]})
+            #pics.append(pickle.loads(pic["pic_data"]))
+            #uuids.append(pic["pic_uuid"])
         
         return pics,uuids
 
@@ -430,4 +441,6 @@ def delThisUser(name):
 # TODO: only for testing, remove in production
 if __name__ == '__main__':
     DB = BBDB()
+    DB.register_user("mike")
+    print(list(DB.user_table.find()))
 """
