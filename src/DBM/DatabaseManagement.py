@@ -232,8 +232,23 @@ class wire_DB(BBDB):
         return pic_uuid
 
     def getTrainingPictures(self, where : str):
-        #not sure how ti implement the where clause, I think we should change the logic here
-        raise NotImplementedError
+        #not sure how to implement the where clause, I think we should change the logic here
+        '''
+        returns training pictures from the database with the given where clause
+        '''
+        pics,uuids = [],[]
+        where = where.replace(" ","") #removes all whitespaces to have a cleaner format to work with
+        if "where" == "*":
+            for pic in self.wire_train_pictures.find():
+                pics.append(pickle.loads(pic["pic_data"]))
+                uuids.append(pic["pic_uuid"])
+        else:
+            #assuming that where is always of the format """WHERE 'name' = 'John Doe' """
+            self.wire_train_pictures.find({"name":where.split("='")[1].split("'")[0]})
+            pics.append(pickle.loads(pic["pic_data"]))
+            uuids.append(pic["pic_uuid"])
+        
+        return pics,uuids
 
     def getAllTrainingsImages(self):
         '''
