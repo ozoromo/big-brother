@@ -3,7 +3,7 @@ We are still trying to write the documentation. We will split it up soon so that
 has a structure that is more readable.
 
 ## Frontend-Group
-
+- routes, structures, functionalities, explanation 
 ## Logik-Group
 
 ## Database-Group
