@@ -11,10 +11,8 @@
 Flask
 flask_wtf
 werkzeug
-wtforms
-Flask-SocketIO==4.3.1
-python-engineio==3.13.2
-python-socketio==4.6.0
+wtforms==2.3.3
+Flask-SocketIO
 flask-login
 imageio
 
@@ -26,22 +24,14 @@ onnxruntime
 tensorflow
 imutils
 open-faces
-atexit
-binascii
 
 ### Math/Plotting ###
 numpy
 pandas
 matplotlib
 Pillow
-sklearn
-logging
 
 ### Database ###
-psycopg2-binary
-#psycopg2
 #pickle
 uuid
 CMake
-dlib-binary
-dlib
