@@ -1,3 +1,0 @@
-md5 80b06fbd5baf43506279b2486e91fbbb "API documentation/README.md"
-md5 83df642c6432f414c412c0350b1dd7ca "API documentation/databasemanagement.md"
-md5 851a80628f3bce2432076a4ef99f1663 mkdocs.yml
