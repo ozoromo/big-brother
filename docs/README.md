@@ -3,7 +3,13 @@ We are still trying to write the documentation. We will split it up soon so that
 has a structure that is more readable.
 
 ## Frontend-Group
-- routes, structures, functionalities, explanation 
+- Run Code:
+- Watch these two videos to install flask on VS Code:
+- Install Python 3.10.2: https://www.youtube.com/watch?v=uxZuFm5tmhM
+-> IMPORTANT: we need Python 3.10.2 to download all the packages
+- Install Flask on VS Code: https://www.youtube.com/watch?v=S8aFNcYpSfI 
+- 
+-  routes, structures, functionalities, explanation 
 ## Logik-Group
 
 ## Database-Group
