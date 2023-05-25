@@ -4,21 +4,21 @@ has a structure that is more readable.
 
 ## Frontend-Group
 - Run Code:
-- Watch these two videos to install flask on VS Code:
-- Install Python 3.10.2: https://www.youtube.com/watch?v=uxZuFm5tmhM
-- IMPORTANT: we need Python 3.10.2 to download all the packages
-- Install Flask on VS Code: https://www.youtube.com/watch?v=S8aFNcYpSfI 
-- Last step on video ist to let the code run -> dont work
+    - Watch these two videos to install flask on VS Code:
+    - Install Python 3.10.2: https://www.youtube.com/watch?v=uxZuFm5tmhM
+    - IMPORTANT: we need Python 3.10.2 to download all the packages
+    - Install Flask on VS Code: https://www.youtube.com/watch?v=S8aFNcYpSfI 
+    - Last step on video is to let the code run -> dont work
 - Install Visual c++: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
 -> for Package dlib-binary
 - Write on the same terminal, while in your env (environment): pip install ..\..\requirements.txt
 - Write: python -m flask --app .\app\__init__.py --debug run
 - If doesnt run install the package it requires (one line above you input): pip install ... and again write the code above to let it run
 - commands for packages you could need:
-- PIL: pip install pillow opencv-python opencv-contrib-python
-- Opencv-python: pip install opencv-python opencv-contrib-python
-- wtforms: pip install wtforms==2.3.3
-- Flask_SocketIO= pip install Flask_SocketIO==4.3.1
+    - PIL: pip install pillow opencv-python opencv-contrib-python
+    - Opencv-python: pip install opencv-python opencv-contrib-python
+    - wtforms: pip install wtforms==2.3.3
+    - Flask_SocketIO= pip install Flask_SocketIO==4.3.1
 -  routes, structures, functionalities, explanation 
 ## Logik-Group
 
