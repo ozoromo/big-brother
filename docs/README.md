@@ -6,7 +6,7 @@ has a structure that is more readable.
 - Run Code:
 - Watch these two videos to install flask on VS Code:
 - Install Python 3.10.2: https://www.youtube.com/watch?v=uxZuFm5tmhM
--> IMPORTANT: we need Python 3.10.2 to download all the packages
+# IMPORTANT: we need Python 3.10.2 to download all the packages
 - Install Flask on VS Code: https://www.youtube.com/watch?v=S8aFNcYpSfI 
 - Last step on video ist to let the code run -> dont work
 - Install Visual c++: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
