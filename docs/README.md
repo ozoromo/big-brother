@@ -19,6 +19,7 @@ has a structure that is more readable.
     - Opencv-python: pip install opencv-python opencv-contrib-python
     - wtforms: pip install wtforms==2.3.3
     - Flask_SocketIO= pip install Flask_SocketIO==4.3.1
+- IMPORTANT: gitignore the env (environment) to avoid committing it to main.
 -  routes, structures, functionalities, explanation 
 ## Logik-Group
 
