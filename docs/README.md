@@ -17,7 +17,7 @@ has a structure that is more readable.
 - commands for packages you could need:
 - PIL: pip install pillow opencv-python opencv-contrib-python
 - Opencv-python: pip install opencv-python opencv-contrib-python
-- wtfforms: pip install wtforms==2.3.3
+- wtforms: pip install wtforms==2.3.3
 - Flask_SocketIO= pip install Flask_SocketIO==4.3.1
 -  routes, structures, functionalities, explanation 
 ## Logik-Group
