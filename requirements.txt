@@ -35,3 +35,4 @@ Pillow
 #pickle
 uuid
 CMake
+dlib-binary
