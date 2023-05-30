@@ -14,30 +14,6 @@ can Import and Export Pictures from Database
 @Last modified by:   Julian FLieller
 @Last modified time: 2023-05-19
 
-<a id="DatabaseManagement.np"></a>
-
-## np
-
-<a id="DatabaseManagement.pickle"></a>
-
-## pickle
-
-<a id="DatabaseManagement.uuid"></a>
-
-## uuid
-
-<a id="DatabaseManagement.dt"></a>
-
-## dt
-
-<a id="DatabaseManagement.timezone"></a>
-
-## timezone
-
-<a id="DatabaseManagement.pymongo"></a>
-
-## pymongo
-
 <a id="DatabaseManagement.BBDB"></a>
 
 ## BBDB Objects
@@ -47,7 +23,7 @@ class BBDB()
 ```
 
 Database Baseclass
-Subclasses like wire_DB inherit methods and Varaibles
+Subclasses like wire_DB inherit methods and variables
 This is done to reduce Code and to Unify the usage of the Database
 
 <a id="DatabaseManagement.BBDB.__init__"></a>
@@ -88,12 +64,22 @@ not needed for mongodb
 def delUser(**kwargs) -> bool
 ```
 
-Delete a user from the database with the given uuid or username
+Delete a user from the database.
 
-Keyword arguments: Only one of the keyword arguments should 
-be set. Otherwise an error will be returned.  
-user_uuid -- ID of the user that you want to delete.  
-username  -- Username of the user that you want to delete.
+Description:
+Hellow
+
+**Arguments**:
+
+- `user_uuid` - ID of the user that you want to delete. Either this
+  argument (exclusiv) or the username-keyword should be set.
+- `username` - Username of the user that you want to delete. Either this
+  argument (exclusiv) or the user_uuid-keyword should be set.
+  
+
+**Returns**:
+
+  Returns True if the user has been deleted and False otherwise.
 
 <a id="DatabaseManagement.BBDB.addAdminRelation"></a>
 
@@ -141,9 +127,13 @@ def login_user(**kwargs)
 
 Creates a new entry in the login_table for the user with the given uuid or username.
 
-Keyword arguments: Only one of the keyword arguments should be set. Otherwise an error will be returned.
-user_uuid -- ID of the user that you want to delete.
-username  -- Username of the user that you want to delete.
+**Arguments**:
+
+- `user_uuid` - ID of the user that you want to delete. Only set either
+  user_uuid or username.
+- `username` - Username of the user that you want to delete. Only
+  set either user_uuid or username.
+  
 
 **Returns**:
 
@@ -158,15 +148,16 @@ username  -- Username of the user that you want to delete.
 def update_login(**kwargs)
 ```
 
-Updates the status of the login of one user with a certain 
+Updates the status of the login of one user with a certain
 user_uuid or username.
 
-Keyword arguments:
-user_id -- ID of the user of which you want to log in. You can only set 
-either the user_id or the username otherwise you are going to get an error.
-username -- Username of the user which you want to log in. You can only
-set either the user_id or the username otherwise you are going to get an error.
-time -- The timestamp of the login you want to update.
+**Arguments**:
+
+- `user_id` - ID of the user of which you want to log in. You can only set
+  either the user_id or the username otherwise you are going to get an error.
+- `username` - Username of the user which you want to log in. You can only
+  set either the user_id or the username otherwise you are going to get an error.
+- `time` - The timestamp of the login you want to update.
 
 <a id="DatabaseManagement.BBDB.register_user"></a>
 
@@ -403,21 +394,5 @@ def __init__(dbhost: str = None)
 
 ```python
 class UsernameExists(Exception)
-```
-
-<a id="DatabaseManagement.makeSuperAdmin"></a>
-
-#### makeSuperAdmin
-
-```python
-def makeSuperAdmin(name)
-```
-
-<a id="DatabaseManagement.delThisUser"></a>
-
-#### delThisUser
-
-```python
-def delThisUser(name)
 ```
 
