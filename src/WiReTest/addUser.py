@@ -1,13 +1,17 @@
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'DBM'))
+
 import numpy as np
 import lib
 import matplotlib as mpl
 import DatabaseManagement
 import uuid
-
+import bson
 
 DB = DatabaseManagement.wire_DB('h2938366.stratoserver.net')
 
-#user_uuid = DB.register_user("jonny_sins")
 print("start")
 
 images = []
@@ -22,9 +26,6 @@ for img_str in sorted(img_str_list):
     print("test")
 
     if img_str[-3:] != "png":
-
-        #raise ValueError("Incorrect Data Type")
-
         continue
 
     im_path = path + img_str
@@ -36,16 +37,11 @@ for img_str in sorted(img_str_list):
     print("test2")
 
     try:
-
         user_uuid = DB.register_user("jonny_sins")
-        print("Created User : {} with uuid : {} ".format(img_str[0:2],user_uuid))
-
+        print("Created User: {} with uuid: {}".format(img_str[0:2], user_uuid))
     except DatabaseManagement.UsernameExists:
-
         users = DB.getUsers()
-
         for u_uuid in users:
-
             if users[u_uuid] == "jonny_sins":
                 user_uuid = u_uuid
 
@@ -54,10 +50,13 @@ for img_str in sorted(img_str_list):
     if not user_uuid:
         raise BaseException("No user id given")
 
-    if type(user_uuid) == str:
+    if isinstance(user_uuid, str):
         user_uuid = uuid.UUID(user_uuid)
 
+    user_uuid_binary = bson.Binary.from_uuid(user_uuid)
+
     print("test4")
-    pic_uuid = DB.insertTrainingPicture(image,user_uuid)
-    print("inserted : {}\nwith uuid : {}\nand user uuid : {}\n\n\n".format(img_str,pic_uuid,user_uuid))
+    pic_uuid = DB.insertTrainingPicture(image, user_uuid_binary)
+    print("inserted: {}\nwith uuid: {}\nand user uuid: {}\n\n\n".format(img_str, pic_uuid, user_uuid))
+
 DB.closeGraceful()
