@@ -176,8 +176,10 @@ def train_add_faces(user_id, images, new_model=False, save_model=False, crop_to_
     #
     # Muss das eine Integer User Id sein? Könnten wir auch die UUIDs aus der Datenbank benutzen?
     # Oder Zumindest eine eindeutige Umwandlung von UUID in Interger ID programmieren?  --Julius
+    
     id_vec = np.full(shape=(len(images),), fill_value=user_id)
-
+    # array is used to link the user_id to the created/extracted images
+    
     recognizer.update(processed_imgs, id_vec)
 
     if save_model == True:
