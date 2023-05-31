@@ -27,8 +27,12 @@ renderer:
       source: README.md
     - title: 'DatabaseManagement'
       contents:
-        - 'DatabaseManagement.*'
+        - 'DatabaseManagement.BBDB.*'
+        - 'DatabaseManagement.wire_DB.*'
+        - 'DatabaseManagement.opencv_DB.*'
+        - 'DatabaseManagement.frontend_DB.*'
+        - 'DatabaseManagement.UsernameExists'
   mkdocs_config:
-    site_name: My Project
+    site_name: big-brother
     theme: readthedocs
-    repo_url: https://github.com/Me/my-project
+    repo_url: https://github.com/Programmierpraktikum-MVA/big-brother

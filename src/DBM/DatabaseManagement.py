@@ -19,7 +19,7 @@ import pymongo
 
 class BBDB:
     """Database Baseclass
-    Subclasses like wire_DB inherit methods and Varaibles
+    Subclasses like wire_DB inherit methods and variables
     This is done to reduce Code and to Unify the usage of the Database""" 
     # I kinda dont get why as it only creates more overhead, 
     # since it only creates a new instance of BDBB
@@ -57,12 +57,16 @@ class BBDB:
 
     def delUser(self,**kwargs)-> bool:
         """
-        Delete a user from the database with the given uuid or username
+        Delete a user from the database.
 
-        Keyword arguments: Only one of the keyword arguments should 
-        be set. Otherwise an error will be returned.  
-        user_uuid -- ID of the user that you want to delete.  
-        username  -- Username of the user that you want to delete.
+        Keyword Arguments:
+        user_uuid -- ID of the user that you want to delete. Either this
+        argument (exclusiv) or the username-keyword should be set.
+        username -- Username of the user that you want to delete. Either this
+        argument (exclusiv) or the user_uuid-keyword should be set.
+
+        Return:
+        Returns True if the user has been deleted and False otherwise.
         """
         # TODO: Discuss. Only use one unique identifier internally. 
         # Of course the username still has to be unique, but the API
@@ -85,11 +89,12 @@ class BBDB:
 
     def addAdminRelation(self, admin_uuid, child_uuid): 
         """
-        Add a user as an admin with the given child_uuid aka user_uuid
+        Add a user as an admin.
 
         Arguments:
         admin_uuid -- This variable is depricated and isn't really used.  
-        child_uuid -- This is the user_id of the user that should be made admin.
+        child_uuid -- This is the user_id of the user that should 
+        be made admin.
         """
         # TODO: maybe simplify arguments as the old ones are confusing
         # as far as I can tell from the diagram, the child_uuid is the user_uuid
@@ -118,9 +123,11 @@ class BBDB:
         """
         Creates a new entry in the login_table for the user with the given uuid or username.
 
-        Keyword arguments: Only one of the keyword arguments should be set. Otherwise an error will be returned.  
-        user_uuid -- ID of the user that you want to delete.
-        username  -- Username of the user that you want to delete.
+        Keyword Arguments: 
+        user_uuid -- ID of the user that you want to delete. Only set either 
+        user_uuid or username.
+        username -- Username of the user that you want to delete. Only 
+        set either user_uuid or username.
 
         Return:  
         Returns (False,False) if the login fails and the timestamp of the
@@ -158,7 +165,7 @@ class BBDB:
         Updates the status of the login of one user with a certain 
         user_uuid or username.
 
-        Keyword arguments:
+        Keyword Arguments:
         user_id -- ID of the user of which you want to log in. You can only set 
         either the user_id or the username otherwise you are going to get an error.
         username -- Username of the user which you want to log in. You can only
@@ -358,11 +365,11 @@ class wire_DB(BBDB):
         Inserts a new training picture into the database and returns the 
         uuid of the inserted picture.
 
-        Arguments:  
+        Arguments:
         pic       -- Picture to be inserted into the database.
         user_uuid -- ID of the user which owns the picture.
 
-        Return:  
+        Return:
         Returns the uuid of the picture that has been inserted into the database.
 
         Exception:

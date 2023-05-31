@@ -1,0 +1,7 @@
+docs_dir: API documentation
+nav:
+- Home: README.md
+- DatabaseManagement: databasemanagement.md
+repo_url: https://github.com/Programmierpraktikum-MVA/big-brother
+site_name: big-brother
+theme: readthedocs
