@@ -22,6 +22,7 @@
         -After isolate the image from the background and preprocess it using dlib, find a way to represent the face in numerical embedding. Represent it using a pre-trained deep neural network OpenFace 
     4. Triplet loss function
         -Neural networks need to be trained in such a way that embedding of anchor image(basic photo of Person X) and positive image(zphoto of Person A) 
-	       should be similar and embedding of anchor image and negative image(photo of Person Y) should be much farther apart.
+	     should be similar and embedding of anchor image and negative image(photo of Person Y) should be much farther apart.
     5. Training and Classification a face recognition model
-        -To compare two images, create the embedding for both images by feeding through the model separately. Use Euclidean distance to find the distance which will be lower value for similar faces and higher value            for different faces.
+        -To compare two images, create the embedding for both images by feeding through the model separately. Use Euclidean distance to find the distance which will be lower value for similar faces and higher valuefor 
+	     different faces.
