@@ -29,7 +29,7 @@ def crop_face(img):
    
 if __name__ == "__main__":
 
-
+    #img = a numpy array (with 1,0 of image ) 
     img = cv2.imread(os.path.expanduser( img_path))
     img_2 = cv2.imread(os.path.expanduser(img_path_2))
     img_test = cv2.imread(os.path.expanduser(img_path_test))
