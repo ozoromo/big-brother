@@ -16,9 +16,17 @@ The concept of the project is to greatly facilitate the learning process by effe
 - *Remember topic changes from sound and image.*
 
 ## TODO:
-- Extract script from the videos. Uses speech2text logic from BetterAlexa for this.
 - Hyperlink to the video at each slide change. Train the **visual** model to notice that there was a slide change (later more advanced topic changes).
 - Indexing - create a list of key time points each with a title and people can click on them to get to the segments.
+
+# Planned development
+- Script extraction from video (using the s2t algorithm)
+- Script summarization using AI
+- Extraction of keywords from the received notes, which will point to particular topics
+- Recognizing the change of presentation slides and recognizing the content on them using OCR
+- If the keywords from the OCR and the script overlap, it can be assumed that the topic has changed
+- Sections between topic changes will be indexed and described by keywords
+
 ### Subteam members
 
 - **miloSK1 (Milosz)**
