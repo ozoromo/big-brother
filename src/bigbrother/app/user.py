@@ -64,6 +64,7 @@ class BigBrotherUser(UserMixin):
                 print(pic.astype('uint8').shape)
                 return
 
+        # TODO Fix
         # Log-Daten aus MongoDB abrufen
         login_collection = self.DB['login_table']
         query = {"user_uuid": str(self.uuid)}
