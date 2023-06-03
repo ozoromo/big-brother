@@ -5,7 +5,7 @@ from app.forms import LoginForm, CreateForm
 from werkzeug.utils import secure_filename
 import os
 
-from app.BBDB import BBDB
+from DBM.DatabaseManagement import BBDB
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -32,7 +32,7 @@ def login():
         flash('Thanks for logging in')
         user = {'username': form.username.data}
 
-        db = BBDB("h2938366.stratoserver.net")
+        db = BBDB()
         pic = np.asarray(form.picture.data)
         #pic = np.asarray(mpl.image.imread('uploads/' + filename))
         db.insertPicture(pic, uuid.uuid4(), 'backend.pictures')
