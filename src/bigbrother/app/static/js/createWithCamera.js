@@ -18,8 +18,8 @@ $(document).ready(function(){
   var localMediaStream = null;
   var ready = true;
 
-  var socket = io.connect("https://h2938366.stratoserver.net:443" + namespace);
-  //var socket = io.connect("http://localhost:5000" + namespace);
+  // TODO: Edit
+  var socket = io.connect("http://localhost:5000" + namespace);
 
   function sendSnapshot() {
     if (!localMediaStream) {
