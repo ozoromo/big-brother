@@ -19,15 +19,24 @@ import pymongo
 
 class BBDB:
     """Database Baseclass""" 
-    def __init__(self):
+    def __init__(self, mongo_client=None):
         """
         Builds up the initial connection to the database
+
+        Optional Arguments:
+        mongo_client -- In case you are using a different mongo cluster.
+        We also offer a default mongo cluster that you can use. In case you 
+        use a different cluster with pre-existing information it has to have
+        the same structure as specified in the documentation.
         """
-        self.cluster = pymongo.MongoClient("mongodb+srv://admin:7EgqBof7tSUKlYBN@bigbrother.qse5xtp.mongodb.net/?retryWrites=true&w=majority",
-                                           connectTimeoutMS=30000,
-                                           socketTimeoutMS=None,
-                                           connect=False,
-                                           maxPoolsize=1)
+        if not mongo_client:
+            self.cluster = pymongo.MongoClient("mongodb+srv://admin:7EgqBof7tSUKlYBN@bigbrother.qse5xtp.mongodb.net/?retryWrites=true&w=majority",
+                                               connectTimeoutMS=30000,
+                                               socketTimeoutMS=None,
+                                               connect=False,
+                                               maxPoolsize=1)
+        else: 
+            self.cluster = mongo_client
         db = self.cluster["BigBrother"]
         self.user = db["user"]
         self.login_attempt = db["login_attempt"]
@@ -84,7 +93,7 @@ class BBDB:
         print("WARNING: AddAdminRelation Failed!")
         return False
 
-    def get_username(self, uuids: list):
+    def getUsername(self, uuids: list):
         """
         Fetches usernames from database belonging to the given uuids
 
@@ -182,7 +191,7 @@ class BBDB:
             print("WARNING: Database Login Update!")
             return False, False
 
-    def register_user(self, username: str, user_enc_res_id):
+    def register_user(self, username: str, user_enc_res_id: uuid.UUID):
         """
         Creates a new user in the database with the given username.
 
