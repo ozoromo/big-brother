@@ -42,7 +42,7 @@ class BigBrotherUser(UserMixin):
         self.recogFlag = False
 
     def sync(self):
-        pics, uuids = self.DB.getTrainingPictures("WHERE user_uuid = '{}'".format(self.uuid))
+        pics, uuids = self.DB.getTrainingPictures(user_uuid = self.uuid)
         self.trainingPicturesWebsiteFormat = []
 
         for pic_index,pic in enumerate(pics):

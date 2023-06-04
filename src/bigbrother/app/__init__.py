@@ -318,7 +318,8 @@ def create():
 
             pictures = [user['pic1'],user['pic2'],user['pic3']]
 
-            user_uuid = ws.DB.register_user(user['username'])
+            # TODO pls change last parameter
+            user_uuid = ws.DB.register_user(user['username'], None)
 
             for pic in pictures:
 

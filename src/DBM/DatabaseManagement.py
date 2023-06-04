@@ -401,10 +401,10 @@ class wire_DB(BBDB):
         if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
             raise TypeError
         
-        pic_uuid = uuid.uuid1()
+        pic_uuid = str(uuid.uuid1())
         self.resource.insert_one({
             "_id" : pic_uuid,
-            "user_id" : user_uuid,
+            "user_id" : str(user_uuid),
             "res" : pickle.dumps(pic),
             "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
             "pic_uuid" : pic_uuid
@@ -412,7 +412,7 @@ class wire_DB(BBDB):
         self.resource_context.update_one(
                 {"name": "wire"},
                 {"$addToSet": {"res_id": pic_uuid}})
-        return pic_uuid
+        return uuid.UUID(pic_uuid)
 
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):

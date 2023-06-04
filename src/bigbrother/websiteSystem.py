@@ -54,7 +54,7 @@ class websiteSystem:
         self.authorizedAbortDict = {}
         self.invalidStreamCount = {}
 
-        self.DB = DBM.wire_DB("h2938366.stratoserver.net")
+        self.DB = DBM.wire_DB()
 
         self.BigBrotherUserList = []
         userDict = self.DB.getUsers().items()
