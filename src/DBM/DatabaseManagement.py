@@ -23,9 +23,13 @@ class BBDB:
         """
         Builds up the initial connection to the database
         """
-        self.cluster = pymongo.MongoClient("mongodb+srv://admin:7EgqBof7tSUKlYBN@bigbrother.qse5xtp.mongodb.net/?retryWrites=true&w=majority",connectTimeoutMS=30000,socketTimeoutMS=None,connect=False,maxPoolsize=1)
+        self.cluster = pymongo.MongoClient("mongodb+srv://admin:7EgqBof7tSUKlYBN@bigbrother.qse5xtp.mongodb.net/?retryWrites=true&w=majority",
+                                           connectTimeoutMS=30000,
+                                           socketTimeoutMS=None,
+                                           connect=False,
+                                           maxPoolsize=1)
         db = self.cluster["BigBrother"]
-        self.user= db["user"]
+        self.user = db["user"]
         self.login_attempt = db["login_attempt"]
         self.resource = db["resource"]
         self.resource_context = db["resource_context"]
@@ -74,13 +78,13 @@ class BBDB:
         Return:
         Returns True if the user has been added and False otherwise.
         """
-        if self.user.find_one({"_id":user_id}):
-            self.user.update_one({"_id":user_id},{"$set":{"is_admin":True}})
+        if self.user.find_one({"_id": user_id}):
+            self.user.update_one({"_id": user_id}, {"$set": {"is_admin": True}})
             return True
         print("WARNING: AddAdminRelation Failed!")
         return False
 
-    def get_username(self,uuids:list):
+    def get_username(self, uuids: list):
         """
         Fetches usernames from database belonging to the given uuids
 
@@ -105,7 +109,7 @@ class BBDB:
         user_id -- ID of the user that you are login in.
         
         Return:  
-        Returns (False,False) if the login fails and the timestamp of the
+        Returns (False, False) if the login fails and the timestamp of the
         login if it succeeds.
         """
         localTime = dt.datetime.now(tz=timezone('Europe/Amsterdam'))
@@ -113,13 +117,13 @@ class BBDB:
             self.login_attempt.insert_one({
                 "user_id" : user_id,
                 "date" : localTime,
-                "login_suc": False, #initially False; set to True if update_login() successfull
-                "success_resp_type": None, #initially None; set to int if update_login() successfull
-                "success_res_id": None, #initially None; set to uuid if update_login() successfull
+                "login_suc": False,           #initially False; set to True if update_login() successfull
+                "success_resp_type": None,    #initially None; set to int if update_login() successfull
+                "success_res_id": None,       #initially None; set to uuid if update_login() successfull
                 })
             return localTime
         print("WARNING: Database Login Failed!")
-        return False,False
+        return False, False
         
     def update_login(self, **kwargs):
         """
@@ -129,7 +133,13 @@ class BBDB:
         user_uuid -- ID of the user of which you want to log in.
         time -- The timestamp of the login you want to update. 
         inserted_pic_uuid -- the uuid for the res in the resource table
+
+        Return:
+        Returns (False, False) if the access to the database hasn't been 
+        successful and returns the UUID (insert_pic_uuid) if the program
+        has been successful.
         """
+        # TODO: Review this and the modules tha call this function
         user_id = time = inserted_pic_uuid = None
         
         for key, value in kwargs.items():
@@ -151,15 +161,16 @@ class BBDB:
         
         if not time or not inserted_pic_uuid or not user_id:
             print("WARNING: Database Login Failed!")
-            return False,False
+            return False, False
         
         try:
             self.login_attempt.update_one(
                 {
-                    "user_id" : user_id,
-                    "date"      : time
+                    "user_id": user_id,
+                    "date": time
                 },
-                { "$set" : {
+                { 
+                    "$set" : {
                     "login_suc": True,
                     "success_resp_type": 0,
                     "inserted_pic_uuid": inserted_pic_uuid,
@@ -169,9 +180,9 @@ class BBDB:
             return inserted_pic_uuid
         except Exception:
             print("WARNING: Database Login Update!")
-            return False,False
+            return False, False
 
-    def register_user(self,username:str,user_enc_res_id):
+    def register_user(self, username: str, user_enc_res_id):
         """
         Creates a new user in the database with the given username.
 
@@ -187,7 +198,6 @@ class BBDB:
         Raises an exception if the username already exists.
         """
         new_uuid = str(uuid.uuid1())
-
         for existing_uuid in self.getUsers():
             while existing_uuid == new_uuid:
                 new_uuid = str(uuid.uuid1())
@@ -238,7 +248,7 @@ class BBDB:
         given ID doesn't exist then None gets returned.
         """
         user_entry = self.user.find_one({"_id" : user_id})
-        if user_entry is None: 
+        if not user_entry: 
             return None
         return user_entry["username"]
 
@@ -253,13 +263,13 @@ class BBDB:
         Returns True if the user has been successfully deleted. And 
         False otherwise (e.g. user didn't exist in the database).
         """
-        if self.user.find_one({"_id" : user_id}):
+        if self.user.find_one({"_id": user_id}):
             self.delUser(user_id)
-            self.login_attempt.delete_many({"user_id" : user_id}) 
-            self.resource.delete_many({"user_id" : user_id})
+            self.login_attempt.delete_many({"user_id": user_id}) 
+            self.resource.delete_many({"user_id": user_id})
+            # TODO: resource_context also needs to get updated
             return True
-        else:
-            return False
+        return False
 
     def getUser(self, username):
         """
@@ -273,14 +283,18 @@ class BBDB:
         doesn't exist then it returns None.
         """
         user_entry = self.user.find_one({"username" : username})
-        if user_entry is None: 
+        if not user_entry:
             return None
         return user_entry["_id"]
     
     def getAllTrainingsImages(self):
         """
+        This function has not been implemented.
+        
         Returns all training images from the database in three lists: 
         pics, uuids, user_uuids
+        """
+        # TODO: Dicuss it's deletetion
         """
         pics,uuids,user_uuids=[],[],[]
         for pic in self.wire_train_pictures.find():
@@ -288,8 +302,13 @@ class BBDB:
             uuids.append(pic["pic_uuid"])
             user_uuids.append(pic["user_uuid"])
         return pics, uuids, user_uuids
+        """
+        raise NotImplementedError
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
+        """
+        This function has not been implemented.
+        """
         # TODO: Take a look at what this funciton is supposed to do. 
         # Decide whether you want to implement it or not.
 
@@ -300,16 +319,19 @@ class BBDB:
 
         # TODO: Error Handling, in the rare case that a duplicate 
         # uuid is generated this method has to try again
-        
         raise NotImplementedError
 
     def getPicture(self,query : str):
-        # TODO: was not implemented yet
+        """
+        This function has not been implemented.
+        """
         raise NotImplementedError
 
 class wire_DB(BBDB):
     def __init__(self):
         BBDB.__init__(self)
+        # TODO: Discuss keeping a reference to the resource_context with
+        # name WiRe in order to make the code and debugging simpler
 
     def getTrainingPictures(self, **kwargs):
         """
@@ -333,23 +355,27 @@ class wire_DB(BBDB):
             print("WARNING: Database Login Failed!")
             return None, None
         '''
-        if not self.resource_context.find({"name":"wire"}):
-            self.resource_context.insert_one({"_id":uuid.uuid1(),"name":"wire","username":None,"res_id":[]})
-        
+        if not self.resource_context.find({"name": "wire"}):
+            self.resource_context.insert_one({
+                "_id": uuid.uuid1(), # TODO: Collision is possible. If many items in resource_context
+                                     # get generated at the same time (e.g. by multiple clients). 
+                                     # Also if other items in resource_context get generated.
+                "name": "wire",
+                "username": None,
+                "res_id": []})
         pics = []
-        for resource_id in self.resource_context.find({"name":"wire"})["res_id"]:
-            resource = self.resource.find_one({"_id":resource_id})
+        for resource_id in self.resource_context.find({"name": "wire"})["res_id"]:
+            resource = self.resource.find_one({"_id": resource_id})
             pics.append(pickle.loads(resource["res"]))
-
         return pics
     
-    def insertTrainingPicture(self, pic:np.ndarray, user_uuid:uuid.UUID):
+    def insertTrainingPicture(self, pic: np.ndarray, user_uuid: uuid.UUID):
         """
         Inserts a new training picture into the database and returns the 
         uuid of the inserted picture.
 
         Arguments:
-        pic       -- Picture to be inserted into the database.
+        pic -- Picture to be inserted into the database.
         user_uuid -- ID of the user which owns the picture.
 
         Return:
@@ -370,12 +396,16 @@ class wire_DB(BBDB):
             "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
             "pic_uuid" : pic_uuid
         })
-        
-        self.resource_context.update_one({"name":"wire"},{"$addToSet":{"res_id":pic_uuid}})
+        self.resource_context.update_one(
+                {"name": "wire"},
+                {"$addToSet": {"res_id": pic_uuid}})
         return pic_uuid
 
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
+        """
+        This function has not been implemented.
+        """
         # TODO: Take a look at what this funciton is supposed to do. 
         # Decide whether you want to implement it or not.
 
@@ -383,19 +413,16 @@ class wire_DB(BBDB):
         # Pickles Picture and inserts it into DB
         # pic : picture to be saved as np.ndarray
         # user_uuid : id of user wich owns picture
-
-        # TODO: Error Handling, in the rare case that a duplicate 
+        # => Error Handling, in the rare case that a duplicate 
         # uuid is generated this method has to try again
         
         raise NotImplementedError
 
-    def getPicture(self,query : str):
-        # TODO: was not implemented yet
+    def getPicture(self, query : str):
+        """
+        This function has not been implemented.
+        """
         raise NotImplementedError
-
-class wire_DB(BBDB):
-    def __init__(self):
-        BBDB.__init__(self)
 
 class opencv_DB(BBDB):
     def __init__(self):
