@@ -82,12 +82,11 @@ class BBDBTest(unittest.TestCase):
 
             self.assertEqual(len(self.db.getUsers()), l, 
                              "Amount of users isn't correct")
-            self.assertEqual(len(self.db.getUsers(limit=l//2)), 
-                             min(l, l//2), 
+            self.assertEqual(len(self.db.getUsers(limit=l//2)), l//2, 
                              "Limit-Keyword from BBDB.getUsers might not be implemented correctly")
             self.output_assertEqual(
                     self.db.getUsers(), 
-                    {str(user_enc_res_ids[i]): user_ids for i in range(l)}
+                    {user_ids[i]: usernames[i] for i in range(l)}
                 )
         self.assertEqual(len(user_ids), len(set(user_ids)),
                          "User IDs are not unique.")

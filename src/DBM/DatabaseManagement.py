@@ -61,7 +61,7 @@ class BBDB:
         """
         return
 
-    def delUser(self,user_id)-> bool:
+    def delUser(self, user_id: uuid.UUID) -> bool:
         """
         Delete a user from the database.
 
@@ -71,13 +71,14 @@ class BBDB:
         Return:
         Returns True if the user has been deleted and False otherwise.
         """
-        if self.user.find_one({"_id":user_id}):
-            self.user.delete_one({"_id":user_id})
+        user_id = str(user_id)
+        if self.user.find_one({"_id": user_id}):
+            self.user.delete_one({"_id": user_id})
             return True 
         print("WARNING: Database Login Failed!")
         return False
 
-    def addAdminRelation(self, user_id): 
+    def addAdminRelation(self, user_id: uuid.UUID):
         """
         Add a user as an admin.
 
@@ -87,6 +88,7 @@ class BBDB:
         Return:
         Returns True if the user has been added and False otherwise.
         """
+        user_id = str(user_id)
         if self.user.find_one({"_id": user_id}):
             self.user.update_one({"_id": user_id}, {"$set": {"is_admin": True}})
             return True
@@ -107,10 +109,10 @@ class BBDB:
         """
         usernames = []
         for user_id in uuids:
-            usernames.append(self.user.find_one({"_id":user_id})["username"])
+            usernames.append(self.user.find_one({"_id": str(user_id)})["username"])
         return usernames
 
-    def login_user(self, user_id):
+    def login_user(self, user_id: uuid.UUID):
         """
         Creates a new entry in the login_table for the user with the given uuid or username.
 
@@ -124,7 +126,7 @@ class BBDB:
         localTime = dt.datetime.now(tz=timezone('Europe/Amsterdam'))
         if self.user.find_one({"_id":user_id}):
             self.login_attempt.insert_one({
-                "user_id" : user_id,
+                "user_id" : str(user_id),
                 "date" : localTime,
                 "login_suc": False,           #initially False; set to True if update_login() successfull
                 "success_resp_type": None,    #initially None; set to int if update_login() successfull
@@ -182,10 +184,9 @@ class BBDB:
                     "$set" : {
                     "login_suc": True,
                     "success_resp_type": 0,
-                    "inserted_pic_uuid": inserted_pic_uuid,
+                    "inserted_pic_uuid": str(inserted_pic_uuid),
                     }
                 })
-            
             return inserted_pic_uuid
         except Exception:
             print("WARNING: Database Login Update!")
@@ -206,22 +207,22 @@ class BBDB:
         Exception:  
         Raises an exception if the username already exists.
         """
-        new_uuid = str(uuid.uuid1())
+        new_uuid = uuid.uuid1()
         for existing_uuid in self.getUsers():
             while existing_uuid == new_uuid:
-                new_uuid = str(uuid.uuid1())
+                new_uuid = uuid.uuid1()
 
         if self.user.find_one({"username" : username}):
             raise UsernameExists("Username in use!")
         else:
             self.user.insert_one({
-                "_id": new_uuid,
+                "_id": str(new_uuid),
                 "username" : username, 
-                "user_enc_res_id" : user_enc_res_id,
+                "user_enc_res_id" : str(user_enc_res_id),
                 "is_admin" : False})
             return new_uuid
 
-    def getUsers(self,limit = -1):
+    def getUsers(self, limit=-1):
         """
         Fetches all Users with their uuids and usernames from the database
 
@@ -234,18 +235,20 @@ class BBDB:
         If `limit` is negative then it returns a dictionary of all users and the 
         associated usernames. If the limit is non-negative then it returns a
         list with `limit` amount of entries. The dictionary key are the user_uuid
-        and the value is the username.
+        (with type uuid.UUID) and the value is the username (with type str).
         """
         users = self.user.find()
-        if limit >= 0:
+        if limit == 0:
+            return {}
+        elif limit > 0:
             users = users.limit(limit)
 
         user_dict = {}
         for user in users:
-            user_dict[user["_id"]] = user["username"]
+            user_dict[uuid.UUID(user["_id"])] = user["username"]
         return user_dict
             
-    def getUserWithId(self, user_id): 
+    def getUserWithId(self, user_id: uuid.UUID) -> str:
         """
         Returns the username corresponding to the user_id.
 
@@ -256,12 +259,12 @@ class BBDB:
         Returns the username corresponding to the user_id. If the user with the
         given ID doesn't exist then None gets returned.
         """
-        user_entry = self.user.find_one({"_id" : user_id})
+        user_entry = self.user.find_one({"_id" : str(user_id)})
         if not user_entry: 
             return None
         return user_entry["username"]
 
-    def deleteUserWithId(self,user_id):
+    def deleteUserWithId(self, user_id: uuid.UUID) -> bool:
         """
         Deletes the user with the given user_uuid from the database and all data cooresponding to it.
 
@@ -272,6 +275,7 @@ class BBDB:
         Returns True if the user has been successfully deleted. And 
         False otherwise (e.g. user didn't exist in the database).
         """
+        user_id = str(user_id)
         if self.user.find_one({"_id": user_id}):
             self.delUser(user_id)
             self.login_attempt.delete_many({"user_id": user_id}) 
@@ -280,7 +284,7 @@ class BBDB:
             return True
         return False
 
-    def getUser(self, username):
+    def getUser(self, username: str) -> uuid.UUID:
         """
         Returns the uuid corresponding to the username.
 
@@ -291,10 +295,10 @@ class BBDB:
         Returns the uuid corresponding to the username. If the username 
         doesn't exist then it returns None.
         """
-        user_entry = self.user.find_one({"username" : username})
+        user_entry = self.user.find_one({"username": username})
         if not user_entry:
             return None
-        return user_entry["_id"]
+        return uuid.UUID(user_entry["_id"])
     
     def getAllTrainingsImages(self):
         """
