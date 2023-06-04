@@ -341,33 +341,8 @@ class BBDB:
         raise NotImplementedError
 
 class wire_DB(BBDB):
-    def __init__(self):
-        BBDB.__init__(self)
-        # TODO: Discuss keeping a reference to the resource_context with
-        # name WiRe in order to make the code and debugging simpler
-
-    def getTrainingPictures(self, **kwargs):
-        """
-        Returns training pictures from the database from the wire resource context
-        """
-
-        #TODO not needed if only "wire" resource context is needed here
-        '''
-        username = None
-
-        for key, value in kwargs.items():
-            if key == "user_uuid":
-                user_uuid = value
-            elif key == "username":
-                username = value
-        
-        if user_uuid and not username:
-            username = self.user.find_one({"user_uuid":user_uuid})["username"] 
-
-        if not username:
-            print("WARNING: Database Login Failed!")
-            return None, None
-        '''
+    def __init__(self, mongo_client=None):
+        BBDB.__init__(self, mongo_client=mongo_client)
         if not self.resource_context.find({"name": "wire"}):
             self.resource_context.insert_one({
                 "_id": uuid.uuid1(), # TODO: Collision is possible. If many items in resource_context
@@ -376,11 +351,28 @@ class wire_DB(BBDB):
                 "name": "wire",
                 "username": None,
                 "res_id": []})
-        pics = []
-        for resource_id in self.resource_context.find({"name": "wire"})["res_id"]:
-            resource = self.resource.find_one({"_id": resource_id})
-            pics.append(pickle.loads(resource["res"]))
-        return pics
+        self.wire_context_collection = self.resource_context.find({"name": "wire"})
+
+    def getTrainingPictures(self, user_uuid: uuid.UUID = None):
+        """
+        Returns training pictures from the database from the wire resource context
+        """
+
+        # TODO: We need to be able to verify whether a certain user with the 
+        # user_id exists before we check
+        # TODO: Find a way to make this prettier
+        resources = None
+        if user_uuid: 
+            resources = self.resource.find({
+                        "_id": {"$in": self.wire_context_collection["res_id"]},
+                        "user_id": str(user_uuid),
+                    })
+        else: 
+            resources = self.resource.find({
+                        "_id": {"$in": self.wire_context_collection["res_id"]},
+                    })
+
+        return [pickle.loads(r["res"]) for r in resources]
     
     def insertTrainingPicture(self, pic: np.ndarray, user_uuid: uuid.UUID):
         """
