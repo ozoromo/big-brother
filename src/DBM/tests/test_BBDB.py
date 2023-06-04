@@ -64,7 +64,9 @@ class BBDBTest(unittest.TestCase):
                                            usernames: list, 
                                            user_enc_res_ids: list):
         """
-        Testing different usernames. Following functions are tested:
+        Testing different usernames. 
+
+        Following functions are tested:
         - register_user
         - getUser
         - getUsername
