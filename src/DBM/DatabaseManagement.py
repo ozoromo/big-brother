@@ -401,18 +401,20 @@ class wire_DB(BBDB):
         if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
             raise TypeError
         
-        pic_uuid = uuid.uuid1()
+        # TODO: There might be some problems if multiple files are inserted
+        # concurrently
+        pic_uuid = str(uuid.uuid1())
         self.resource.insert_one({
             "_id" : pic_uuid,
-            "user_id" : user_uuid,
+            "user_id": str(user_uuid),
             "res" : pickle.dumps(pic),
             "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
-            "pic_uuid" : pic_uuid
+            "pic_uuid": pic_uuid
         })
         self.resource_context.update_one(
                 {"name": "wire"},
                 {"$addToSet": {"res_id": pic_uuid}})
-        return pic_uuid
+        return uuid.UUID(pic_uuid)
 
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
