@@ -102,9 +102,8 @@ class BBDB:
         Creates a new entry in the login_table for the user with the given uuid or username.
 
         Arguments: 
-        user_id -- ID of the user that you want to delete. Only set either 
-        user_id or username.
-
+        user_id -- ID of the user that you are login in.
+        
         Return:  
         Returns (False,False) if the login fails and the timestamp of the
         login if it succeeds.
@@ -278,6 +277,72 @@ class BBDB:
             return None
         return user_entry["_id"]
     
+    def getAllTrainingsImages(self):
+        """
+        Returns all training images from the database in three lists: 
+        pics, uuids, user_uuids
+        """
+        pics,uuids,user_uuids=[],[],[]
+        for pic in self.wire_train_pictures.find():
+            pics.append(pickle.loads(pic["pic_data"]))
+            uuids.append(pic["pic_uuid"])
+            user_uuids.append(pic["user_uuid"])
+        return pics, uuids, user_uuids
+
+    def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
+        # TODO: Take a look at what this funciton is supposed to do. 
+        # Decide whether you want to implement it or not.
+
+        # Returns True/False on Success or Error
+        # Pickles Picture and inserts it into DB
+        # pic : picture to be saved as np.ndarray
+        # user_uuid : id of user wich owns picture
+
+        # TODO: Error Handling, in the rare case that a duplicate 
+        # uuid is generated this method has to try again
+        
+        raise NotImplementedError
+
+    def getPicture(self,query : str):
+        # TODO: was not implemented yet
+        raise NotImplementedError
+
+class wire_DB(BBDB):
+    def __init__(self):
+        BBDB.__init__(self)
+
+    def getTrainingPictures(self, **kwargs):
+        """
+        Returns training pictures from the database from the wire resource context
+        """
+
+        #TODO not needed if only "wire" resource context is needed here
+        '''
+        username = None
+
+        for key, value in kwargs.items():
+            if key == "user_uuid":
+                user_uuid = value
+            elif key == "username":
+                username = value
+        
+        if user_uuid and not username:
+            username = self.user.find_one({"user_uuid":user_uuid})["username"] 
+
+        if not username:
+            print("WARNING: Database Login Failed!")
+            return None, None
+        '''
+        if not self.resource_context.find({"name":"wire"}):
+            self.resource_context.insert_one({"_id":uuid.uuid1(),"name":"wire","username":None,"res_id":[]})
+        
+        pics = []
+        for resource_id in self.resource_context.find({"name":"wire"})["res_id"]:
+            resource = self.resource.find_one({"_id":resource_id})
+            pics.append(pickle.loads(resource["res"]))
+
+        return pics
+    
     def insertTrainingPicture(self, pic:np.ndarray, user_uuid:uuid.UUID):
         """
         Inserts a new training picture into the database and returns the 
@@ -293,51 +358,22 @@ class BBDB:
         Exception:
         TypeError -- Gets risen if the type of the input isn't the expected type.
         """
-        # TODO: Only commented out for testing purposes
-        #if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
-        #    raise TypeError
+
+        if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
+            raise TypeError
         
-        # TODO: Make sure pic_uuid is unique?
-        pic_uuid = str(uuid.uuid1())
-        self.wire_train_pictures.insert_one({
-            "user_uuid" : user_uuid,
-            "pic_data" : pickle.dumps(pic),
-            "pic_uuid" : pic_uuid})
+        pic_uuid = uuid.uuid1()
+        self.resource.insert_one({
+            "_id" : pic_uuid,
+            "user_id" : user_uuid,
+            "res" : pickle.dumps(pic),
+            "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
+            "pic_uuid" : pic_uuid
+        })
+        
+        self.resource_context.update_one({"name":"wire"},{"$addToSet":{"res_id":pic_uuid}})
         return pic_uuid
 
-    def getTrainingPictures(self, where : str):
-        """
-        Returns training pictures from the database with the given where clause
-        """
-        # TODO: Discuss. Change the logic of this function, because the 
-        # is hard to parse.
-        # TODO: This code is likely not to be correct. Change this code!
-        pics,uuids = [],[]
-        where = where.replace(" ","") #removes all whitespaces to have a cleaner format to work with
-        if "where" == "*":
-            for pic in self.wire_train_pictures.find():
-                pics.append(pickle.loads(pic["pic_data"]))
-                uuids.append(pic["pic_uuid"])
-        else:
-            pass
-            #assuming that where is always of the format """WHERE 'name' = 'John Doe' """
-            #self.wire_train_pictures.find({"name":where.split("='")[1].split("'")[0]})
-            #pics.append(pickle.loads(pic["pic_data"]))
-            #uuids.append(pic["pic_uuid"])
-        
-        return pics,uuids
-
-    def getAllTrainingsImages(self):
-        """
-        Returns all training images from the database in three lists: 
-        pics, uuids, user_uuids
-        """
-        pics,uuids,user_uuids=[],[],[]
-        for pic in self.wire_train_pictures.find():
-            pics.append(pickle.loads(pic["pic_data"]))
-            uuids.append(pic["pic_uuid"])
-            user_uuids.append(pic["user_uuid"])
-        return pics, uuids, user_uuids
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
         # TODO: Take a look at what this funciton is supposed to do. 
