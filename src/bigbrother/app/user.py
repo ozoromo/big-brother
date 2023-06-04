@@ -63,7 +63,7 @@ class BigBrotherUser(UserMixin):
                 print(pic.astype('uint8'))
                 print(pic.astype('uint8').shape)
                 return
-
+"""
         # TODO Fix
         # Log-Daten aus MongoDB abrufen
         login_collection = self.DB['login_table']
@@ -88,5 +88,5 @@ class BigBrotherUser(UserMixin):
             self.childUser.append(child_user)
        
     def get_id(self):
-        return self.uuid
+        return self.uuid"""
 

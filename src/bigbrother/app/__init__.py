@@ -354,7 +354,7 @@ def create():
 
             print("'{}' already exists!".format(user['username']),file=sys.stdout)
 
-            rejectionDict['reason'] = "Benutzername '{}' nicht Verfügbar".format(user['username'])
+            rejectionDict['reason'] = "Benutzername '{}' ist bereits vergeben!".format(user['username'])
 
             return render_template('rejection.html',  rejectionDict = rejectionDict, title='Reject', form=form)
 

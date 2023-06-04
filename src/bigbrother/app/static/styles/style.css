@@ -11,7 +11,7 @@
 
 body {
     color: black;
-	background: #ffffff url(https://norbertbiedrzycki.pl/wp-content/uploads/2020/09/You_face_Norbert_Biedrzycki.jpg) no-repeat fixed center center;
+	background: #ffffff url(https://images.hdqwalls.com/wallpapers/white-cube-pattern-4k-bu.jpg) no-repeat fixed center center;
 	background-size: cover;
 }
 
@@ -19,9 +19,14 @@ body {
 	margin: 10px;
 }
 
-h1{
-    text-align: center;
-}
+h1 {
+	text-align: center;
+	font-family: "Roboto", Arial, sans-serif;
+	color: #333333;
+	font-size: 36px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	}
 
 #center{
     text-align: center;
@@ -169,7 +174,7 @@ img{
 
 
 /*dropdown menu*/
-.dropdown {list-style: none; background: #2170BA; padding: 0;}
+.dropdown {list-style: none; background: #7d7d7d; padding: 0;}
 .dropdown .nav-link {color:#fff; text-decoration: none;}
 .dropdown .dropdown-menu a{color: #000; text-decoration: none;}
 .dropdown .btn {background: #336EFF; color:#fff;}
