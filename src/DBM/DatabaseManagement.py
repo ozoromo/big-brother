@@ -17,6 +17,7 @@ import datetime as dt
 from pytz import timezone
 import pymongo
 
+
 class BBDB:
     """Database Baseclass""" 
     def __init__(self, mongo_client=None):
@@ -35,8 +36,7 @@ class BBDB:
                                                socketTimeoutMS=None,
                                                connect=False,
                                                maxPoolsize=1)
-        else: 
-            self.cluster = mongo_client
+        self.cluster = mongo_client
         db = self.cluster["BigBrother"]
         self.user = db["user"]
         self.login_attempt = db["login_attempt"]
@@ -49,6 +49,12 @@ class BBDB:
         """
         self.cluster.close()
     
+    def closeGraceful(self):
+        """
+        not needed for mongodb
+        """
+        self.close()
+
     def closeGraceful(self):
         """
         not needed for mongodb
@@ -74,7 +80,7 @@ class BBDB:
         user_id = str(user_id)
         if self.user.find_one({"_id": user_id}):
             self.user.delete_one({"_id": user_id})
-            return True 
+            return True
         print("WARNING: Database Login Failed!")
         return False
 
@@ -99,11 +105,11 @@ class BBDB:
         """
         Fetches usernames from database belonging to the given uuids
 
-        Arguments:  
+        Arguments:
         uuids -- This is a list of user_uuid. Those are the uuids of which you want to get the usernames.
 
-        Return:  
-        Returns the a list of usernames that correspond to the user_uuid 
+        Return:
+        Returns the a list of usernames that correspond to the user_uuid
         that have been inputted. The index i of the return list corresponds
         to uuids[i] in the input.
         """
@@ -160,7 +166,7 @@ class BBDB:
                 time = value
             elif key == "inserted_pic_uuid":
                 inserted_pic_uuid = value
-            
+
             '''
             elif key == "success_res_id":
                 success_res_id = value
@@ -196,15 +202,15 @@ class BBDB:
         """
         Creates a new user in the database with the given username.
 
-        Arguments:  
+        Arguments:
         username -- The username of the new user.
         user_enc_res_id -- user_enc_res_id of the user (identifier from opencv)
 
-        Return:  
+        Return:
         If the user has been successfully registered then it returns the
         user_id of the user what has been created.
 
-        Exception:  
+        Exception:
         Raises an exception if the username already exists.
         """
         new_uuid = uuid.uuid1()
@@ -226,13 +232,13 @@ class BBDB:
         """
         Fetches all Users with their uuids and usernames from the database
 
-        Optional arguments:  
-        limit -- This argument sets the amount of users that you want to limit 
+        Optional arguments:
+        limit -- This argument sets the amount of users that you want to limit
         your request to. If it's set to a negative number (which it is by default),
         then the search isn't limited.
 
-        Return:  
-        If `limit` is negative then it returns a dictionary of all users and the 
+        Return:
+        If `limit` is negative then it returns a dictionary of all users and the
         associated usernames. If the limit is non-negative then it returns a
         list with `limit` amount of entries. The dictionary key are the user_uuid
         (with type uuid.UUID) and the value is the username (with type str).
@@ -272,7 +278,7 @@ class BBDB:
         user_id: ID of the user that should be deleted.
 
         Return:
-        Returns True if the user has been successfully deleted. And 
+        Returns True if the user has been successfully deleted. And
         False otherwise (e.g. user didn't exist in the database).
         """
         user_id = str(user_id)
@@ -288,11 +294,11 @@ class BBDB:
         """
         Returns the uuid corresponding to the username.
 
-        Arguments:  
+        Arguments:
         username -- The username of the user.
 
-        Return:  
-        Returns the uuid corresponding to the username. If the username 
+        Return:
+        Returns the uuid corresponding to the username. If the username
         doesn't exist then it returns None.
         """
         user_entry = self.user.find_one({"username": username})
@@ -330,7 +336,7 @@ class BBDB:
         # pic : picture to be saved as np.ndarray
         # user_uuid : id of user wich owns picture
 
-        # TODO: Error Handling, in the rare case that a duplicate 
+        # TODO: Error Handling, in the rare case that a duplicate
         # uuid is generated this method has to try again
         raise NotImplementedError
 
@@ -381,10 +387,10 @@ class wire_DB(BBDB):
             resource = self.resource.find_one({"_id": resource_id})
             pics.append(pickle.loads(resource["res"]))
         return pics
-    
+
     def insertTrainingPicture(self, pic: np.ndarray, user_uuid: uuid.UUID):
         """
-        Inserts a new training picture into the database and returns the 
+        Inserts a new training picture into the database and returns the
         uuid of the inserted picture.
 
         Arguments:
