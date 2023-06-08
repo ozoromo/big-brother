@@ -15,6 +15,7 @@ import pickle
 import uuid
 import datetime as dt
 from pytz import timezone
+from gridfs import GridFS
 import pymongo
 
 class BBDB:
@@ -34,6 +35,7 @@ class BBDB:
         """
         self.cluster = pymongo.MongoClient("mongodb+srv://admin:7EgqBof7tSUKlYBN@bigbrother.qse5xtp.mongodb.net/?retryWrites=true&w=majority",connectTimeoutMS=30000,socketTimeoutMS=None,connect=False,maxPoolsize=1)
         db = self.cluster["BigBrother"]
+        self.train_videos = db["train_videos"]
         self.wire_train_pictures = db["wire_train_pictures"]
         self.user_table = db["user_table"]
         self.admin_table = db["admin_table"]
@@ -420,6 +422,52 @@ class wire_DB(BBDB):
             uuids.append(pic["pic_uuid"])
             user_uuids.append(pic["user_uuid"])
         return pics, uuids, user_uuids
+
+class vid_DB(BBDB):
+    """Subclass from BBDB
+    Inherits Methods and Variables"""
+
+    def __init__(self,dbhost:str=None):
+        BBDB.__init__(self)
+
+    def insertVideo(self, vid:np.ndarray, user_uuid:uuid.UUID):
+        """
+        Inserts a new video into the database and returns the 
+        uuid of the inserted video.
+
+        Arguments:
+        vid       -- Video to be inserted into the database.
+        user_uuid -- ID of the user that owns the video.
+
+        Return:
+        Returns the uuid of the video that has been inserted into the database.
+
+        Exception:
+        TypeError -- Gets risen if the type of the input isn't the expected type.
+        """
+
+        if type(vid) != np.ndarray or type(user_uuid) != uuid.UUID:
+           raise TypeError
+        
+        bucket = GridFS(self.train_videos)
+        
+        # TODO: vid_uuid can be stored in GridFS file with the video
+        # vid_uuid = str(uuid.uuid1())
+        video_id = bucket.put(pickle.dumps(vid), user_uuid=user_uuid)
+        
+        return video_id
+
+    def getVideo(self, video_id:str):
+
+        bucket = GridFS(self.train_videos)
+        video = pickle.load(bucket.get(video_id))
+        # TODO: create video stream functionality
+        # video_stream = bucket.openDownloadStream()
+
+        return video
+
+
+
 
 class opencv_DB(BBDB):
     # TODO: Discuss. REMOVEABLE?
