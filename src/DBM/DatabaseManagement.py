@@ -457,8 +457,8 @@ class vid_DB(BBDB):
     """Subclass from BBDB
     Inherits Methods and Variables"""
 
-    def __init__(self,dbhost:str=None):
-        BBDB.__init__(self)
+    def __init__(self,dbhost=None):
+        BBDB.__init__(self, dbhost)
 
     def insertVideo(self, vid, user_uuid:uuid.UUID):
         """

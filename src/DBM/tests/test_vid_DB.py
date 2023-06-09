@@ -5,6 +5,7 @@ sys.path.append("..")
 
 from parameterized import parameterized
 import mongomock
+from mongomock.gridfs import enable_gridfs_integration
 from PIL import Image
 import numpy as np
 import cv2
@@ -17,8 +18,12 @@ class WireDBTest(unittest.TestCase):
                          f"Expected {expected}, but {check} found.")
 
     def setUp(self):
-        client = mongomock.MongoClient()
+        client = mongomock.MongoClient(connectTimeoutMS=30000,
+                                       socketTimeoutMS=None,
+                                       connect=False,
+                                       maxPoolsize=1)
         self.db = vid_DB(client)
+        enable_gridfs_integration()
 
     def test_video_insertion_and_retrival(self):
         source = "videos/Program in C Song.mp4"
