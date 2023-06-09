@@ -40,11 +40,11 @@ class BBDB:
         else: 
             self.cluster = mongo_client
 
-        db = self.cluster["BigBrother"]
-        self.user = db["user"]
-        self.login_attempt = db["login_attempt"]
-        self.resource = db["resource"]
-        self.resource_context = db["resource_context"]
+        self.db = self.cluster["BigBrother"]
+        self.user = self.db["user"]
+        self.login_attempt = self.db["login_attempt"]
+        self.resource = self.db["resource"]
+        self.resource_context = self.db["resource_context"]
 
     def close(self):
         """
@@ -447,13 +447,15 @@ class vid_DB(BBDB):
     def __init__(self,dbhost:str=None):
         BBDB.__init__(self)
 
-    def insertVideo(self, vid:np.ndarray, user_uuid:uuid.UUID):
+    def insertVideo(self, vid, user_uuid:uuid.UUID):
         """
         Inserts a new video into the database and returns the 
         uuid of the inserted video.
 
         Arguments:
-        vid       -- Video to be inserted into the database.
+        vid -- The source stream of the video that is getting uploaded.
+        This has to be a file-like object that implements `read()`. 
+        Alternatively it's also allowed to be a string.
         user_uuid -- ID of the user that owns the video.
 
         Return:
@@ -462,15 +464,15 @@ class vid_DB(BBDB):
         Exception:
         TypeError -- Gets risen if the type of the input isn't the expected type.
         """
-
-        if type(vid) != np.ndarray or type(user_uuid) != uuid.UUID:
+        if type(user_uuid) != uuid.UUID:
            raise TypeError
-        
-        fs = GridFSBucket(self.resource)
+
+        fs = GridFSBucket(self.db, "resource")
         vid_uuid = str(uuid.uuid1())
 
         fs.upload_from_stream_with_id(
             vid_uuid,
+            str(vid_uuid),
             source = vid,
             metadata = {
                 "user_id": str(user_uuid),
@@ -485,17 +487,12 @@ class vid_DB(BBDB):
         
         return uuid.UUID(vid_uuid)        
 
-    def getVideoStream(self, vid_uuid):
-
+    def getVideoStream(self, vid_uuid, stream):
         if type(vid_uuid) != uuid.UUID:
            raise TypeError
 
-        video_id = str(vid_uuid)
-
-        fs = GridFSBucket(self.resource)
-        grid_out = fs.open_download_stream(video_id)
-        
-        return grid_out
+        fs = GridFSBucket(self.db, "resource")
+        fs.download_to_stream(str(vid_uuid), stream)
 
 
 
