@@ -104,6 +104,22 @@ class BBDB:
         print("WARNING: AddAdminRelation Failed!")
         return False
 
+    def checkUserIDExists(self, uuid: uuid.UUID):
+        """
+        Checks whether a certain uuid already exists.
+
+        Arguments: 
+        uuid -- The user id that you want to verify.
+
+        Return:
+        Returns True if the user id exists already and false if it doesn't
+        exist.
+        """
+        for existing_uuid in self.getUsers():
+            if existing_uuid == uuid:
+                return True
+        return False
+
     def getUsername(self, uuids: list):
         """
         Fetches usernames from database belonging to the given uuids
@@ -217,9 +233,8 @@ class BBDB:
         Raises an exception if the username already exists.
         """
         new_uuid = uuid.uuid1()
-        for existing_uuid in self.getUsers():
-            while existing_uuid == new_uuid:
-                new_uuid = uuid.uuid1()
+        while self.checkUserIDExists(new_uuid):
+            new_uuid = uuid.uuid1()
 
         if self.user.find_one({"username" : username}):
             raise UsernameExists("Username in use!")
@@ -366,7 +381,6 @@ class wire_DB(BBDB):
         """
         Returns training pictures from the database from the wire resource context
         """
-
         # TODO: We need to be able to verify whether a certain user with the 
         # user_id exists before we check
         # TODO: Find a way to make this prettier
@@ -431,7 +445,6 @@ class wire_DB(BBDB):
         # user_uuid : id of user wich owns picture
         # => Error Handling, in the rare case that a duplicate 
         # uuid is generated this method has to try again
-        
         raise NotImplementedError
 
     def getPicture(self, query : str):
@@ -487,7 +500,18 @@ class vid_DB(BBDB):
         
         return uuid.UUID(vid_uuid)        
 
-    def getVideoStream(self, vid_uuid, stream):
+    def getVideoStream(self, vid_uuid: uuid.UUID, stream):
+        """
+        Writes video with certain id into the stream.
+
+        Arguments:
+        vid_uuid: This is the id of the video that you want to get.
+        stream -- The destination stream of the video that is getting downloaded.
+        This has to be a file-like object that implements `write()`. 
+
+        Exception:
+        TypeError -- Gets risen if the type of the input isn't the expected type.
+        """
         if type(vid_uuid) != uuid.UUID:
            raise TypeError
 
