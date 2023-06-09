@@ -41,20 +41,10 @@ class BBDB:
             self.cluster = mongo_client
 
         db = self.cluster["BigBrother"]
-<<<<<<< HEAD
-        self.train_videos = db["train_videos"]
-        self.wire_train_pictures = db["wire_train_pictures"]
-        self.user_table = db["user_table"]
-        self.admin_table = db["admin_table"]
-        self.login_table = db["login_table"]
-        self.benchmark_pictures = db["benchmark_pictures"]
-        self.gesture_videos = db["gesture_videos"]
-=======
         self.user = db["user"]
         self.login_attempt = db["login_attempt"]
         self.resource = db["resource"]
         self.resource_context = db["resource_context"]
->>>>>>> DB/tests
 
     def close(self):
         """
