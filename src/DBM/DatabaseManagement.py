@@ -15,7 +15,7 @@ import pickle
 import uuid
 import datetime as dt
 from pytz import timezone
-from gridfs import GridFS, GridFSBucket
+from gridfs import GridFSBucket
 import pymongo
 
 
