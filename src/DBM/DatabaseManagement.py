@@ -15,7 +15,7 @@ import pickle
 import uuid
 import datetime as dt
 from pytz import timezone
-from gridfs import GridFS
+from gridfs import GridFS, GridFSBucket
 import pymongo
 
 
@@ -41,20 +41,10 @@ class BBDB:
             self.cluster = mongo_client
 
         db = self.cluster["BigBrother"]
-<<<<<<< HEAD
-        self.train_videos = db["train_videos"]
-        self.wire_train_pictures = db["wire_train_pictures"]
-        self.user_table = db["user_table"]
-        self.admin_table = db["admin_table"]
-        self.login_table = db["login_table"]
-        self.benchmark_pictures = db["benchmark_pictures"]
-        self.gesture_videos = db["gesture_videos"]
-=======
         self.user = db["user"]
         self.login_attempt = db["login_attempt"]
         self.resource = db["resource"]
         self.resource_context = db["resource_context"]
->>>>>>> DB/tests
 
     def close(self):
         """
@@ -476,22 +466,36 @@ class vid_DB(BBDB):
         if type(vid) != np.ndarray or type(user_uuid) != uuid.UUID:
            raise TypeError
         
-        bucket = GridFS(self.train_videos)
+        fs = GridFSBucket(self.resource)
+        vid_uuid = str(uuid.uuid1())
+
+        fs.upload_from_stream_with_id(
+            vid_uuid,
+            source = vid,
+            metadata = {
+                "user_id": str(user_uuid),
+                "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
+            }
+        )
         
-        # TODO: vid_uuid can be stored in GridFS file with the video
-        # vid_uuid = str(uuid.uuid1())
-        video_id = bucket.put(pickle.dumps(vid), user_uuid=user_uuid)
+        self.resource_context.update_one(
+            {"name": "video"},
+            {"$addToSet": {"res_id": vid_uuid}}
+        )
         
-        return video_id
+        return uuid.UUID(vid_uuid)        
 
-    def getVideo(self, video_id:str):
+    def getVideoStream(self, vid_uuid):
 
-        bucket = GridFS(self.train_videos)
-        video = pickle.load(bucket.get(video_id))
-        # TODO: create video stream functionality
-        # video_stream = bucket.openDownloadStream()
+        if type(vid_uuid) != uuid.UUID:
+           raise TypeError
 
-        return video
+        video_id = str(vid_uuid)
+
+        fs = GridFSBucket(self.resource)
+        grid_out = fs.open_download_stream(video_id)
+        
+        return grid_out
 
 
 
