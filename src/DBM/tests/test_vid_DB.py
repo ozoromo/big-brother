@@ -25,7 +25,12 @@ class WireDBTest(unittest.TestCase):
         self.db = vid_DB(client)
         enable_gridfs_integration()
 
+    def test_video_insertion_non_existent_user(self):
+        # TODO: Implement
+        pass
+
     def test_video_insertion_and_retrival(self):
+        # TODO: make sure that user_uuid exists
         source = "videos/Program in C Song.mp4"
         compare = "tmp/test.mp4"
 

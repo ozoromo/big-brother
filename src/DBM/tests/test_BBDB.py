@@ -102,5 +102,34 @@ class BBDBTest(unittest.TestCase):
         self.output_assertEqual(self.db.getUsername(user_ids[::-1]), usernames[::-1])
         self.output_assertEqual(self.db.getUsername(user_ids[::3]), usernames[::3])
 
+    def test_registration_with_existing_username(self):
+        # TODO: Implement
+        pass
+
+    def test_getters_no_users(self):
+        # TODO: Implement
+        pass
+
+    def test_login_users(self):
+        # TODO: Implement
+        pass
+
+    def test_basic_login_workflow(self):
+        # TODO: Implement
+        pass
+
+    def test_basic_user_deletion(self):
+        # TODO: Implement
+        pass
+
+    def test_deletion_non_existing_user(self):
+        # TODO: Implement
+        pass
+
+    def test_duplicate_getUsers(self):
+        # TODO: Implement
+        # The list of the function will contain multiple same uuids or usernames
+        pass
+
 if __name__ == "__main__":
     unittest.main()

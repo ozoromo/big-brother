@@ -19,8 +19,9 @@ class WireDBTest(unittest.TestCase):
         client = mongomock.MongoClient()
         self.db = wire_DB(mongo_client=client)
     
-    def test_insertTrainingPicture(self):
+    def test_basic_insertion_and_retrieval_training_pic(self):
         # TODO: Put encoding into the registration
+        # TODO: Finish implementation
         user_ids = [self.db.register_user("sylphid", None),
                    self.db.register_user("number", None),]
         
@@ -37,6 +38,14 @@ class WireDBTest(unittest.TestCase):
         # convert back
         pilImage = Image.fromarray(img_np.astype('uint8'))
         pilImage.save("test.jpg")
+
+    def test_insertion_for_non_existing_user(self):
+        # TODO: Implement
+        pass
+    
+    def test_insertion_of_non_existing_picture(self):
+        # TODO: Implement
+        pass
 
 if __name__ == "__main__":
     unittest.main()
