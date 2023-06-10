@@ -159,12 +159,12 @@ def load_images(path: str,user_uuid : uuid.UUID, file_ending: str=".png") -> (li
     # Useful functions: lib.list_directory(), matplotlib.image.imread(), numpy.asarray()
     #img_str_list = lib.list_directory(path)
 
-    DB = DatabaseManagement.wire_DB('h2938366.stratoserver.net')
+    DB = DatabaseManagement.wire_DB()
     uuids = []
 
     if path == "./data/train/":
 
-        images,uuids = DB.getTrainingPictures("""WHERE user_uuid = '{}'""".format(user_uuid))
+        images,uuids = DB.getTrainingPictures(user_uuid=user_uuid)
 
 
         for image_index, image in enumerate(images):
