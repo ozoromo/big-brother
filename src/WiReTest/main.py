@@ -146,7 +146,8 @@ def load_images(path: str, user_uuid: uuid.UUID, file_ending: str = ".png") -> T
         images,uuids = DB.getTrainingPictures(user_uuid=user_uuid)
 
         for image_index, image in enumerate(images):
-            images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.COLOR_BGR2GRAY)
+            # images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.COLOR_BGR2GRAY)
+            images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.CV_32S)
         
         for img_str in sorted(img_str_list):
             if img_str[-3:] != "png":
