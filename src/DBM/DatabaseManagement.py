@@ -396,7 +396,13 @@ class wire_DB(BBDB):
                         "_id": {"$in": self.wire_context_collection["res_id"]},
                     })
 
-        return [pickle.loads(r["res"]) for r in resources], [r["_id"] for r in resources]
+        pics = []
+        ids = []
+        for r in resources:
+            pics.append(pickle.loads(r["res"]))
+            ids.append(r["_id"])
+
+        return pics, ids
     
     def insertTrainingPicture(self, pic: np.ndarray, user_uuid: uuid.UUID):
         """
