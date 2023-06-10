@@ -239,7 +239,6 @@ def login():
             
             # TODO: Take a look at why it was set to user_uuid[0]
             # user_uuid =uuid.UUID(user_uuid[0]) old code outputted a list
-            user_uuid = uuid.UUID(user_uuid)
             user['uuid'] = user_uuid
             #Get Picture Path
             #print("test3",file=sys.stdout)
