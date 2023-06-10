@@ -16,11 +16,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'..','DBM'))
 import DatabaseManagement
 import uuid
 import cv2
+from typing import Tuple
 
-####################################################################################################
-# Exercise 1: Power Iteration
-
-def power_iteration(M: np.ndarray, epsilon: float = -1.0) -> (np.ndarray, list):
+def power_iteration(M: np.ndarray, epsilon: float = -1.0) -> Tuple[np.ndarray, list]:
     """
     Compute largest eigenvector of matrix M using power iteration. It is assumed that the
     largest eigenvalue of M, in magnitude, is well separated.
@@ -62,28 +60,23 @@ def power_iteration(M: np.ndarray, epsilon: float = -1.0) -> (np.ndarray, list):
         x = vector
         z = M @ vector
         vector = z / np.linalg.norm(z)
-        #print(vector)
         residual = np.linalg.norm(x - vector)
         residuals.append(residual)
 
 
     return vector, residuals
 
-
-####################################################################################################
-# Exercise 2: Eigenfaces
-
 def insertTrainImages(path: str):
 
     print("start")
-    DB = DatabaseManagement.wire_DB('h2938366.stratoserver.net')
-
+    DB = DatabaseManagement.wire_DB()
     images = []
 
     # TODO read each image in path as numpy.ndarray and append to images
     # Useful functions: lib.list_directory(), matplotlib.image.imread(), numpy.asarray()
     table_name = ""
-    if path == "./data/train/":
+    curDir = os.path.dirname(os.path.abspath(__file__))
+    if path == f"{curDir}/data/train/":
         table_name = "backend.wire_train"
     else:
         table_name = "backend.wire_test"
@@ -129,7 +122,7 @@ def insertTrainImages(path: str):
     DB.closeGraceful()
 
 
-def load_images(path: str,user_uuid : uuid.UUID, file_ending: str=".png") -> (list, int, int):
+def load_images(path: str, user_uuid: uuid.UUID, file_ending: str = ".png") -> Tuple[list, int, int]:
     """
     Load all images in path with matplotlib that have given file_ending
 
@@ -142,22 +135,15 @@ def load_images(path: str,user_uuid : uuid.UUID, file_ending: str=".png") -> (li
     dimension_x: size of images in x direction
     dimension_y: size of images in y direction
     """
-    #print("Starting DB Download")
-    #Database
-
     images = []
 
-    # TODO read each image in path as numpy.ndarray and append to images
-    # Useful functions: lib.list_directory(), matplotlib.image.imread(), numpy.asarray()
+    curDir = os.path.dirname(os.path.abspath(__file__))
     img_str_list = lib.list_directory(path)
-
     DB = DatabaseManagement.wire_DB()
     uuids = []
 
-    if path == "./data/train/":
-
+    if path == f"{curDir}/data/train/":
         images,uuids = DB.getTrainingPictures(user_uuid=user_uuid)
-
 
         for image_index, image in enumerate(images):
             images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.COLOR_BGR2GRAY)
@@ -169,21 +155,13 @@ def load_images(path: str,user_uuid : uuid.UUID, file_ending: str=".png") -> (li
             images.append(np.asarray(mpl.image.imread(im_path), dtype=np.float64))
             images.append(mpl.image.imread(im_path))
         DB.closeGraceful()
-
-
-
     else:
-
         img_str_list = lib.list_directory(path)
 
         for img_str in sorted(img_str_list):
 
             if img_str[-3:] != "png":
-
-                #raise ValueError("Incorrect Data Type")
-
                 continue
-
             im_path = path + img_str
 
             images.append(np.asarray(mpl.image.imread(im_path), dtype=np.float64))
@@ -214,24 +192,13 @@ def setup_data_matrix(images: list) -> np.ndarray:
     Return:
     D: data matrix that contains the flattened images as rows
     """
-    # TODO: initialize data matrix with proper size and data type
+
     image_nbr = len(images)
-    #print(type(images[0]))
     im_s = images[0].shape
     D = np.zeros((image_nbr, im_s[0] * im_s[1]))
 
-
-
-    # TODO: add flattened images to data matrix
-
-
     for img_index, img in enumerate(images):
-        #img = img.reshape(im_s[0] * im_s[1])
-        #print(img)
         for row_index, row in enumerate(img):
-            #c = row_index * im_s[1]
-            #D[img_index][c] = img
-
             for val_index,val in enumerate(row):
 
                 data_offset = row_index * im_s[1]
@@ -239,25 +206,7 @@ def setup_data_matrix(images: list) -> np.ndarray:
                 try:
                     D[img_index][data_index] = val
                 except Exception:
-                    #print(type(val))
                     D[img_index][data_index] = (val[0] + val[1] + val[2]) / 3
-
-
-    """
-    for img_index, img in enumerate(images):
-        print(im_s[0])
-        print(im_s[1])
-        print(img.shape[0])
-        print(img.shape[1])
-
-        print(im_s[0] * im_s[1])
-        print(img.shape[0] * img.shape[1])
-
-        #D[img_index] = img.reshape(im_s[0] * im_s[1])
-        D[img_index] += img.reshape(img.shape[0] * img.shape[1])
-    """
-
-
     return D
 
 
@@ -273,24 +222,9 @@ def calculate_pca(D: np.ndarray) -> (np.ndarray, np.ndarray, np.ndarray):
     svals: singular values associated with principle components
     mean_data: mean that was subtracted from data
     """
-
-    # TODO: subtract mean from data / center data at origin
-    #print(D)
-    #print(D.shape)
     ds = D.shape
     mean_data = np.zeros(ds[1])
 
-    """
-    for k in range(ds[0]):
-
-        mean_data = np.zeros(ds[0] * ds[1])
-
-        for n in range(ds[1]):
-
-            mean_data[n] += D[k][n]
-
-        mean_data /= ds[0]
-    """
     for n in range(ds[1]):
 
         for k in range(ds[0]):
@@ -298,12 +232,7 @@ def calculate_pca(D: np.ndarray) -> (np.ndarray, np.ndarray, np.ndarray):
             mean_data[n] += D[k][n]
 
     mean_data /= ds[0]
-
     D -= mean_data
-
-    # TODO: compute left and right singular vectors and singular values
-    # Useful functions: numpy.linalg.svd(..., full_matrices=False)
-    #svals, pcs = [np.ones((1, 1))] * 2
     lvals,svals , pcs = np.linalg.svd(D, full_matrices=False)
 
     return pcs, svals, mean_data
@@ -321,14 +250,9 @@ def accumulated_energy(singular_values: np.ndarray, threshold: float = 0.8) -> i
     Return:
     k: threshold index
     """
-
-    # TODO: Normalize singular value magnitudes
-
     norm_sing = singular_values / np.linalg.norm(singular_values)
 
     k = 0
-    # TODO: Determine k that first k singular values make up threshold percent of magnitude
-
     total = 0
 
     for val in norm_sing:
@@ -343,7 +267,6 @@ def accumulated_energy(singular_values: np.ndarray, threshold: float = 0.8) -> i
 
         k += 1
 
-    #print(k)
     return k
 
 
@@ -360,36 +283,15 @@ def project_faces(pcs: np.ndarray, images: list, mean_data: np.ndarray) -> np.nd
     coefficients: basis function coefficients for input images, each row contains coefficients of one image
     """
 
-    # TODO: initialize coefficients array with proper size
     coefficients = np.zeros((len(images), pcs.shape[0]))
-
-    #mpl.pyplot.imshow(images[0], cmap="Greys_r")
-    #mpl.pyplot.show()
-
-    # TODO: iterate over images and project each normalized image into principal component basis
     images = setup_data_matrix(images)
-
-    #mpl.pyplot.imshow(images[0].reshape(116,98), cmap="Greys_r")
-    #mpl.pyplot.show()
-
-
-    #
-    #Normalize
-    #
 
     for img_index, img in enumerate(images):
         images[img_index] = images[img_index] - mean_data
 
-    #mpl.pyplot.imshow(images[0].reshape(116,98), cmap="Greys_r")
-    #mpl.pyplot.show()
-
-
     for img_index, img in enumerate(images):
         for row_index, row in enumerate(pcs):
             coefficients[img_index][row_index] = np.dot(row,img)
-
-    #mpl.pyplot.imshow(coefficients, cmap="Greys_r")
-    #mpl.pyplot.show()
 
     return coefficients
 
@@ -433,16 +335,9 @@ np.ndarray, list, np.ndarray):
         for train_img_index, coeff_train in enumerate(coeffs_train):
             scores[train_img_index][img_index] = np.arccos(np.dot(coeff_test,coeff_train)/(np.linalg.norm(coeff_test)*np.linalg.norm(coeff_train)))
 
-    #print(scores)
-    #print(scores)
     return scores, imgs_test, coeffs_test
 
-#insertTrainImages("./data/train/")
-#insertAllImages("./data/test/")
-
-
 if __name__ == '__main__':
-
     print("All requested functions for the assignment have to be implemented in this file and uploaded to the "
           "server for the grading.\nTo test your implemented functions you can "
           "implement/run tests in the file tests.py (> python3 -v test.py [Tests.<test_function>]).")
