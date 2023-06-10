@@ -15,6 +15,7 @@ import pickle
 import uuid
 import datetime as dt
 from pytz import timezone
+from gridfs import GridFSBucket
 import pymongo
 
 
@@ -36,12 +37,14 @@ class BBDB:
                                                socketTimeoutMS=None,
                                                connect=False,
                                                maxPoolsize=1)
-        self.cluster = mongo_client
-        db = self.cluster["BigBrother"]
-        self.user = db["user"]
-        self.login_attempt = db["login_attempt"]
-        self.resource = db["resource"]
-        self.resource_context = db["resource_context"]
+        else: 
+            self.cluster = mongo_client
+
+        self.db = self.cluster["BigBrother"]
+        self.user = self.db["user"]
+        self.login_attempt = self.db["login_attempt"]
+        self.resource = self.db["resource"]
+        self.resource_context = self.db["resource_context"]
 
     def close(self):
         """
@@ -99,6 +102,22 @@ class BBDB:
             self.user.update_one({"_id": user_id}, {"$set": {"is_admin": True}})
             return True
         print("WARNING: AddAdminRelation Failed!")
+        return False
+
+    def checkUserIDExists(self, uuid: uuid.UUID):
+        """
+        Checks whether a certain uuid already exists.
+
+        Arguments: 
+        uuid -- The user id that you want to verify.
+
+        Return:
+        Returns True if the user id exists already and false if it doesn't
+        exist.
+        """
+        for existing_uuid in self.getUsers():
+            if existing_uuid == uuid:
+                return True
         return False
 
     def getUsername(self, uuids: list):
@@ -214,9 +233,8 @@ class BBDB:
         Raises an exception if the username already exists.
         """
         new_uuid = uuid.uuid1()
-        for existing_uuid in self.getUsers():
-            while existing_uuid == new_uuid:
-                new_uuid = uuid.uuid1()
+        while self.checkUserIDExists(new_uuid):
+            new_uuid = uuid.uuid1()
 
         if self.user.find_one({"username" : username}):
             raise UsernameExists("Username in use!")
@@ -347,33 +365,8 @@ class BBDB:
         raise NotImplementedError
 
 class wire_DB(BBDB):
-    def __init__(self):
-        BBDB.__init__(self)
-        # TODO: Discuss keeping a reference to the resource_context with
-        # name WiRe in order to make the code and debugging simpler
-
-    def getTrainingPictures(self, **kwargs):
-        """
-        Returns training pictures from the database from the wire resource context
-        """
-
-        #TODO not needed if only "wire" resource context is needed here
-        '''
-        username = None
-
-        for key, value in kwargs.items():
-            if key == "user_uuid":
-                user_uuid = value
-            elif key == "username":
-                username = value
-        
-        if user_uuid and not username:
-            username = self.user.find_one({"user_uuid":user_uuid})["username"] 
-
-        if not username:
-            print("WARNING: Database Login Failed!")
-            return None, None
-        '''
+    def __init__(self, mongo_client=None):
+        BBDB.__init__(self, mongo_client=mongo_client)
         if not self.resource_context.find({"name": "wire"}):
             self.resource_context.insert_one({
                 "_id": uuid.uuid1(), # TODO: Collision is possible. If many items in resource_context
@@ -382,12 +375,28 @@ class wire_DB(BBDB):
                 "name": "wire",
                 "username": None,
                 "res_id": []})
-        pics = []
-        for resource_id in self.resource_context.find({"name": "wire"})["res_id"]:
-            resource = self.resource.find_one({"_id": resource_id})
-            pics.append(pickle.loads(resource["res"]))
-        return pics
+        self.wire_context_collection = self.resource_context.find({"name": "wire"})
 
+    def getTrainingPictures(self, user_uuid: uuid.UUID = None):
+        """
+        Returns training pictures from the database from the wire resource context
+        """
+        # TODO: We need to be able to verify whether a certain user with the 
+        # user_id exists before we check
+        # TODO: Find a way to make this prettier
+        resources = None
+        if user_uuid: 
+            resources = self.resource.find({
+                        "_id": {"$in": self.wire_context_collection["res_id"]},
+                        "user_id": str(user_uuid),
+                    })
+        else: 
+            resources = self.resource.find({
+                        "_id": {"$in": self.wire_context_collection["res_id"]},
+                    })
+
+        return [pickle.loads(r["res"]) for r in resources]
+    
     def insertTrainingPicture(self, pic: np.ndarray, user_uuid: uuid.UUID):
         """
         Inserts a new training picture into the database and returns the
@@ -407,13 +416,15 @@ class wire_DB(BBDB):
         if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
             raise TypeError
         
+        # TODO: There might be some problems if multiple files are inserted
+        # concurrently
         pic_uuid = str(uuid.uuid1())
         self.resource.insert_one({
             "_id" : pic_uuid,
-            "user_id" : str(user_uuid),
+            "user_id": str(user_uuid),
             "res" : pickle.dumps(pic),
             "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
-            "pic_uuid" : pic_uuid
+            "pic_uuid": pic_uuid
         })
         self.resource_context.update_one(
                 {"name": "wire"},
@@ -434,7 +445,6 @@ class wire_DB(BBDB):
         # user_uuid : id of user wich owns picture
         # => Error Handling, in the rare case that a duplicate 
         # uuid is generated this method has to try again
-        
         raise NotImplementedError
 
     def getPicture(self, query : str):
@@ -442,6 +452,74 @@ class wire_DB(BBDB):
         This function has not been implemented.
         """
         raise NotImplementedError
+
+class vid_DB(BBDB):
+    """Subclass from BBDB
+    Inherits Methods and Variables"""
+
+    def __init__(self,dbhost=None):
+        BBDB.__init__(self, dbhost)
+
+    def insertVideo(self, vid, user_uuid:uuid.UUID):
+        """
+        Inserts a new video into the database and returns the 
+        uuid of the inserted video.
+
+        Arguments:
+        vid -- The source stream of the video that is getting uploaded.
+        This has to be a file-like object that implements `read()`. 
+        Alternatively it's also allowed to be a string.
+        user_uuid -- ID of the user that owns the video.
+
+        Return:
+        Returns the uuid of the video that has been inserted into the database.
+
+        Exception:
+        TypeError -- Gets risen if the type of the input isn't the expected type.
+        """
+        if type(user_uuid) != uuid.UUID:
+           raise TypeError
+
+        fs = GridFSBucket(self.db, "resource")
+        vid_uuid = str(uuid.uuid1())
+
+        fs.upload_from_stream_with_id(
+            vid_uuid,
+            str(vid_uuid),
+            source = vid,
+            metadata = {
+                "user_id": str(user_uuid),
+                "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
+            }
+        )
+        
+        self.resource_context.update_one(
+            {"name": "video"},
+            {"$addToSet": {"res_id": vid_uuid}}
+        )
+        
+        return uuid.UUID(vid_uuid)        
+
+    def getVideoStream(self, vid_uuid: uuid.UUID, stream):
+        """
+        Writes video with certain id into the stream.
+
+        Arguments:
+        vid_uuid: This is the id of the video that you want to get.
+        stream -- The destination stream of the video that is getting downloaded.
+        This has to be a file-like object that implements `write()`. 
+
+        Exception:
+        TypeError -- Gets risen if the type of the input isn't the expected type.
+        """
+        if type(vid_uuid) != uuid.UUID:
+           raise TypeError
+
+        fs = GridFSBucket(self.db, "resource")
+        fs.download_to_stream(str(vid_uuid), stream)
+
+
+
 
 class opencv_DB(BBDB):
     def __init__(self):
