@@ -6,7 +6,7 @@ sys.path.append("..")
 from parameterized import parameterized
 import mongomock
 
-from DatabaseManagement import BBDB
+from DatabaseManagement import BBDB, UsernameExists
 
 class BBDBTest(unittest.TestCase):
     def output_assertEqual(self, check, expected):
@@ -103,12 +103,30 @@ class BBDBTest(unittest.TestCase):
         self.output_assertEqual(self.db.getUsername(user_ids[::3]), usernames[::3])
 
     def test_registration_with_existing_username(self):
-        # TODO: Implement
-        pass
+        """
+        Test registration with existing username.
+        """
+        # TODO: User encoding ID ask again...
+        self.db.register_user("name", None)
+        self.assertRaises(UsernameExists, 
+                          self.db.register_user("name", None),
+                          "Username already exists, but on exception")
 
     def test_getters_no_users(self):
-        # TODO: Implement
-        pass
+        """ 
+        Tests getter functions when where are no users in the database. Or
+        the users that you want to do not exist.
+
+        Tests the following methods:
+        - getUser
+        - getUsername
+        - getUsers
+        - getUserWithId
+        """
+        self.output_assertEqual(self.db.getUser(uuid.uuid1()), None)
+        self.output_assertEqual(self.db.getUsername([uuid.uuid1(), uuid.uuid1()]), [])
+        self.output_assertEqual(self.db.getUsers(), [])
+        self.output_assertEqual(self.db.getUserWithId(uuid.uuid1()), None)
 
     def test_login_users(self):
         # TODO: Implement
