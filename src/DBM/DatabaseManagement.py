@@ -367,15 +367,16 @@ class BBDB:
 class wire_DB(BBDB):
     def __init__(self, mongo_client=None):
         BBDB.__init__(self, mongo_client=mongo_client)
-        if not self.resource_context.find({"name": "wire"}):
+        if not self.resource_context.find_one({"name": "wire"}):
+            # TODO: Collision is possible. If many items in resource_context
+            # get generated at the same time (e.g. by multiple clients). 
+            # Also if other items in resource_context get generated.
             self.resource_context.insert_one({
-                "_id": uuid.uuid1(), # TODO: Collision is possible. If many items in resource_context
-                                     # get generated at the same time (e.g. by multiple clients). 
-                                     # Also if other items in resource_context get generated.
+                "_id": str(uuid.uuid1()),
                 "name": "wire",
                 "username": None,
                 "res_id": []})
-        self.wire_context_collection = self.resource_context.find({"name": "wire"})
+        self.wire_context_collection = self.resource_context.find_one({"name": "wire"})
 
     def getTrainingPictures(self, user_uuid: uuid.UUID = None):
         """
@@ -395,7 +396,7 @@ class wire_DB(BBDB):
                         "_id": {"$in": self.wire_context_collection["res_id"]},
                     })
 
-        return [pickle.loads(r["res"]) for r in resources]
+        return [pickle.loads(r["res"]) for r in resources], [r["_id"] for r in resources]
     
     def insertTrainingPicture(self, pic: np.ndarray, user_uuid: uuid.UUID):
         """
