@@ -65,7 +65,7 @@ class BigBrotherUser(UserMixin):
                 return
 
         self.logData = self.DB.getLoginLogOfUser(user_uuid=self.uuid)
-            
+        print(self.logData)
         # TODO: Setting permissions for admin?
         """
         admin_collection = self.DB['admin_table']
