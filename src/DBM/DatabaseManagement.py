@@ -217,6 +217,26 @@ class BBDB:
             print("WARNING: Database Login Update!")
             return False, False
 
+    def getLoginLogOfUser(self, user_uuid: uuid.UUID):
+        # TODO: Write tests for this method
+        """
+        Outputs log data of the user.
+
+        Arguments:
+        user_uuid -- The id of the user from which you want to get the log
+        data.
+
+        Returns:
+        A list containing multiple Lists with the following structure:
+        [<login_date>, <res_id of success resource>]. If the a login at 
+        a certain date wasn't successful then the res_id will be None.
+        """
+        log = []
+        logins = self.login_attempt.find({"user_id": str(user_uuid)})
+        for login in logins:
+            log.append([login["date"], login["success_res_id"]])
+        return log
+
     def register_user(self, username: str, user_enc_res_id: uuid.UUID):
         """
         Creates a new user in the database with the given username.
@@ -524,8 +544,6 @@ class vid_DB(BBDB):
 
         fs = GridFSBucket(self.db, "resource")
         fs.download_to_stream(str(vid_uuid), stream)
-
-
 
 
 class opencv_DB(BBDB):

@@ -63,20 +63,11 @@ class BigBrotherUser(UserMixin):
                 print(pic.astype('uint8'))
                 print(pic.astype('uint8').shape)
                 return
-"""
-        # TODO Fix
-        # Log-Daten aus MongoDB abrufen
-        login_collection = self.DB['login_table']
-        query = {"user_uuid": str(self.uuid)}
-        result = login_collection.find(query)
-        
-        self.logData = []
-        for document in result:
-            login_date = document['login_date'].strftime("%d/%m/%Y, %H:%M:%S")
-            inserted_pic_uuid = document['inserted_pic_uuid']
-            self.logData.append([login_date, inserted_pic_uuid])
+
+        self.logData = self.DB.getLoginLogOfUser(user_uuid=self.uuid)
             
-        # Child-User aus MongoDB abrufen
+        # TODO: Setting permissions for admin?
+        """
         admin_collection = self.DB['admin_table']
         query = {"admin_uuid": str(self.uuid)}
         result = admin_collection.find(query)
@@ -86,7 +77,9 @@ class BigBrotherUser(UserMixin):
             child_user = document['child_user']
             self.admin = True
             self.childUser.append(child_user)
+        """
+        self.childUser = []
        
     def get_id(self):
-        return self.uuid"""
+        return self.uuid
 
