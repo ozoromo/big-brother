@@ -129,14 +129,6 @@ def insertTrainImages(path: str):
     DB.closeGraceful()
 
 
-
-
-
-
-
-
-
-
 def load_images(path: str,user_uuid : uuid.UUID, file_ending: str=".png") -> (list, int, int):
     """
     Load all images in path with matplotlib that have given file_ending
@@ -157,7 +149,7 @@ def load_images(path: str,user_uuid : uuid.UUID, file_ending: str=".png") -> (li
 
     # TODO read each image in path as numpy.ndarray and append to images
     # Useful functions: lib.list_directory(), matplotlib.image.imread(), numpy.asarray()
-    #img_str_list = lib.list_directory(path)
+    img_str_list = lib.list_directory(path)
 
     DB = DatabaseManagement.wire_DB()
     uuids = []
@@ -169,21 +161,13 @@ def load_images(path: str,user_uuid : uuid.UUID, file_ending: str=".png") -> (li
 
         for image_index, image in enumerate(images):
             images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.COLOR_BGR2GRAY)
-        #images,uuids = DB.getTrainingPictures("""user_uuid,pic_data""","""""".format(user_uuid))
-        #print(images)
-
-        #for img_str in sorted(img_str_list):
-
-            #if img_str[-3:] != "png":
-
-                #raise ValueError("Incorrect Data Type")
-
-                #continue
-
-            #im_path = path + img_str
-
-            #images.append(np.asarray(mpl.image.imread(im_path), dtype=np.float64))
-            #images.append(mpl.image.imread(im_path))
+        
+        for img_str in sorted(img_str_list):
+            if img_str[-3:] != "png":
+                raise ValueError("Incorrect Data Type")
+            im_path = path + img_str
+            images.append(np.asarray(mpl.image.imread(im_path), dtype=np.float64))
+            images.append(mpl.image.imread(im_path))
         DB.closeGraceful()
 
 

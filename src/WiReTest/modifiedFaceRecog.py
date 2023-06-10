@@ -19,6 +19,8 @@ import cv2
 
 #def recogFace(returnQueue,im_data):
 def recogFace(im_data):
+    #TODO remove
+    return ["Merkel","Ronaldo"]
     #im_data:
     #im_data[0] = image path
     #im_data[1] = user uuid
@@ -79,7 +81,7 @@ def recogFace(im_data):
 
             return []
 
-        DB = DatabaseManagement.wire_DB('h2938366.stratoserver.net')
+        DB = DatabaseManagement.wire_DB()
         usernames.append(DB.getUserWithId(user_uuid))
 
 
