@@ -134,7 +134,9 @@ class BBDB:
         """
         usernames = []
         for user_id in uuids:
-            usernames.append(self._user.find_one({"_id": str(user_id)})["username"])
+            user_data = self._user.find_one({"_id": str(user_id)})
+            if user_data is not None:
+                usernames.append(user_data["username"])
         return usernames
 
     def login_user(self, user_id: uuid.UUID):

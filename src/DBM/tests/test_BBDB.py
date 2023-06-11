@@ -124,7 +124,7 @@ class BBDBTest(unittest.TestCase):
         """
         self.output_assertEqual(self.db.getUser(uuid.uuid1()), None)
         self.output_assertEqual(self.db.getUsername([uuid.uuid1(), uuid.uuid1()]), [])
-        self.output_assertEqual(self.db.getUsers(), [])
+        self.output_assertEqual(self.db.getUsers(), {})
         self.output_assertEqual(self.db.getUserWithId(uuid.uuid1()), None)
 
     def test_login_users(self):
