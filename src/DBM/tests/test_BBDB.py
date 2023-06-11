@@ -132,8 +132,23 @@ class BBDBTest(unittest.TestCase):
         pass
 
     def test_basic_login_workflow(self):
-        # TODO: Implement
-        pass
+        # TODO: Finish
+        return
+        user_id = self.db.register_user("user", None)
+        # ...
+        timestamp = self.db.login_user(user_id)
+        self.db.getTrainingPictures(user_id)
+
+        # user gives us picture
+        user_input_pic = ...
+        # authenticate picture
+
+        pic_uuid = self.db.insertTrainingPicture(
+            np.asarray(user_input_pic, dtype=np.float64),
+            user_id)
+        self.db.update_login(user_uuid=user_id, 
+                             time=timestamp,
+                             inserted_pic_uuid=pic_uuid)
 
     def test_basic_user_deletion(self):
         # TODO: Implement
