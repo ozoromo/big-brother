@@ -108,9 +108,8 @@ class BBDBTest(unittest.TestCase):
         """
         # TODO: User encoding ID ask again...
         self.db.register_user("name", None)
-        self.assertRaises(UsernameExists, 
-                          self.db.register_user("name", None),
-                          "Username already exists, but on exception")
+        with self.assertRaises(UsernameExists):
+            self.db.register_user("name", None)
 
     def test_getters_no_users(self):
         """ 
