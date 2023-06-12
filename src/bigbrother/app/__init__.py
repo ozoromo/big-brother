@@ -697,7 +697,7 @@ def logincamera():
             'bbUser': bbUser
         }
 
-        user['login_attempt_time'] = ws.DB.login_user(user_uuid)
+        user['login_attempt_time'] = ws.DB.login_user(user_uuid=user_uuid)
 
         return render_template('webcamJS.html', title='Camera')
 
