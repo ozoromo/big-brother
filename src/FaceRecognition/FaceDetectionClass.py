@@ -345,7 +345,10 @@ class FaceDetection:
             self.init()
 
         # TODO maybe necessary: crop and align train and test images
-
+        # import face_rec_main
+        # face = detect_face(img(=test_image?), fix_res=True) <- solution in each TODO in FaceDetectionClass and FaceDetection?? (#fix_res changes resotion of the cropped face to standard size) 
+        
+        
         # not normalized training pictures
         #für das eine testbild : jedes trainingsbild vergleiche
         test_rep = self.getRep(test_image)

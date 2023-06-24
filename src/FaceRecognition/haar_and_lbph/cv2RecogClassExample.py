@@ -12,9 +12,12 @@ import os
 #chad smith : 10
 
 #-- global paths to images
-img_path = '~/Downloads/th.jpeg' # change paths here
-img_path_2 = '~/Downloads/th-2.jpeg'
-img_path_test = '~/Downloads/Mark-Benecke-400x601.jpg' #different person from img_path and img_path2
+#img_path = '~/Downloads/th.jpeg' # change paths here
+#img_path_2 = '~/Downloads/th-2.jpeg'
+#img_path_test = '~/Downloads/Mark-Benecke-400x601.jpg' #different person from img_path and img_path2
+img_path = '../testImages/merkel.jpg'
+img_path_2 = '../testImages/merkel2.jpg'
+img_path_test = '../testImages/ronaldo.jpg'
 
 
 
