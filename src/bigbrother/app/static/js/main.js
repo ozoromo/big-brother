@@ -8,7 +8,6 @@
  */
 
 
-
 $(document).ready(function(){
   let namespace = "/webcamJS";
   let video = document.querySelector("#videoElement");
@@ -18,55 +17,48 @@ $(document).ready(function(){
   var localMediaStream = null;
   var ready = true;
 
-  //var socket = io.connect("https://h2938366.stratoserver.net:443" + namespace);
-  var socket = io.connect("http://localhost:5000" + namespace);
+  //var socket = io.connect("https://h2938366.stratoserver.net/" + namespace);
+  var socket = io.connect("http://localhost:5000/" + namespace);
+
+  // Timer-Code
+  var timerValue = 5;
+
+  function startTimer() {
+    var display = document.querySelector('#timer');
+    display.textContent = timerValue;
+
+    var timerInterval = setInterval(function () {
+      timerValue--;
+
+      if (timerValue >= 0) {
+        display.textContent = timerValue;
+      } else {
+        clearInterval(timerInterval);
+        sendSnapshot();
+      }
+    }, 1000);
+  }
 
   function sendSnapshot() {
-    if (!localMediaStream) {
-      return;
-    }
-
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    var video = document.querySelector('#videoElement');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    var dataURL = canvas.toDataURL('image/jpeg');
 
-    //ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, 300, 150);
-    ctx.drawImage(video, 0, 0);
-
-    let dataURL = canvas.toDataURL('image/jpeg');
-    socket.emit('input_image_login', dataURL);
-
-    socket.emit('output image')
-    //socket.emit('server ready')
-
-    var img = new Image();
-    socket.on('next_image',function(data){
-    ready = true;
-
-
-    img.src = dataURL//data.image_data
-    photo.setAttribute('src', data.image_data);
-
-    //socket.emit('input image', dataURL);
-
-    });
-
-    socket.on('ready',function(data){
-
-    ready = true;
-
-    });
-
-    socket.on('display_image',function(data){
-    ready = true;
-
-    img.src = dataURL//data.image_data
-    photo.setAttribute('src', data.image_data);
-    //socket.emit('input image', dataURL);
-
-    });
-
-
+    var link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'snapshot.jpeg';
+    link.click();
   }
+
+  // Starte den Timer beim Laden der Seite
+  startTimer();
+
+
+  
 
   socket.on('connect', function() {
     console.log('Connected!');
