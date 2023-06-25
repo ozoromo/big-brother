@@ -54,7 +54,7 @@ class websiteSystem:
         self.authorizedAbortDict = {}
         self.invalidStreamCount = {}
 
-        self.DB = DBM.wire_DB("h2938366.stratoserver.net")
+        self.DB = DBM.wire_DB()
 
         self.BigBrotherUserList = []
         userDict = self.DB.getUsers().items()
@@ -181,14 +181,13 @@ class websiteSystem:
 
             print("After: ",user_uuid)
 
-            user_uuid = uuid.UUID(user_uuid)
 
             recogUsernames = recogFace([pic,user_uuid])
 
             print("Running Query...",file=sys.stdout)
             t0 = time.time()
             print("UUID: ",user_uuid)
-            imgs_raw ,uuids = self.DB.getTrainingPictures("""WHERE user_uuid = '{}'""".format(user_uuid))
+            imgs_raw ,uuids = self.DB.getTrainingPictures(user_uuid=user_uuid)
             t1 = time.time()
             print("Took : {}s".format(t1-t0),file=sys.stdout)
 
