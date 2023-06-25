@@ -32,7 +32,7 @@ class WireDBTest(unittest.TestCase):
             img = Image.open(f"images/sylphid{i}.jpg")
             img_np = np.asarray(img, dtype=np.float64)
             pic_id = self.db.insertTrainingPicture(
-                    np.asarray(img, dtype=np.float64), user_id
+                    np.asarray(img, dtype=np.float64), user_ids[0]
                 )
 
         # convert back

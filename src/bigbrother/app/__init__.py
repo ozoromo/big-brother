@@ -239,7 +239,7 @@ def login():
             
             # TODO: Take a look at why it was set to user_uuid[0]
             # user_uuid =uuid.UUID(user_uuid[0]) old code outputted a list
-            user_uuid = uuid.UUID(user_uuid)
+            #user_uuid = uuid.UUID(user_uuid)
             user['uuid'] = user_uuid
             #Get Picture Path
             #print("test3",file=sys.stdout)
@@ -301,8 +301,6 @@ def create():
         user = {
                     'username': form.name.data,
                     'pic1' : request.files['pic1'],
-                    'pic2' : request.files['pic2'],
-                    'pic3' : request.files['pic3']
                 }
 
         user_uuid = None
@@ -316,9 +314,9 @@ def create():
             #pic_2 = form.pictureleft.data
             #pic_3 = form.pictureright.data
 
-            pictures = [user['pic1'],user['pic2'],user['pic3']]
+            pictures = [user['pic1']]
 
-            user_uuid = ws.DB.register_user(user['username'])
+            user_uuid = ws.DB.register_user(user['username'], None)
 
             for pic in pictures:
 
@@ -697,7 +695,7 @@ def logincamera():
             'bbUser': bbUser
         }
 
-        user['login_attempt_time'] = ws.DB.login_user(user_uuid=user_uuid)
+        #user['login_attempt_time'] = ws.DB.login_user(uuid_id=user_uuid)
 
         return render_template('webcamJS.html', title='Camera')
 
