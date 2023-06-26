@@ -8,7 +8,7 @@ can Import and Export Pictures from Database
 @Project: ODS-Praktikum-Big-Brother
 @Filename: new_database_management.py
 @Last modified by:   Julian Flieller
-@Last modified time: 2023-05-31
+@Last modified time: 2023-06-16
 """
 import numpy as np
 import pickle
@@ -40,6 +40,10 @@ class BBDB:
         else: 
             self.cluster = mongo_client
 
+        # Constants
+        self._RETRY_AFTER_FAILURE = 10
+
+        # Values
         self._db = self.cluster["BigBrother"]
         self._user = self._db["user"]
         self._login_attempt = self._db["login_attempt"]
@@ -130,13 +134,16 @@ class BBDB:
         Return:
         Returns the a list of usernames that correspond to the user_uuid
         that have been inputted. The index i of the return list corresponds
-        to uuids[i] in the input.
+        to uuids[i] in the input. It a uuid doesn't belong to any user then None 
+        is returned for the entry.
         """
         usernames = []
         for user_id in uuids:
-            user_data = self._user.find_one({"_id": str(user_id)})
-            if user_data is not None:
-                usernames.append(user_data["username"])
+            entries = self._user.find_one({"_id": str(user_id)})
+            entry = None
+            if entries:
+                entry = entries["username"]
+            usernames.append(entry)
         return usernames
 
     def login_user(self, user_id: uuid.UUID):
@@ -254,19 +261,21 @@ class BBDB:
         Exception:
         Raises an exception if the username already exists.
         """
-        new_uuid = uuid.uuid1()
-        while self.checkUserIDExists(new_uuid):
-            new_uuid = uuid.uuid1()
-
         if self._user.find_one({"username" : username}):
             raise UsernameExists("Username in use!")
-        else:
-            self._user.insert_one({
-                "_id": str(new_uuid),
-                "username" : username, 
-                "user_enc_res_id" : str(user_enc_res_id),
-                "is_admin" : False})
-            return new_uuid
+
+        new_uuid = uuid.uuid4()
+        for _ in range(self._RETRY_AFTER_FAILURE):
+            try: 
+                self._user.insert_one({
+                    "_id": str(new_uuid),
+                    "username" : username, 
+                    "user_enc_res_id" : str(user_enc_res_id),
+                    "is_admin" : False})
+                break
+            except pymongo.errors.DuplicateKeyError:
+                new_uuid = uuid.uuid4()
+        return new_uuid
 
     def getUsers(self, limit=-1):
         """
@@ -389,15 +398,18 @@ class BBDB:
 class wire_DB(BBDB):
     def __init__(self, mongo_client=None):
         BBDB.__init__(self, mongo_client=mongo_client)
-        if not self._resource_context.find_one({"name": "wire"}):
-            # TODO: Collision is possible. If many items in resource_context
-            # get generated at the same time (e.g. by multiple clients). 
-            # Also if other items in resource_context get generated.
-            self._resource_context.insert_one({
-                "_id": str(uuid.uuid1()),
-                "name": "wire",
-                "username": None,
-                "res_id": []})
+        if not self._resource_context.find({"name": "wire"}):
+            for _ in range(self._RETRY_AFTER_FAILURE):
+                try: 
+                    self._resource_context.insert_one({
+                        "_id": str(uuid.uuid4()),
+                        "name": "wire",
+                        "username": None,
+                        "res_id": []})
+                    break
+                except pymongo.errors.DuplicateKeyError:
+                    pass
+
         self.wire_context_collection = self._resource_context.find_one({"name": "wire"})
 
     def getTrainingPictures(self, user_uuid: uuid.UUID = None):
@@ -406,7 +418,6 @@ class wire_DB(BBDB):
         """
         # TODO: We need to be able to verify whether a certain user with the 
         # user_id exists before we check
-        # TODO: Find a way to make this prettier
         resources = None
         if user_uuid: 
             resources = self._resource.find({
@@ -441,25 +452,28 @@ class wire_DB(BBDB):
         Exception:
         TypeError -- Gets risen if the type of the input isn't the expected type.
         """
-
         if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
             raise TypeError
         
-        # TODO: There might be some problems if multiple files are inserted
-        # concurrently
-        pic_uuid = str(uuid.uuid1())
-        self._resource.insert_one({
-            "_id" : pic_uuid,
-            "user_id": str(user_uuid),
-            "res" : pickle.dumps(pic),
-            "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
-            "pic_uuid": pic_uuid
-        })
+        pic_uuid = uuid.uuid4()
+        for _ in range(self._RETRY_AFTER_FAILURE):
+            try: 
+                self._resource.insert_one({
+                    "_id" : str(pic_uuid),
+                    "user_id": str(user_uuid),
+                    "res" : pickle.dumps(pic),
+                    "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
+                    "pic_uuid": str(pic_uuid)
+                })
+                break
+            except pymongo.errors.DuplicateKeyError:
+                pic_uuid = uuid.uuid4()
+
+        # TODO: Are there also exceptions that need to be handled?
         self._resource_context.update_one(
                 {"name": "wire"},
-                {"$addToSet": {"res_id": pic_uuid}})
-        return uuid.UUID(pic_uuid)
-
+                {"$addToSet": {"res_id": str(pic_uuid)}})
+        return pic_uuid
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
         """
@@ -481,6 +495,7 @@ class wire_DB(BBDB):
         This function has not been implemented.
         """
         raise NotImplementedError
+
 
 class vid_DB(BBDB):
     """Subclass from BBDB
@@ -509,24 +524,28 @@ class vid_DB(BBDB):
         if type(user_uuid) != uuid.UUID:
            raise TypeError
 
-        fs = GridFSBucket(self._db, "resource")
-        vid_uuid = str(uuid.uuid1())
-
-        fs.upload_from_stream_with_id(
-            vid_uuid,
-            str(vid_uuid),
-            source = vid,
-            metadata = {
-                "user_id": str(user_uuid),
-                "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
-            }
-        )
+        fs = GridFSBucket(self.db, "resource")
+        vid_uuid = str(uuid.uuid4())
+        for i in range(self._RETRY_AFTER_FAILURE):
+            try:
+                fs.upload_from_stream_with_id(
+                    vid_uuid,
+                    str(vid_uuid),
+                    source = vid,
+                    metadata = {
+                        "user_id": str(user_uuid),
+                        "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
+                    }
+                )
+                break
+            # TODO: Are there more errors that should be handled?
+            except pymongo.errors.DuplicateKeyError:
+                vid_uuid = str(uuid.uuid4())
         
         self._resource_context.update_one(
             {"name": "video"},
             {"$addToSet": {"res_id": vid_uuid}}
         )
-        
         return uuid.UUID(vid_uuid)        
 
     def getVideoStream(self, vid_uuid: uuid.UUID, stream):
