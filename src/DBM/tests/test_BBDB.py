@@ -108,8 +108,9 @@ class BBDBTest(unittest.TestCase):
         """
         # TODO: User encoding ID ask again...
         self.db.register_user("name", None)
-        with self.assertRaises(UsernameExists):
-            self.db.register_user("name", None)
+        self.assertRaises(UsernameExists, 
+                          self.db.register_user, 
+                          "name", None)
 
     def test_getters_no_users(self):
         """ 
@@ -122,8 +123,11 @@ class BBDBTest(unittest.TestCase):
         - getUsers
         - getUserWithId
         """
-        self.output_assertEqual(self.db.getUser(uuid.uuid1()), None)
-        self.output_assertEqual(self.db.getUsername([uuid.uuid1(), uuid.uuid1()]), [])
+        self.output_assertEqual(self.db.getUser(str(uuid.uuid1())), None)
+        self.output_assertEqual(
+                self.db.getUsername([uuid.uuid1(), uuid.uuid1()]), 
+                [None, None]
+            )
         self.output_assertEqual(self.db.getUsers(), {})
         self.output_assertEqual(self.db.getUserWithId(uuid.uuid1()), None)
 
