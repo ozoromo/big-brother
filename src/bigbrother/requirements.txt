@@ -1,0 +1,37 @@
+#@Author: Julius U. Heller
+#@Date:   2021-06-04T22:29:55+02:00
+#@Project: ODS-Praktikum-Big-Brother
+#@Filename: requirements.txt
+#@Last modified by:   Julius U. Heller
+#@Last modified time: 2021-06-21T13:42:11+02:00
+
+
+
+### Flask Dependencies ###
+Flask
+flask_wtf
+werkzeug
+wtforms==2.3.3
+Flask-SocketIO
+flask-login
+imageio
+
+### opencv ###
+opencv-contrib-python
+onnx
+onnx_tf
+onnxruntime
+tensorflow
+imutils
+open-faces
+
+### Math/Plotting ###
+numpy
+pandas
+matplotlib
+Pillow
+
+### Database ###
+#pickle
+uuid
+CMake
