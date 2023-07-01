@@ -5,7 +5,8 @@
 #@Last modified by:   Julius U. Heller
 #@Last modified time: 2021-06-21T13:42:11+02:00
 
-
+### CMake ###
+CMake
 
 ### Flask Dependencies ###
 Flask
@@ -34,4 +35,3 @@ Pillow
 ### Database ###
 #pickle
 uuid
-CMake
