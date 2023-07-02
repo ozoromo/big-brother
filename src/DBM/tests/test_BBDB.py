@@ -131,41 +131,40 @@ class BBDBTest(unittest.TestCase):
         self.output_assertEqual(self.db.getUsers(), {})
         self.output_assertEqual(self.db.getUserWithId(uuid.uuid1()), None)
 
-    def test_login_users(self):
-        # TODO: Implement
-        pass
-
     def test_basic_login_workflow(self):
-        # TODO: Finish
-        return
+        # TODO: Maybe implement more tests like this
+        print("start")
         user_id = self.db.register_user("user", None)
-        # ...
+
         timestamp = self.db.login_user(user_id)
-        self.db.getTrainingPictures(user_id)
-
-        # user gives us picture
-        user_input_pic = ...
-        # authenticate picture
-
-        pic_uuid = self.db.insertTrainingPicture(
-            np.asarray(user_input_pic, dtype=np.float64),
-            user_id)
-        self.db.update_login(user_uuid=user_id, 
-                             time=timestamp,
-                             inserted_pic_uuid=pic_uuid)
+        # The pic uuid is assumed to be correct 
+        inserted_pic_uuid = uuid.uuid1()
+        self.assertEqual(
+                self.db.update_login(user_uuid=user_id,
+                                     time=timestamp,
+                                     inserted_pic_uuid=inserted_pic_uuid),
+                inserted_pic_uuid)
+        self.assertEqual(self.db.getLoginLogOfUser(user_id)[0][0],
+                         timestamp)
 
     def test_basic_user_deletion(self):
-        # TODO: Implement
-        pass
+        user_id = self.db.register_user("user", None)
+        self.assertTrue(self.db.delUser(user_id))
 
     def test_deletion_non_existing_user(self):
-        # TODO: Implement
-        pass
+        self.db.register_user("user1", None)
+        self.db.register_user("user2", None)
+        self.assertFalse(self.db.delUser(uuid.uuid1()))
 
     def test_duplicate_getUsers(self):
-        # TODO: Implement
-        # The list of the function will contain multiple same uuids or usernames
-        pass
+        user_ids = [
+                self.db.register_user("user0", None),
+                self.db.register_user("user1", None),
+            ]
+        self.output_assertEqual(
+                self.db.getUsername([user_ids[0], user_ids[1], user_ids[0]]),
+                ["user0", "user1", "user0"]
+            )
 
 if __name__ == "__main__":
     unittest.main()

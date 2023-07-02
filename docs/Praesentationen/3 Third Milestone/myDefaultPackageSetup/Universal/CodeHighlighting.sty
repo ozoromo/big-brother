@@ -1,0 +1,164 @@
+\ProvidesPackage{CodeHighlighting}
+
+%\RequirePackage{xcolor}
+\RequirePackage{listings}
+
+% colors that are used
+\definecolor{blue-green}{rgb}{0.0, 0.87, 0.87}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{red-brownish}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% General Properties 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{literate=
+  {Ã¡}{{\'a}}1 {Ã©}{{\'e}}1 {Ã­}{{\'i}}1 {Ã³}{{\'o}}1 {Ãº}{{\'u}}1
+  {Ã}{{\'A}}1 {Ã‰}{{\'E}}1 {Ã}{{\'I}}1 {Ã“}{{\'O}}1 {Ãš}{{\'U}}1
+  {Ã }{{\`a}}1 {Ã¨}{{\`e}}1 {Ã¬}{{\`i}}1 {Ã²}{{\`o}}1 {Ã¹}{{\`u}}1
+  {Ã€}{{\`A}}1 {Ãˆ}{{\'E}}1 {ÃŒ}{{\`I}}1 {Ã’}{{\`O}}1 {Ã™}{{\`U}}1
+  {Ã¤}{{\"a}}1 {Ã«}{{\"e}}1 {Ã¯}{{\"i}}1 {Ã¶}{{\"o}}1 {Ã¼}{{\"u}}1
+  {Ã„}{{\"A}}1 {Ã‹}{{\"E}}1 {Ã}{{\"I}}1 {Ã–}{{\"O}}1 {Ãœ}{{\"U}}1
+  {Ã¢}{{\^a}}1 {Ãª}{{\^e}}1 {Ã®}{{\^i}}1 {Ã´}{{\^o}}1 {Ã»}{{\^u}}1
+  {Ã‚}{{\^A}}1 {ÃŠ}{{\^E}}1 {ÃŽ}{{\^I}}1 {Ã”}{{\^O}}1 {Ã›}{{\^U}}1
+  {Ãƒ}{{\~A}}1 {Ã£}{{\~a}}1 {Ã•}{{\~O}}1 {Ãµ}{{\~o}}1
+  {Å“}{{\oe}}1 {Å’}{{\OE}}1 {Ã¦}{{\ae}}1 {Ã†}{{\AE}}1 {ÃŸ}{{\ss}}1
+  {Å±}{{\H{u}}}1 {Å°}{{\H{U}}}1 {Å‘}{{\H{o}}}1 {Å}{{\H{O}}}1
+  {Ã§}{{\c c}}1 {Ã‡}{{\c C}}1 {Ã¸}{{\o}}1 {Ã¥}{{\r a}}1 {Ã…}{{\r A}}1
+  {â‚¬}{{\euro}}1 {Â£}{{\pounds}}1 {Â«}{{\guillemotleft}}1
+  {Â»}{{\guillemotright}}1 {Ã±}{{\~n}}1 {Ã‘}{{\~N}}1 {Â¿}{{?`}}1
+}
+\lstset{xleftmargin=20pt,%
+	xrightmargin=5pt,%
+	aboveskip=12pt,%
+	belowskip=8pt,%
+	basicstyle=\ttfamily \small,%
+	showstringspaces=false,%
+	columns=flexible,%
+    	commentstyle=\color{red-brownish},%
+	keywordstyle=\color{deepblue},%
+}
+\newcommand\defaultstyle{
+\lstset{xleftmargin=20pt,%
+	xrightmargin=5pt,%
+	aboveskip=12pt,%
+	belowskip=8pt,%
+	basicstyle=\ttfamily \small,%
+	showstringspaces=false,%
+	columns=flexible,%
+    	commentstyle=\color{red-brownish},%
+	keywordstyle=\color{deepblue},%
+	}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Python style for highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\pythonstyle{%
+\defaultstyle\lstset{%
+	language=Python,%
+	frame=single,%
+	stringstyle=\color{deepgreen},%
+	otherkeywords={self},% 			Add keywords here
+	emph={MyClass,__init__}% 		Custom highlighting
+}%
+}
+% Python environment
+\lstnewenvironment{python}[1][]{\pythonstyle\lstset{#1}}{}
+% Python for external files
+\newcommand\pythonexternal[2][]{\begin{center}\pythonstyle\lstinputlisting[#1]{#2}\end{center}}
+% Python for inline (No Frame by default)
+\newcommand\pythoninline[1]{\pythonstyle\lstinline!#1!}
+
+%%%%%%% No Frame Version %%%%%%%
+\newcommand\pythonstyleNoFrame{\pythonstyle\lstset{frame=none}}
+% Python environment
+\lstnewenvironment{pythonNoFrame}[1][]{\pythonstyleNoFrame\lstset{#1}}{}
+% Python for external files
+\newcommand\pythonexternalNoFrame[2][]{\pythonstyleNoFrame\lstinputlisting[#1]{#2}}
+% Python for inline (No Frame by default)
+\let\pythoninlineNoFrame\pythoninline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C++ style for highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\cppstyle{%
+\defaultstyle\lstset{%
+	language=C++,%
+	frame=single,%
+    	stringstyle=\color{turquoise}%
+	}%
+}
+% C++ environment
+\lstnewenvironment{cpp}[1][]{\cppstyle\lstset{#1}} {}
+% C++ for external files: \cppexternal{<file>}
+\newcommand\cppexternal[2][]{\begin{center}\cppstyle\lstinputlisting[#1]{#2}\end{center}}
+% C++ for inline: \cppinline{<code>} (no Frame by default)
+\newcommand\cppinline[1]{{\cppstyle\lstinline!#1!}}
+
+%%%%%%% No Frame Version %%%%%%%
+\newcommand\cppstyleNoFrame{\cppstyle\lstset{frame=none}}
+% C++ environment
+\lstnewenvironment{cppNoFrame}[1][]{\cppstyleNoFrame\lstset{#1}}{}
+% C++ for external files: \cppexternal{<file>}
+\newcommand\cppexternalNoFrame[2][]{\cppstyleNoFrame\lstinputlisting[#1]{#2}}
+% C++ for inline: \cppinline{<code>} (no Frame by default)
+\let\cppinlineNoFrame\cppinline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Pseudo style for highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\pseudostyle{%
+\defaultstyle\lstset{%
+	frame=single,%
+	otherkeywords={INIT,FOR,FOREACH,TO,DOWNTO,IF,ELSE,AS,DEFINE,WITH,AKA,WHILE,DO},%
+    	stringstyle=\color{turquoise}%
+	}%
+}
+% Pseudo environment
+\lstnewenvironment{pseudo}[1][]{\pseudostyle\lstset{#1}} {}
+% Pseudo for external files
+\newcommand\pseudoexternal[2][]{\begin{center}\pseudostyle\lstinputlisting[#1]{#2}\end{center}}
+% Pseudo for inline: \pseudoinline{<code>} (no Frame by default)
+\newcommand\pseudoinline[1]{{\pseudostyle\lstinline!#1!}}
+
+%%%%%%% No Frame Version %%%%%%%
+\newcommand\pseudostyleNoFrame{\pseudostyle\lstset{frame=none}}
+% Pseudo environment
+\lstnewenvironment{pseudoNoFrame}[1][]{\pseudostyleNoFrame\lstset{#1}}{}
+% Pseudo for external files: \pseudoexternal{<file>}
+\newcommand\pseudoexternalNoFrame[2][]{\pseudostyleNoFrame\lstinputlisting[#1]{#2}}
+% Pseudo for inline: \pseudoinline{<code>} (no Frame by default)
+\let\pseudoinlineNoFrame\pseudoinline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dart style for highlighting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define the code emph rules
+\newcommand\dartstyle{%
+\defaultstyle\lstset{%
+	frame=single,%
+	stringstyle=\color{deepgreen},%
+	emph={%
+  %Types
+  final,const,int,List,var,String,%
+  %Functions
+  },
+  }%
+}
+
+% Dart environment
+\lstnewenvironment{dart}[1][]{\dartstyle\lstset{#1}}{}
+% Dart for external files
+\newcommand\dartexternal[2][]{\begin{center}\dartstyle\lstinputlisting[#1]{#2}\end{center}}
+% Dart for inline (No Frame by default)
+\newcommand\dartinline[1]{\dartstyle\lstinline!#1!}
+
+%%%%%%% No Frame Version %%%%%%%
+\newcommand\dartstyleNoFrame{\dartstyle\lstset{frame=none}}
+% Dart environment
+\lstnewenvironment{dartNoFrame}[1][]{\dartstyleNoFrame\lstset{#1}}{}
+% Dart for external files
+\newcommand\dartexternalNoFrame[2][]{\dartstyleNoFrame\lstinputlisting[#1]{#2}}
+% Dart for inline (No Frame by default)
+\let\dartinlineNoFrame\dartinline

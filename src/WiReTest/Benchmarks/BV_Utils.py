@@ -59,7 +59,6 @@ class UserTimer(BenchmarkTimer):
         #self.userTimeDf = None
 
     def startTimer(self,user):
-
         startTime = t.time()
 
         self.userList.append(user)
@@ -67,16 +66,21 @@ class UserTimer(BenchmarkTimer):
 
 
     def endTimer(self,user):
-
+        # TODO: The user isn't used here! Could this lead to inconsistencies?
         endTime = t.time()
         self.userEndTimesRaw.append(endTime)
 
-    def getTimes (self):
+    def getTimes(self):
+        # TODO: Find out error here! Because this condition is meet it would
+        # mean that there are scenarios in which the timer are not stopped!
+        while len(self.userEndTimesRaw) < len(self.userStartTimesRaw):
+            self.endTimer(None)
+            print("WARNING: End timer hasn't been stopped and had to be stopped manually")
 
-        df = pd.DataFrame({'user' : self.userList,'startTime' : self.userStartTimesRaw, 'endTime' : self.userEndTimesRaw})
-
+        df = pd.DataFrame({'user':      self.userList,
+                           'startTime': self.userStartTimesRaw, 
+                           'endTime':   self.userEndTimesRaw})
         df['executeTime'] = df['endTime'] - df['startTime']
-
         return df
 
 
@@ -162,7 +166,7 @@ class progresWindow:
         try:
             self.progressbars[name]
         except KeyError:
-            print("Warning : Name not found!")
+            print(f"Warning : Name ({name}) not found!")
             return
 
         self.progressbars[name][0].destroy()
@@ -215,7 +219,7 @@ class progresWindow:
         try:
             self.progressbars[name]
         except KeyError:
-            print("Warning : Name not found!")
+            print(f"Warning : Name ({name}) not found!")
             return
 
         #print(self.progressbars[name][1])

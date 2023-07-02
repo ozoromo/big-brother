@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import sys
 import os
+import uuid
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'DBM'))
 from DatabaseManagement import BBDB
@@ -29,6 +30,13 @@ class BenchmarkApp(tk.Tk):
         self.entry_users = tk.Entry(self)
         self.entry_users.pack()
 
+        self.label_method = tk.Label(self, text="Which method do you want to run benchmarks for?")
+        self.label_method.pack()
+        self.selected_option = tk.StringVar()
+        options = ["register users", "add admin relation", "delete users", "login users"]
+        option_menu = ttk.OptionMenu(self, self.selected_option, options[0], *options)
+        option_menu.pack()
+
         self.button = tk.Button(self, text="Run Benchmark", command=self.run_benchmark)
         self.button.pack()
 
@@ -45,10 +53,45 @@ class BenchmarkApp(tk.Tk):
             self.run_iterations(iterations, users_per_iteration)
             self.button.configure(state=tk.NORMAL)
             self.label_wait.destroy()
-        except ValueError:
+        except ValueError as e:
+            print(e)
             messagebox.showerror("Error", "Invalid input! Please enter numbers for iterations and users.")
 
-    def run_iterations(self, iterations, users_per_iteration):
+    def register_users(self,db:BBDB,users_per_iteration:int,is_benchmark_test_method:bool=False) ->list:
+        user_ids = []
+        for i in range(users_per_iteration):
+            username = f"username{uuid.uuid4()}"
+            user_enc_res_id = f"user_enc_res_id{uuid.uuid4()}"
+            user_id = db.register_user(username, user_enc_res_id)
+            user_ids.append(user_id)
+            if is_benchmark_test_method:
+                self.progressbar["value"] += 1
+                self.update_idletasks()
+
+        return user_ids
+    
+    def delete_users(self,db:BBDB,user_ids:list,is_benchmark_test_method:bool=False):
+        for user_id in user_ids:
+            db.delUser(user_id)
+            if is_benchmark_test_method:
+                self.progressbar["value"] += 1
+                self.update_idletasks()
+
+    def add_admin_relation(self,db:BBDB,user_ids:list,is_benchmark_test_method:bool=False):
+        for user_id in user_ids:
+            db.addAdminRelation(user_id)
+            if is_benchmark_test_method:
+                self.progressbar["value"] += 1
+                self.update_idletasks()
+
+    def login_users(self,db:BBDB,user_ids:list,is_benchmark_test_method:bool=False):
+        for user_id in user_ids:
+            db.login_user(user_id)
+            if is_benchmark_test_method:
+                self.progressbar["value"] += 1
+                self.update_idletasks()
+
+    def run_iterations(self, iterations:int, users_per_iteration:int):
         total_execution_time = 0
         results = []
         self.progressbar["maximum"] = iterations * users_per_iteration
@@ -57,18 +100,43 @@ class BenchmarkApp(tk.Tk):
         db = BBDB()  # Instantiate the BBDB class
 
         for i in range(iterations):
-            start_time = time.time()
 
             # Run database operations here and measure the execution time
-            execution_time = self.run_database_operations(db, users_per_iteration)
+            if self.selected_option.get() == "register users":
+                start_time = time.time()
+                user_ids = self.register_users(db=db, users_per_iteration=users_per_iteration, is_benchmark_test_method=True)
+                end_time = time.time()
+                self.delete_users(db,user_ids)
+            
+            elif self.selected_option.get() == "delete users":
+                user_ids = self.register_users(db=db, users_per_iteration=users_per_iteration)
+                start_time = time.time()
+                self.delete_users(db=db, user_ids=user_ids, is_benchmark_test_method=True)
+                end_time = time.time()
+            
+            elif self.selected_option.get() == "add admin relation":
+                user_ids = self.register_users(db=db, users_per_iteration=users_per_iteration)
+                start_time = time.time()
+                self.add_admin_relation(db=db,user_ids=user_ids, is_benchmark_test_method=True)
+                end_time = time.time()
+                self.delete_users(db=db, user_ids=user_ids)
 
-            end_time = time.time()
+            elif self.selected_option.get() == "login users":
+                user_ids = self.register_users(db=db, users_per_iteration=users_per_iteration)
+                start_time = time.time()
+                self.login_users(db=db,user_ids=user_ids, is_benchmark_test_method=True)
+                end_time = time.time()
+                self.delete_users(db=db, user_ids=user_ids)
+
             iteration_execution_time = end_time - start_time
             total_execution_time += iteration_execution_time
 
             results.append((i + 1, iteration_execution_time))
 
             self.update_idletasks()
+        
+        # Add Average execution time to the results
+        results.append(("Average", total_execution_time / iterations))
 
         # Add total execution time to the results
         results.append(("Total", total_execution_time))
@@ -80,39 +148,6 @@ class BenchmarkApp(tk.Tk):
         df["Execution Time"] = df["Execution Time"].apply(lambda x: f"{x:.6f} s")
 
         messagebox.showinfo("Benchmark Results", df.to_string(index=False))
-
-    def run_database_operations(self, db, users_per_iteration):
-        start_time = time.time()
-
-        # Delete existing users (uncomment if necessary)
-        """
-        existing_users = db.getUsers()
-        for user_id in existing_users:
-            db.delUser(user_id)
-        """
-
-        # Register multiple users
-        user_ids = []
-        for i in range(users_per_iteration):
-            username = f"username{i + 1}"
-            user_enc_res_id = f"user_enc_res_id{i + 1}"
-            user_id = db.register_user(username, user_enc_res_id)
-            user_ids.append(user_id)
-            self.progressbar["value"] += 1
-            self.update_idletasks()
-
-        # Add admin relation for each user
-        for user_id in user_ids:
-            db.addAdminRelation(user_id)
-
-        # Delete all users
-        for user_id in user_ids:
-            db.delUser(user_id)
-
-        end_time = time.time()
-        execution_time = end_time - start_time
-
-        return execution_time
 
 
 if __name__ == "__main__":
