@@ -1,0 +1,141 @@
+\usepackage[simplified]{pgf-umlcd}
+
+\renewenvironment{package}[2][\umlcdPackageTitle]{
+\edef\umlcdPackageTitle{#2}
+\def\umlcdPackageFit{}
+\def\umlcdPackageName{#1}
+}{
+  \begin{pgfonlayer}{background}
+  \node[umlcd style, draw, inner sep=0.5cm, fit = \umlcdPackageFit] (\umlcdPackageName) {};
+  \node[umlcd style, draw, outer ysep=-0.5, anchor=south west] (\umlcdPackageName caption) at
+  (\umlcdPackageName.north west) {\umlcdPackageTitle};
+  \end{pgfonlayer}
+}
+
+\newenvironment{packageTiny}[2][\umlcdPackageTitle]{
+\edef\umlcdPackageTitle{#2}
+\def\umlcdPackageFit{}
+\def\umlcdPackageName{#1}
+}{
+  \begin{pgfonlayer}{background}
+  \node[umlcd style, draw, inner sep=0.2cm, fit = \umlcdPackageFit] (\umlcdPackageName) {};
+  \node[umlcd style, draw, outer ysep=-0.2, anchor=south west] (\umlcdPackageName caption) at
+  (\umlcdPackageName.north west) {\umlcdPackageTitle};
+  \end{pgfonlayer}
+}
+
+\renewcommand{\unidirectionalAssociation}[4]{
+  \draw [umlcd style, ->] (#1) -- (#4)
+    node[near end, auto,align=center]{#2}
+    node[near end, auto,swap,align=center]{#3};
+}
+
+\renewcommand{\aggregation}[4]{
+  \draw [umlcd style, -{Diamond[fill=white,scale=1.3]}] (#1) -- (#4)
+    node[near end, auto,align=center]{#2}
+    node[near end, auto,swap,align=center]{#3};
+}
+
+\renewcommand{\composition}[4]{
+  \draw [umlcd style, -{Diamond[fill=black,black,scale=1.3]}] (#1) -- (#4)
+    node[near end, auto,align=center]{#2}
+    node[near end, auto,swap,align=center]{#3};
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Example Code            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Example 1 %%
+%\begin{tikzpicture}
+%% creating a UML-Class:
+%% \begin{class}[<options>]{<Name>}
+%% {<x-Coordinate>,<y-Coordinate>}
+%\begin{class}[text width=10cm,scale=0.7]%
+%{TGrammatik}{0,0}
+%% adding Attributes
+%\attribute{+ axiom: String}
+%\attribute{+ regeln: TRegelDictionary}
+%
+%% adding operations
+%\operation{+ TGrammatik()}
+%\operation{+ \textcolor{red-brownish}{\textasciitilde{}TGrammatik()}}
+%\operation{+ addRegel(rechts: char; links: String)}
+%\operation{+ \textcolor{red-brownish}{copy() : TGrammatik}}
+%\end{class}
+%\end{tikzpicture}
+
+%%% Example 2 %%
+%\begin{tikzpicture}
+%\begin{class}[scale=0.7]{TRegelProduktionsseite}{0,0}
+%    \attribute{+ produktion: String}
+%    \attribute{+ zufaelligkeit: Real}
+%    \operation{+ TRegelProduktionsseite()}
+%    \operation{+ \textcolor{red-brownish}{\textasciitilde{}TRegelProduktionsseite()}}
+%\end{class}
+%
+%% If you want to include a package 
+%\begin{package}{fgl}
+%\begin{class}[scale=0.7]{TFPGMap<T1;T2>}{0,4.5}
+%\end{class}
+%
+%\begin{class}[scale=0.7]{TFPGList<T>}{0,4}
+%\end{class}
+%\end{package}
+%
+%\begin{class}[scale=0.7, text width=6cm]
+%{TRegelProduktionsseitenListe <TRegelProduktionsseite>}
+%{0,2}
+%\end{class}
+%
+%\begin{class}[scale=0.7]
+%{TRegelDictionary <Char; TRegelProduktionsseitenListe>}
+%{6.5,4.788}
+%\end{class}
+%
+%\begin{class}[scale=0.6]{TGrammatik}{6.5,2}
+%\attribute{+ axiom: String}
+%\attribute{+ regeln: TRegelDictionary}
+%
+%\operation{+ TGrammatik()}
+%\operation{+ \textcolor{red-brownish}{\textasciitilde{}TGrammatik()}}
+%\operation{+ addRegel(rechts: Char; 
+%                      links: String; 
+%                      zufaelligkeit: Real) : Void}
+%\operation{+ addRegel(rechts: Char; 
+%                      links: String) : Void}
+%\operation{+ \textcolor{red-brownish}{copy() : TGrammatik}}
+%\end{class}
+%
+%% unidirectional association Parameter:
+%% <class1>,<node1>,<node2>,<class2>
+%\unidirectionalAssociation
+%{TRegelProduktionsseitenListe <TRegelProduktionsseite>}
+%{}{\\[20pt]\tiny<<Bind>>\\[-7pt]\tiny{}T::TRegelProduktionsseite}
+%{TFPGList<T>}
+%
+%\unidirectionalAssociation
+%{TRegelDictionary <Char; TRegelProduktionsseitenListe>}
+%{}{\tiny<<Bind>>\\[-7pt]
+%   \tiny{}T1::Char\\[-7pt]
+%   \tiny{}T2::TRegelProduktionsseitenListe}
+%{TFPGMap<T1;T2>}
+%
+%% <class1>,<node1>,<node2>,<class2>
+%\composition
+%{TRegelProduktionsseite}{}{}
+%{TRegelProduktionsseitenListe <TRegelProduktionsseite>}
+%
+%% you can also draw a line between those
+%% different classes with the draw
+%% functionality
+%\begin{scope}[on background layer]
+%\draw [umlcd style, fill=white,-{Diamond[fill=black,black,scale=1.3]}]
+%(TRegelProduktionsseitenListe <TRegelProduktionsseite>) --
+%++(4,0) -- ++(0,2.5) -- ++(0.65,0);
+%\end{scope}
+%
+%\composition
+%{TRegelDictionary <Char; TRegelProduktionsseitenListe>}
+%{}{}{TGrammatik}
+%\end{tikzpicture}
