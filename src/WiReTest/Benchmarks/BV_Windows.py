@@ -5,14 +5,12 @@
 # @Last modified by:   thekalk
 # @Last modified time: 2021-06-09T14:55:53+02:00
 
-
-
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import messagebox
 
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+
 #Implement the default Matplotlib key bindings.
 from matplotlib.figure import Figure
 from matplotlib.widgets import SpanSelector
@@ -45,35 +43,24 @@ class BVWindow:
         self.windowStatus = "visible"
 
     def hide(self):
-
         self.masterFrame.place_forget()
         self.windowStatus = "hidden"
 
     def buildSIPDynamicLabels(self,master,amount):
-
         labels = []
-
         portLen = amount
-
-        spacing = (1 - (1 / portLen)) / portLen
-
+        spacing = (1 - 1/portLen)/portLen
         y = 0
-
         for column in range(amount):
-
             label = ttk.Label(master,text="PLACEHOLDER")
             #label.config(bg="#FFFFFF")
             label.config(anchor=tk.W)
-
             label.place(relx=0, rely=y, relheight=spacing, relwidth=1)
-
             labels.append(label)
             y += spacing
-
         return labels
 
     def updateBenchmark(self,benchmarkType):
-
         userlimit = self.getUserLimitEntry()
         userTimes = None
 
@@ -86,63 +73,40 @@ class BVWindow:
             return
 
         if benchmarkType == "TP":
-
             self.scores = self.parent.bR.run_true_positives()
             userTimes = self.parent.bR.TPUserTimer.getTimes()
-
         elif benchmarkType == "TN":
-
             self.scores = self.parent.bR.run_true_negatives()
             userTimes = self.parent.bR.TNUserTimer.getTimes()
-
         elif benchmarkType == "OFTN":
-
-            self.scores = self.parent.bR.openface_run_true_negatives()
+            # TODO: openface_run_true_negatives_doesn't exist somehow
+            self.scores = self.parent.bR.openface_run_true_positives()
             userTimes = self.parent.bR.OFTNUserTimer.getTimes()
-
         elif benchmarkType == "OFTP":
-
             self.scores = self.parent.bR.openface_run_true_positives()
             userTimes = self.parent.bR.OFTPUserTimer.getTimes()
-
         elif benchmarkType == "CV2TN":
-
             self.scores = self.parent.bR.opencv_run_true_negatives()
             userTimes = self.parent.bR.CV2TNUserTimer.getTimes()
-
         elif benchmarkType == "CV2TP":
-
             self.scores = self.parent.bR.opencv_run_true_positives()
             userTimes = self.parent.bR.CV2TPUserTimer.getTimes()
-
-
         elif benchmarkType == "Mixed":
-
             numSelfIm = 5
             numDecoy = 5
             numDecoyIm = 10
-
             try:
-
                 numSelfIm = int(self.numSelfImagesEntry.get())
                 numDecoy = int(self.numDecoyUsersEntry.get())
                 numDecoyIm = int(self.numDecoyUserImages.get())
-
             except ValueError:
-
                 messagebox.showerror("Error", "Invalid Input only numbers allowed")
-                pass
                 return
-
             self.scores = self.parent.bR.run_mixed_positives(numSelfIm ,numDecoy,numDecoyIm)
             userTimes = self.parent.bR.MixedUserTimer.getTimes()
-
         self.updateListbox()
 
-        #
         # Config Time Labels
-        #
-
         self.DynTimeLabels[0].config(text="Benchmark Time : {}s".format(round(userTimes['executeTime'].sum(),2)))
         self.DynTimeLabels[1].config(text="Avg. User Time : {}s".format(round(userTimes['executeTime'].mean(),2)))
         maxUserTime = userTimes[['user','executeTime']].iloc[userTimes['executeTime'].idxmax()]
@@ -151,10 +115,7 @@ class BVWindow:
         self.DynTimeLabels[3].config(text="Min User Time : {} {}s".format(minUserTime[0].username,round(minUserTime[1],2)))
         self.DynTimeLabels[4].config(text="Min/Max Variance: {}s".format(round(maxUserTime[1] - minUserTime[1],2)))
 
-        #
         # Config Benchmark Meta Data Labels
-        #
-
         self.DynMetaDataLabels_1[0].config(text="Benchmark Meta Data",style = 'title.TLabel')
         self.DynMetaDataLabels_1[1].config(text="Loaded Training Pictures : {}".format(self.parent.bR.trainPictureCount))
         self.DynMetaDataLabels_1[2].config(text="Loaded Input Pictures : {}".format(self.parent.bR.recogPictureCount))
@@ -164,14 +125,11 @@ class BVWindow:
         self.DynMetaDataLabels_2[1].config(text="F score Level  : {}".format(self.parent.threshold_calc.f_Score_Level))
         self.DynMetaDataLabels_2[2].config(text="F Score: {}".format(self.parent.threshold_calc.f_Score))
         self.DynMetaDataLabels_2[3].config(text="Threshold : {}".format(self.parent.threshold_calc.thresh))
+
+
 class UserViewer(BVWindow):
 
     def __init__(self,GUI,windowStatus,name):
-
-        #
-        # Variables
-        #
-
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
@@ -180,10 +138,12 @@ class UserViewer(BVWindow):
         _lightgray = "#FAFAFA"
 
         self.ttkstyle = ttk.Style()
-        self.ttkstyle.configure('TScale',
-        background=_lightgray,
-        foreground='white',
-        font=('Helvetica', 18, 'bold'))
+        self.ttkstyle.configure(
+                'TScale',
+                background=_lightgray,
+                foreground='white',
+                font=('Helvetica', 18, 'bold')
+            )
 
         self.ttkstyle.configure('TCheckbutton',
         background=_lightgray,)
@@ -286,46 +246,34 @@ class UserViewer(BVWindow):
         self.currentTrainPicIndex = 0
 
     def switchUser(self):
-
         self.currentRecogPicIndex = 0
         self.currentTrainPicIndex = 0
-
         self.updateUserView()
 
     def switchPic(self,pictype,switchtype):
-
         if not self.currentUser:
             return
 
         if switchtype == "next":
-
             if pictype == "train":
                 if self.currentTrainPicIndex + 1 < len(self.currentUser.trainPictures):
                     self.currentTrainPicIndex += 1
                     self.updateUserView()
-
             elif pictype == "test":
                 if self.currentRecogPicIndex + 1 < len(self.currentUser.recogPictures):
                     self.currentRecogPicIndex += 1
                     self.updateUserView()
-
         elif switchtype == "prev":
-
             if pictype == "train":
                 if self.currentTrainPicIndex - 1 >= 0:
                     self.currentTrainPicIndex -= 1
                     self.updateUserView()
-
             elif pictype == "test":
                 if self.currentRecogPicIndex - 1 >= 0:
                     self.currentRecogPicIndex -= 1
                     self.updateUserView()
 
-
-
-
     def updateUserView(self):
-
         if self.UserLB.curselection() == ():
             return
 
@@ -341,7 +289,6 @@ class UserViewer(BVWindow):
 
         plt.figure(self.name + "_recogPicFig")
 
-        #print(user.imgShape)
         pic = user.recogPictures[self.currentRecogPicIndex]
 
         #reshapedPic = pic.reshape((user.imgShape[1],user.imgShape[0],3))
@@ -365,7 +312,6 @@ class UserViewer(BVWindow):
         return
 
     def updateListbox(self):
-
         if self.UserLB.size()[0] > 0:
             lastSel = self.UserLB.curselection()
 
@@ -376,23 +322,16 @@ class UserViewer(BVWindow):
 
         self.UserLB.selection_set(0)
 
-
         if len(lastSel) > 0:
-
             self.UserLB.selection_set(lastSel)
 
 
-
 class GraphViewer(BVWindow):
-
-    #Subclass of BVWindow
+    """
+    Subclass of BVWindow
+    """
 
     def __init__(self,GUI,windowStatus,name):
-
-        #
-        # Variables
-        #
-
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
@@ -523,7 +462,6 @@ class GraphViewer(BVWindow):
         self.DynMetaDataLabels_2 = self.buildSIPDynamicLabels(self.metaDataFrame_2,4)
 
     def updateListbox(self):
-
         if self.Scrolledlistbox1.size()[0] > 0:
             lastSel = self.Scrolledlistbox1.curselection()
 
@@ -534,9 +472,7 @@ class GraphViewer(BVWindow):
 
         self.Scrolledlistbox1.selection_set(0)
 
-
         if len(lastSel) > 0:
-
             self.Scrolledlistbox1.selection_set(lastSel)
 
 
@@ -573,17 +509,17 @@ class GraphViewer(BVWindow):
 
         #Plot Mean
         mean = y.mean()
-        plt.plot([x.iloc[0],x[-1:]],[mean,mean])
+        plt.plot([x.iloc[0],x.iloc[-1:]],[mean,mean])
         plt.text(x.iloc[0],mean, "Mean : {}".format(round(mean,4)), fontsize=10)
 
         #Plot Max
         max = y.max()
-        plt.plot([x.iloc[0],x[-1:]],[max,max])
+        plt.plot([x.iloc[0],x.iloc[-1:]],[max,max])
         plt.text(x.iloc[0],max, "Max : {}".format(round(max,4)), fontsize=10)
 
         #Plot Min
         min = y.min()
-        plt.plot([x.iloc[0],x[-1:]],[min,min])
+        plt.plot([x.iloc[0],x.iloc[-1:]],[min,min])
         plt.text(x.iloc[0],min, "Min : {}".format(round(min,4)), fontsize=10)
 
         plt.xlabel(self.plotPrettyLabel)
@@ -594,31 +530,19 @@ class GraphViewer(BVWindow):
         self.plotCanvas.draw()
 
     def getUserLimitEntry (self):
-
         userLimit = 0
-
         try:
-
             userLimit = int(self.userLimitEntry.get())
-
         except ValueError:
-
             messagebox.showerror("Error", "Invalid Input only numbers allowed")
             pass
-
         return userLimit
 
 
-
-
 class TPViewer(GraphViewer):
-    #def __init__(self,master, sqlCon_SPD, sqlCon_STA):
-    def __init__(self,GUI,windowStatus):
+    def __init__(self, GUI, windowStatus):
 
-        #
         # Starting GraphViewer Superclass
-        #
-
         GraphViewer.__init__(self,GUI,windowStatus,"TPViewer")
         self.titleLabel.config(text = "True Positive Viewer" ,style = 'title.TLabel')
         self.plotPrettyLabel = "True Positive Pictures"
@@ -634,16 +558,12 @@ class TPViewer(GraphViewer):
 class TNViewer(GraphViewer):
     def __init__(self,GUI,windowStatus):
 
-        #
         # Starting GraphViewer Superclass
-        #
-
         GraphViewer.__init__(self,GUI,windowStatus,"TNViewer")
 
+        # Configuring GUI elements
         self.titleLabel.config(text = "True Negative Viewer",style = 'title.TLabel')
-
         self.plotPrettyLabel = "True Negative Pictures"
-
         self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("TN"))
 
         self.updateBenchmark("TN")
@@ -651,19 +571,16 @@ class TNViewer(GraphViewer):
         if (self.windowStatus == "visible"):
             self.show()
 
+
 class OFTNViewer(GraphViewer):
     def __init__(self,GUI,windowStatus):
 
-        #
         # Starting GraphViewer Superclass
-        #
-
         GraphViewer.__init__(self,GUI,windowStatus,"OFTNViewer")
 
+        # Configuring GUI elements
         self.titleLabel.config(text = "Openface True Negative Viewer",style = 'title.TLabel')
-
         self.plotPrettyLabel = "Openface True Negative Pictures"
-
         self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("OFTN"))
 
         self.updateBenchmark("OFTN")
@@ -672,17 +589,14 @@ class OFTNViewer(GraphViewer):
             self.show()
 
 class OFTPViewer(GraphViewer):
-    #def __init__(self,master, sqlCon_SPD, sqlCon_STA):
     def __init__(self,GUI,windowStatus):
 
-        #
         # Starting GraphViewer Superclass
-        #
-
         GraphViewer.__init__(self,GUI,windowStatus,"OFTPViewer")
+
+        # Configuring GUI elements
         self.titleLabel.config(text = "Openface True Positive Viewer" ,style = 'title.TLabel')
         self.plotPrettyLabel = "Openface True Positive Pictures"
-
         self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("OFTP"))
 
         self.updateBenchmark("OFTP")
@@ -693,16 +607,12 @@ class OFTPViewer(GraphViewer):
 class CV2TNViewer(GraphViewer):
     def __init__(self,GUI,windowStatus):
 
-        #
         # Starting GraphViewer Superclass
-        #
-
         GraphViewer.__init__(self,GUI,windowStatus,"CV2TNViewer")
 
+        # Configuring GUI elements
         self.titleLabel.config(text = "CV2 True Negative Viewer",style = 'title.TLabel')
-
         self.plotPrettyLabel = "CV2 True Negative Pictures"
-
         self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("CV2TN"))
 
         self.updateBenchmark("CV2TN")
@@ -711,17 +621,14 @@ class CV2TNViewer(GraphViewer):
             self.show()
 
 class CV2TPViewer(GraphViewer):
-    #def __init__(self,master, sqlCon_SPD, sqlCon_STA):
     def __init__(self,GUI,windowStatus):
 
-        #
         # Starting GraphViewer Superclass
-        #
-
         GraphViewer.__init__(self,GUI,windowStatus,"CV2TPViewer")
+
+        # Configuring GUI elements
         self.titleLabel.config(text = "CV2 True Positive Viewer" ,style = 'title.TLabel')
         self.plotPrettyLabel = "CV2 True Positive Pictures"
-
         self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("CV2TP"))
 
         self.updateBenchmark("CV2TP")
@@ -730,15 +637,12 @@ class CV2TPViewer(GraphViewer):
             self.show()
 
 class MixedViewer(GraphViewer):
-    #def __init__(self,master, sqlCon_SPD, sqlCon_STA):
     def __init__(self,GUI,windowStatus):
 
-        #
         # Starting GraphViewer Superclass
-        #
-
         GraphViewer.__init__(self,GUI,windowStatus,"MixedViewer")
 
+        # Configuring GUI elements
         self.runTestOnParameterButton.configure(text = "Run with Parameters")
         self.runTestOnParameterButton.place(relx=0.0, rely=0.55,relheight = 0.05,relwidth = 0.9)
 
@@ -763,13 +667,12 @@ class MixedViewer(GraphViewer):
         self.numDecoyUserImages.place(relx=0.0, rely=0.45,relheight = 0.05,relwidth = 0.3)
         self.numDecoyUserImages.insert(tk.END,"10")
 
-
-
         self.titleLabel.config(text = "Mixed Viewer",style = 'title.TLabel')
 
         self.plotPrettyLabel = "Mixed Pictures"
 
         self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("Mixed"))
+
 
         self.updateBenchmark("Mixed")
 
@@ -785,10 +688,7 @@ if __name__ == '__main__':
 
     while True:
         time.sleep(0.1)
-
         if not main_app.exitFlag:
-
             root.update()
-
         else:
             exit()

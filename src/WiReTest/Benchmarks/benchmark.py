@@ -53,18 +53,11 @@ class userRecog():
     #
 
     def __init__(self,username):
-
         self.username = username
-
         self.recogPictures = []
-
         self.trainPictures = []
-
         self.recogScores = None
-
         self.imgShape = None
-
-
 
 
 class benchRecog():
@@ -74,15 +67,20 @@ class benchRecog():
 
     def __init__(self,**kwargs):
 
-        #
         # Since Benchmarks can take long the
         # Master Class can define a Progresswindow so the GUI doesnt freeze
         # and can update
-        #
+        
+        # tkinter elements
         self.master = None
         self.root = None
-        self.pW = None
+        self.pW = None          # progress window
+
         self.userLimit = 5
+        self.trainPictureAmount = 20
+        self.recogPictureAmount = 10
+
+        # initialize timers for respective tests
         self.TPUserTimer = BVU.UserTimer()
         self.TNUserTimer = BVU.UserTimer()
         self.CV2TPUserTimer = BVU.UserTimer()
@@ -90,29 +88,18 @@ class benchRecog():
         self.OFTPUserTimer = BVU.UserTimer()
         self.OFTNUserTimer = BVU.UserTimer()
         self.MixedUserTimer = BVU.UserTimer()
-        self.trainPictureAmount = 30
-        self.recogPictureAmount = 10
+
         self.exitFlag = False
         self.cv2Inst = cv2Recog()
 
-        #
         # Fetch optional Arguments
-        #
-
         for key, value  in kwargs.items():
-
-            #if key == 'pW':
-                #self.pW = value
-
             if key == 'root':
                 self.root = value
-
             if key == 'master':
                 self.master = value
-
             if key == 'userlimit':
                 self.userLimit = value
-
             if key == 'pW':
                 self.pW = value
                 self.pW.createProgressbar("benchProg")
@@ -120,16 +107,17 @@ class benchRecog():
         # Optimal Threshold Calculation
         self.threshold_calc = self.master.threshold_calc
 
-        #if self.root and self.master:
-            #self.pW = BVW.progresWindow(self.root,"Benchmark",self.master.windowDimension_x,self.master.windowDimension_y)
-            #self.pW.dropDown(self.root,self.master)
-
+        # update progress window
         if self.pW:
             self.pW.update("benchProg","Fetching Dataset...",0)
 
         #Fetch the Learning set from sklearn
-        lfw_people = fetch_lfw_people(min_faces_per_person=self.trainPictureAmount, resize=1)
+        lfw_people = fetch_lfw_people(
+                min_faces_per_person=self.recogPictureAmount+self.trainPictureAmount, 
+                resize=1
+            )
 
+        # update progress window
         if self.pW:
             self.pW.update("benchProg","Resizing Images...",30)
 
@@ -137,119 +125,82 @@ class benchRecog():
         imgs = lfw_people.images
         targets = lfw_people.target
         target_names = lfw_people.target_names
-        #print(len(targets))
 
         if target_names.size < self.userLimit:
-
             if tk.messagebox.askyesno("Benchmark","Only : {} users available, continue with {}?".format(target_names.size,target_names.size)):
-
                 self.userLimit = target_names.size
             else:
-
                 self.exitFlag = True
                 return
 
         resizedImgs = []
-
         self.image_shape = imgs[0].shape
 
-        #Resize images
+        # Resize images
         # Since WiRe Algo needs all images to be the same height and width
-
         for img in imgs:
-
-            #plt.imshow(cv2.resize(img, dsize=(98,116), interpolation=cv2.INTER_CUBIC).reshape((98 * 116)), cmap="Greys_r")
-            #plt.show()
-            #resizedImgs.append(cv2.resize(img, dsize=(116,98), interpolation=cv2.INTER_CUBIC).reshape((98 * 116)))
             resizedImgs.append(img.reshape((self.image_shape[1] * self.image_shape[0])))
 
+        # update progress window
         if self.pW:
             self.pW.update("benchProg","Building Image Data...",35)
 
-        #Set up Dataframe for better Datamanagement
-        # Dataframes provide many useful functions for Scientific Datamanipulation
-        # Like sorting Indexing etc.
-
-        #print(len(list(map(lambda x: self.mapNamesToNumber(x,target_names),targets))))
-        #print(list(map(lambda x: target_names[x],targets)))
-
-        self.df = pd.DataFrame(data = {'target' : targets,'name' : list(map(lambda x: target_names[x],targets)), 'img' : resizedImgs})
+        self.df = pd.DataFrame(data = {
+            'target' : targets,
+            'name' : list(map(lambda x: target_names[x],targets)), 
+            'img' : resizedImgs
+        })
         self.df = self.df.set_index('target').sort_index()
-
-        #print(self.df)
 
         self.FaceDetection = self.master.FaceDetection
 
-        #
-        # Init Users
-        # Assignes Images to their right owner, assignes Username and necessary Variables
-        #
-
+        # Init Users: Assignes Images to their right owner, assignes Username and necessary Variables
         self.users = []
         self.dbUsers = self.master.DbUsers
-
-
         userCount = self.userLimit
         userFin = 0
-        #
-        # Since I switched to Dataframes this could be done better
-        #
+
+        # TODO: Since I switched to Dataframes this could be done better
         self.recogPictureCount = 0
         self.trainPictureCount = 0
 
+        # Initializing users for benchmark tests: Inserting train and recognition images
         for index in range(self.userLimit):
-
+            # update progress window
             if self.pW:
-                self.pW.update("benchProg","Initialize Users...",35 + userFin / userCount * 65)
+                self.pW.update("benchProg","Initialize Users...",35 + (userFin/userCount)*65)
 
             data = self.df.loc[index]
+            username = list(data['name'])[0]
+            user_ = userRecog(username)
 
-            user_ = userRecog(list(data['name'])[0])
-
-            dataRecog = np.asarray(data['img'][:self.recogPictureAmount])
-            dataTrain = np.asarray(data['img'][self.recogPictureAmount:self.trainPictureAmount])
-            #print(len(dataRecog))
-            #print(len(dataTrain))
-
+            dataRecog = np.asarray(data['img'].iloc[:self.recogPictureAmount])
+            dataTrain = np.asarray(data['img'].iloc[self.recogPictureAmount:self.trainPictureAmount+self.recogPictureAmount])
             self.recogPictureCount += len(dataRecog)
             self.trainPictureCount += len(dataTrain)
 
-            user_.recogPictures = np.zeros((dataRecog.shape[0],dataRecog[0].shape[0]))
-            user_.trainPictures = np.zeros((dataTrain.shape[0],dataTrain[0].shape[0]))
-
-            for index,img in enumerate(dataRecog):
+            user_.recogPictures = np.zeros((dataRecog.shape[0], dataRecog[0].shape[0]))
+            user_.trainPictures = np.zeros((dataTrain.shape[0], dataTrain[0].shape[0]))
+            for index, img in enumerate(dataRecog):
                 user_.recogPictures[index] += img
-
-            for index,img in enumerate(dataTrain):
+            for index, img in enumerate(dataTrain):
                 user_.trainPictures[index] += img
 
-            #user.recogPictures = np.asarray(data[:5])
-            #user.trainPictures = np.asarray(data[5:])
-
             self.users.append(user_)
-
             userFin += 1
 
+        # update progress window
         if self.pW:
             self.pW.finProgress("benchProg")
-
-
 
         self.users = self.master.DbUsers
         self.dbUsers = self.master.DbUsers
 
         self.image_shape = self.master.imShape
 
-
-
-
-
     def modified_project_faces(self, pcs: np.ndarray, images: np.ndarray, mean_data: np.ndarray) -> np.ndarray:
         """
-
-        Modified Method from WiRe Algo wich needed to be slightly Changed
-
-        Project given image set into basis.
+        Modified Method from WiRe Algo: Project given image set into basis.
 
         Arguments:
         pcs: matrix containing principal components / eigenfunctions as rows
@@ -260,21 +211,13 @@ class benchRecog():
         coefficients: basis function coefficients for input images, each row contains coefficients of one image
         """
 
-        # TODO: initialize coefficients array with proper size
+        # initialize coefficients array with proper size
         coefficients = np.zeros((len(images), pcs.shape[0]))
 
-        #mpl.pyplot.imshow(images[0], cmap="Greys_r")
-        #mpl.pyplot.show()
-
-        # TODO: iterate over images and project each normalized image into principal component basis
         # Doesnt need to be executed, done in Benchmark Init
         #images = setup_data_matrix(images)
 
-
-        #
-        #Normalize
-        #
-
+        # Iterate over images and project each normalized image into principal component basis
         for img_index, img in enumerate(images):
             images[img_index] = images[img_index] - mean_data
 
@@ -301,6 +244,7 @@ class benchRecog():
         imgs_test: list of test images
         coeffs_test: Eigenface coefficient of test images
         """
+        # TODO: Properly comment this method
         """
         # Doesnt need to be executed, done in Benchmark Init
         # TODO: load test data set
@@ -309,40 +253,34 @@ class benchRecog():
         #coeffs_test = np.zeros((len(imgs_test),))
         #coeffs_test = project_faces(pcs, imgs_test, mean_data)
         """
-
         d_matrix = imgs_test
         test_pcs, test_sval, test_mean = main.calculate_pca(d_matrix)
-        coeffs_test = self.modified_project_faces(pcs,imgs_test,mean_data)
+        coeffs_test = self.modified_project_faces(pcs, imgs_test, mean_data)
 
-
-
-        # TODO: Initialize scores matrix with proper size
+        # The score is the (angular) distance between the images
         scores = np.zeros((coeffs_train.shape[0], coeffs_test.shape[0]))
-        # TODO: Iterate over all images and calculate pairwise correlation
+        # Iterate over all images and calculate pairwise correlation
         for img_index, coeff_test in enumerate(coeffs_test):
             for train_img_index, coeff_train in enumerate(coeffs_train):
-                scores[train_img_index][img_index] = np.arccos(np.dot(coeff_test,coeff_train)/(np.linalg.norm(coeff_test)*np.linalg.norm(coeff_train)))
+                # TODO: Perhapss explain this calculation better in the future
+                # TODO: A runtime warning occurs here. Try to figure out what causes it!
+                scores[train_img_index][img_index] = np.arccos(np.dot(coeff_test, coeff_train)/(np.linalg.norm(coeff_test)*np.linalg.norm(coeff_train)))
 
         return scores, imgs_test, coeffs_test
 
-    def wireAlgo(self,imgs_test,imgs_train):
-
-        pcs, sv, mean_data  = main.calculate_pca( imgs_train )
-
+    def wireAlgo(self, imgs_test, imgs_train):
+        # TODO: Properly comment this section
+        pcs, sv, mean_data  = main.calculate_pca(imgs_train) 
         cutoff_threshold = 0.8
-
         k = main.accumulated_energy(sv, cutoff_threshold)
-
-        pcs = pcs[0:k, :]
-
+        pcs = pcs[0:k,:]
         coeffs_train = self.modified_project_faces(pcs, imgs_train, mean_data)
-
-        scores, imgs_test, coeffs_test = self.modified_identify_faces(coeffs_train, pcs, mean_data,imgs_test)
-
+        scores, imgs_test, coeffs_test = self.modified_identify_faces(
+                coeffs_train, pcs, mean_data,imgs_test
+            )
         return scores
 
     def run_true_negatives(self):
-
         if self.pW:
             self.pW.createProgressbar("TNProg")
 
@@ -355,15 +293,16 @@ class benchRecog():
         usernames = []
         recogUsernames = []
 
-        #random.shuffle(self.users)
         self.TNUserTimer.clear()
 
-        for user_index,user_ in enumerate(self.users):
-
-            self.TNUserTimer.startTimer(user_)
-
+        for user_index, user_ in enumerate(self.users):
+            # TODO: The start of this enumeration is very similar across all benchmark methods
+            # it might be good to clean this up
             if self.pW:
-                self.pW.update("TNProg","[TN] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),userFin / userCount * 100)
+                self.pW.update(
+                    "TNProg","[TN] Benchmarking User: {}/{}...".format(user_.username,self.userLimit), 
+                    userFin/userCount * 100
+                )
 
             if self.root:
                 self.root.update()
@@ -371,32 +310,27 @@ class benchRecog():
             if len(user_.trainPictures) == 0:
                 continue
 
-            #Fetch User pictures
+            self.TNUserTimer.startTimer(user_)
 
-            rand = random.randint(0,userCount - 1)
+            # Get index of user that is different from current one
+            rand = random.randint(0, userCount - 1)
             while rand == user_index:
-                rand = random.randint(0,userCount - 1)
+                rand = random.randint(0, userCount - 1)
 
-            imgs_train = self.users[rand].trainPictures # Images are flattened
-
+            # Images are flattened
+            imgs_train = self.users[rand].trainPictures
             imgs_test = user_.recogPictures
 
-            #
             # Running WiRe Algo on user
-            #
             try:
-
-                scores = self.wireAlgo(imgs_test ,imgs_train)
-
-            except ValueError:
+               scores = self.wireAlgo(imgs_test ,imgs_train)
+            except ValueError as e:
+                print("WARNING: wireAlgo terminated with an error:")
+                print(e)
                 return
 
-            #
             # Prepare Score Dataframe
-            #
-
             user_.recogScores = None
-
             for testImageIndex in range(scores.shape[1]):
                 recognisedImageIndex = np.argmin(scores[:, testImageIndex])
                 recognisedImageScore = np.min(scores[:, testImageIndex])
@@ -406,24 +340,29 @@ class benchRecog():
                 usernames.append(user_.username)
                 recogUsernames.append(self.users[rand].username)
 
-            #recogScores.append(pd.DataFrame(data = {'testImageIndex' : testImageIndices,'recogImageIndex' : recogImageIndices,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex'))
-
             userFin += 1
             self.TNUserTimer.endTimer(user_)
 
         if self.pW:
             self.pW.finProgress("TNProg")
 
-        recogScores = pd.DataFrame(data = {'testImageIndex' : testImageIndices,'username' : usernames, 'recogImageIndex' : recogImageIndices,'recogUsername' : recogUsernames,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex')
+        recogScores = pd.DataFrame(
+            data = {
+                'testImageIndex':    testImageIndices,
+                'username':          usernames,
+                'recogImageIndex':   recogImageIndices,
+                'recogUsername':     recogUsernames,
+                'recogScore' :       recogImageScores
+            }
+        ).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
         return recogScores
 
-    def run_mixed_positives(self,numSelfImages,numDecoyUsers,numDecoyUserImages):
-
-        #
-        # Benchmark method for mixed benchmark
-        # Compares user images with image mixture of different users and a pic from the query user
-        #
+    def run_mixed_positives(self, numSelfImages, numDecoyUsers, numDecoyUserImages):
+        """
+        Benchmark method for mixed benchmark
+        Compares user images with image mixture of different users and a pic from the query user
+        """
 
         if self.pW:
             self.pW.createProgressbar("MProg")
@@ -440,7 +379,6 @@ class benchRecog():
         user_ = self.users[0]
 
         if numSelfImages > len(user_.trainPictures) or numDecoyUserImages > len(user_.trainPictures) or numDecoyUsers > len(self.users):
-
             tk.messagebox.showinfo("Benchmark","Adjusting Parameters:\nNum. Of Query Images: {} -> {}\nNum. Of Other Users: {} -> {}\nNum. Pic. Of Other Users: {} -> {}\n".format(
             numSelfImages,np.min((numSelfImages,len(user_.trainPictures))),numDecoyUsers,np.min((numDecoyUsers,len(self.users))),
             numDecoyUserImages,np.min((numDecoyUserImages,len(user_.trainPictures)))))
@@ -450,16 +388,19 @@ class benchRecog():
 
         for user_ in self.users:
 
-            self.MixedUserTimer.startTimer(user_)
-
             if self.pW:
-                self.pW.update("MProg","[MP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),userFin / userCount * 100)
+                self.pW.update(
+                    "MProg","[MP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),
+                    userFin/userCount * 100
+                )
 
             if self.root:
                 self.root.update()
 
             if len(user_.trainPictures) == 0:
                 continue
+
+            self.MixedUserTimer.startTimer(user_)
 
             #Fetch User pictures
             #imgs_train = user_.trainPictures # Images are flattened
@@ -501,24 +442,19 @@ class benchRecog():
 
             decoyUsers.append(user_)
 
-
-            #
-            # Running WiRe Algo on user
-            #
             try:
                 scores = self.wireAlgo(imgs_test ,imgs_train)
-            except ValueError:
+            except ValueError as e:
+                print("WARNING: wireAlgo terminated with an error:")
+                print(e)
                 return
 
-            #
             # Prepare Score Dataframe
-            #
-
             user_.recogScores = None
-
             for testImageIndex in range(scores.shape[1]):
                 recognisedImageIndex = np.argmin(scores[:, testImageIndex])
                 recognisedImageScore = np.min(scores[:, testImageIndex])
+
                 #Correctly map imgs_train to Index
                 testImageIndices.append(testImageIndex)
                 recogImageIndices.append(recognisedImageIndex // numDecoyUserImages)
@@ -529,29 +465,29 @@ class benchRecog():
                 #print(recognisedImageIndex // numDecoyUserImages)
                 recogUsernames.append(decoyUsers[recognisedImageIndex // numDecoyUserImages].username)
 
-            #recogScores.append(pd.DataFrame(data = {'testImageIndex' : testImageIndices,'recogImageIndex' : recogImageIndices,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex'))
-
             userFin += 1
             self.MixedUserTimer.endTimer(user_)
 
         if self.pW:
             self.pW.finProgress("MProg")
 
-        #print(len(usernames),len(testImageIndices),len(recogImageIndices),len(recogUsernames),len(recogImageScores))
-
-        recogScores = pd.DataFrame(data = {'testImageIndex' : testImageIndices,'username' : recogUsernames, 'recogImageIndex' : recogImageIndices,'recogUsername' : usernames,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex')
-
+        recogScores = pd.DataFrame(
+            data = {
+                'testImageIndex':  testImageIndices,
+                'username':        recogUsernames, 
+                'recogImageIndex': recogImageIndices, 
+                'recogUsername':   usernames,
+                'recogScore':      recogImageScores
+            }
+        ).set_index('recogImageIndex').sort_values(by='testImageIndex')
         return recogScores
 
-
-
     def run_true_positives(self):
-
-        #
-        # Benchmark method for ture positive classes
-        # Compares user images with images of that exact user
-        # creating a True Positive case
-        #
+        """
+        Benchmark method for ture positive classes
+        Compares user images with images of that exact user
+        creating a True Positive case
+        """
 
         if self.pW:
             self.pW.createProgressbar("TPProg")
@@ -565,14 +501,13 @@ class benchRecog():
         usernames = []
 
         self.TPUserTimer.clear()
-        #random.shuffle(self.users)
 
         for user_ in self.users:
-
-            self.TPUserTimer.startTimer(user_)
-
             if self.pW:
-                self.pW.update("TPProg","[TP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),userFin / userCount * 100)
+                self.pW.update(
+                    "TPProg","[TP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),
+                    userFin/userCount * 100
+                )
 
             if self.root:
                 self.root.update()
@@ -580,26 +515,19 @@ class benchRecog():
             if len(user_.trainPictures) == 0:
                 continue
 
-            #Fetch User pictures
+            self.TPUserTimer.startTimer(user_)
+
+            # Fetch User pictures
             imgs_train = user_.trainPictures # Images are flattened
             imgs_test = user_.recogPictures
 
-            #
-            # Running WiRe Algo on user
-            #
             try:
-
                 scores = self.wireAlgo(imgs_test ,imgs_train)
-
             except ValueError:
                 return
 
-            #
             # Prepare Score Dataframe
-            #
-
             user_.recogScores = None
-
             for testImageIndex in range(scores.shape[1]):
                 recognisedImageIndex = np.argmin(scores[:, testImageIndex])
                 recognisedImageScore = np.min(scores[:, testImageIndex])
@@ -608,25 +536,29 @@ class benchRecog():
                 recogImageScores.append(recognisedImageScore)
                 usernames.append(user_.username)
 
-            #recogScores.append(pd.DataFrame(data = {'testImageIndex' : testImageIndices,'recogImageIndex' : recogImageIndices,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex'))
-
             userFin += 1
             self.TPUserTimer.endTimer(user_)
 
         if self.pW:
             self.pW.finProgress("TPProg")
 
-        recogScores = pd.DataFrame(data = {'testImageIndex' : testImageIndices,'username' : usernames, 'recogImageIndex' : recogImageIndices,'recogUsername' : usernames,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex')
+        recogScores = pd.DataFrame(
+            data = {
+                'testImageIndex':  testImageIndices,
+                'username':        usernames, 
+                'recogImageIndex': recogImageIndices,
+                'recogUsername':   usernames,
+                'recogScore':      recogImageScores
+            }).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
         return recogScores
 
 
 
     def plot_user(self,fig,user_,scores):
-
-        #
-        # Plots Score Dataframe needs to be called from a GraphViewer Class in BV_Windows
-        #
+        """
+        Plots Score Dataframe needs to be called from a GraphViewer Class in BV_Windows
+        """
 
         slotIndex = 1
 
@@ -649,11 +581,10 @@ class benchRecog():
             plt.imshow(recogUser.trainPictures[int(scoreTuple[1])].reshape(user_.imgShape).astype("uint8"))
             plt.xlabel('Identified: {} with Score: {}'.format(scoreTuple[3],round(scoreTuple[4],4)),rotation=0)
 
-
             slotIndex += 2
 
-
     def findUsername(self,username):
+        # TODO: This looks very inefficient
         for user in self.users:
             if user.username == username:
                 return user
@@ -675,8 +606,6 @@ class benchRecog():
             else:
                 train_alignedFace = train_img
 
-
-
             for test_index, test_img in enumerate(test_imgs):
                 test_img = test_img.reshape((self.image_shape[0],self.image_shape[1]))
                 test_img = cv2.normalize(src=test_img, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
@@ -693,12 +622,11 @@ class benchRecog():
         return scores
 
     def openface_run_true_positives(self):
-
-        #
-        # Benchmark method for ture positive classes
-        # Compares user images with images of that exact user
-        # creating a True Positive case
-        #
+        """
+        Benchmark method for ture positive classes
+        Compares user images with images of that exact user
+        creating a True Positive case
+        """
 
         if self.pW:
             self.pW.createProgressbar("Openface_TPProg")
@@ -715,11 +643,11 @@ class benchRecog():
         #random.shuffle(self.users)
 
         for user_ in self.users:
-
-            self.OFTPUserTimer.startTimer(user_)
-
             if self.pW:
-                self.pW.update("Openface_TPProg","[TP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),userFin / userCount * 100)
+                self.pW.update(
+                    "Openface_TPProg","[TP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),
+                    userFin/userCount * 100
+                )
 
             if self.root:
                 self.root.update()
@@ -727,20 +655,16 @@ class benchRecog():
             if len(user_.trainPictures) == 0:
                 continue
 
+            self.OFTPUserTimer.startTimer(user_)
+
             #Fetch User pictures
             imgs_train = user_.trainPictures # Images are flattened
             imgs_test = user_.recogPictures
 
-            #
             # Running Openface Algo on user
-            #
-
             scores = self.openface_algo(imgs_train, imgs_test, crop_and_align=True)
 
-            #
             # Prepare Score Dataframe
-            #
-
             user_.recogScores = None
 
             for testImageIndex in range(scores.shape[1]):
@@ -752,7 +676,6 @@ class benchRecog():
                 usernames.append(user_.username)
 
             #recogScores.append(pd.DataFrame(data = {'testImageIndex' : testImageIndices,'recogImageIndex' : recogImageIndices,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex'))
-            print(pd.DataFrame(data = {'testImageIndex' : testImageIndices,'recogImageIndex' : recogImageIndices,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex'))
 
             userFin += 1
             self.OFTPUserTimer.endTimer(user_)
@@ -760,13 +683,19 @@ class benchRecog():
         if self.pW:
             self.pW.finProgress("Openface_TPProg")
 
-        recogScores = pd.DataFrame(data = {'testImageIndex' : testImageIndices,'username' : usernames, 'recogImageIndex' : recogImageIndices,'recogUsername' : usernames,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex')
+        recogScores = pd.DataFrame(
+            data = {
+                'testImageIndex':  testImageIndices,
+                'username':        usernames, 
+                'recogImageIndex': recogImageIndices,
+                'recogUsername':   usernames,
+                'recogScore':      recogImageScores
+            }).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
         return recogScores
 
     def opencv_haar_lbph_algo(self, imgs_test_raw,imgs_train_raw):
-
-        #pre-process pictures to be in the right format
+        # pre-process pictures to be in the right format
         imgs_train = []
         for train_img in imgs_train_raw:
             train_img_resized = train_img.reshape((self.image_shape[0],self.image_shape[1])) #back into original shape
@@ -780,20 +709,16 @@ class benchRecog():
             test_img_norm = cv2.normalize(src=test_img_resized, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U) #normalize, so that its an int array between 0 and 255
             imgs_test.append(test_img_norm)
 
-        #use temporary integer ID to train a completely new model and check if it recognized the same person in authorisation login picture
+        # use temporary integer ID to train a completely new model and check if it recognized the same person in authorisation login picture
         temp_ID = 22
         face_rec_main.train_add_faces(temp_ID, imgs_train, new_model=True, save_model=False, crop_to_face=False)
 
-        #Authorize: check if the training pitures are the same person as the given login picture
+        # Authorize: check if the training pitures are the same person as the given login picture
         _, dists = face_rec_main.authorize_faces(temp_ID, imgs_test, crop_to_face=False)
-        #debug
-        print(f'\nOpenCV result: \ndistances: {dists} \n')
+
         return dists
 
     def opencv_single_dist_algo(self, imgs_test_raw,imgs_train_raw):
-
-
-
         #pre-process pictures to be in the right format
         imgs_train = []
         for train_img_processing in imgs_train_raw:
@@ -810,22 +735,20 @@ class benchRecog():
             test_img_norm = cv2.normalize(src=test_img_resized, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U) #normalize, so that its an int array between 0 and 255
             imgs_test.append(test_img_norm)
 
-        #2d array of results: each row is one train picture, each column is one test picture
+        # 2d array of results: each row is one train picture, each column is one test picture
         res = np.zeros((len(imgs_train), len(imgs_test)))
         for train_ind, train_img in enumerate(imgs_train):
             for test_ind, test_img in enumerate(imgs_test):
                 res[train_ind, test_ind] = self.cv2Inst.dist_between_two_pics(train_img, test_img)
 
-
         return res
 
     def opencv_run_true_positives(self):
-
-        #
-        # Benchmark method for ture positive classes of the opencv haar+lbph models
-        # Compares user images with images of that exact user
-        # creating a True Positive case
-        #
+        """
+        Benchmark method for true positive classes of the opencv haar+lbph models
+        Compares user images with images of that exact user
+        creating a True Positive case
+        """
 
         if self.pW:
             self.pW.createProgressbar("OpenCVTPProg")
@@ -839,14 +762,13 @@ class benchRecog():
         usernames = []
 
         self.CV2TPUserTimer.clear()
-        #random.shuffle(self.users)
 
         for user_ in self.users:
-
-            self.CV2TPUserTimer.startTimer(user_)
-
             if self.pW:
-                self.pW.update("OpenCVTPProg","[CV2TP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),userFin / userCount * 100)
+                self.pW.update(
+                    "OpenCVTPProg","[CV2TP] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),
+                    userFin/userCount * 100
+                )
 
             if self.root:
                 self.root.update()
@@ -854,22 +776,17 @@ class benchRecog():
             if len(user_.trainPictures) == 0:
                 continue
 
+            self.CV2TPUserTimer.startTimer(user_)
+
             #Fetch User pictures
             imgs_train = user_.trainPictures # Images are flattened
             imgs_test = user_.recogPictures
 
-            #
             # Running opencv haar and lpph Algo on user
-            #
-
             scores = self.opencv_single_dist_algo(imgs_test, imgs_train)
 
-            #
             # Prepare Score Dataframe
-            #
-
             user_.recogScores = None
-
             for testImageIndex in range(scores.shape[1]):
                 recognisedImageIndex = np.argmin(scores[:, testImageIndex])
                 recognisedImageScore = np.min(scores[:, testImageIndex])
@@ -878,11 +795,12 @@ class benchRecog():
                 recogImageScores.append(recognisedImageScore)
                 usernames.append(user_.username)
 
-            #recogScores.append(pd.DataFrame(data = {'testImageIndex' : testImageIndices,'recogImageIndex' : recogImageIndices,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex'))
-
-
+            # TODO: Find out what it does
             # Data to calculate optimal Threshold
-            labels = np.full(shape=(len(imgs_train),len(imgs_test)), fill_value=True, dtype=bool)#we're in true positive case so all labels are True
+            # we're in true positive case so all labels are True
+            labels = np.full(shape=(len(imgs_train),len(imgs_test)), 
+                             fill_value=True, 
+                             dtype=bool)
             self.threshold_calc.add_data_and_labels(scores, labels)
 
             userFin += 1
@@ -891,12 +809,18 @@ class benchRecog():
         if self.pW:
             self.pW.finProgress("OpenCVTPProg")
 
-        recogScores = pd.DataFrame(data = {'testImageIndex' : testImageIndices,'username' : usernames, 'recogImageIndex' : recogImageIndices,'recogUsername' : usernames,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex')
+        recogScores = pd.DataFrame(
+            data = {
+                'testImageIndex': testImageIndices,
+                'username' : usernames, 
+                'recogImageIndex' : recogImageIndices,
+                'recogUsername' : usernames,
+                'recogScore' : recogImageScores
+            }).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
         return recogScores
 
     def opencv_run_true_negatives(self):
-
         if self.pW:
             self.pW.createProgressbar("CV2TNProg")
 
@@ -909,48 +833,36 @@ class benchRecog():
         usernames = []
         recogUsernames = []
 
-        #random.shuffle(self.users)
         self.CV2TNUserTimer.clear()
 
         for user_index,user_ in enumerate(self.users):
-
-            self.CV2TNUserTimer.startTimer(user_)
-
             if self.pW:
-                self.pW.update("CV2TNProg","[CV2TN] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),userFin / userCount * 100)
+                self.pW.update(
+                    "CV2TNProg","[CV2TN] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),
+                    userFin/userCount * 100
+                )
 
             if self.root:
                 self.root.update()
 
             if len(user_.trainPictures) == 0:
-                print("Training pictures empty")
+                print("WARNING: Training pictures empty!")
                 continue
 
+            self.CV2TNUserTimer.startTimer(user_)
+
             #Fetch User pictures
-            print("Fetching user")
             rand = random.randint(0,userCount - 1)
             while rand == user_index:
-                print(rand,"==",user_index)
                 rand = random.randint(0,userCount - 1)
 
-            print("Test 1")
             imgs_train = self.users[rand].trainPictures # Images are flattened
-            print("Test 2")
             imgs_test = user_.recogPictures
 
-            #
-            # Running OpenCV Haar  on user
-            #
-            print("Running Opencv Haar")
+            scores = self.opencv_single_dist_algo(imgs_test, imgs_train)
 
-            scores = self.opencv_single_dist_algo(imgs_test ,imgs_train)
-
-            #
             # Prepare Score Dataframe
-            #
-
             user_.recogScores = None
-
             for testImageIndex in range(scores.shape[1]):
                 recognisedImageIndex = np.argmin(scores[:, testImageIndex])
                 recognisedImageScore = np.min(scores[:, testImageIndex])
@@ -960,23 +872,31 @@ class benchRecog():
                 usernames.append(user_.username)
                 recogUsernames.append(self.users[rand].username)
 
-            #recogScores.append(pd.DataFrame(data = {'testImageIndex' : testImageIndices,'recogImageIndex' : recogImageIndices,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex'))
-
             userFin += 1
             self.CV2TNUserTimer.endTimer(user_)
 
             # Data to calculate optimal Threshold
-            labels = np.full(shape=(len(imgs_train),len(imgs_test)), fill_value=False, dtype=bool)#we're in true positive case so all labels are True
+            # We're in true positive case so all labels are True
+            labels = np.full(shape=(len(imgs_train), len(imgs_test)), 
+                             fill_value=False, 
+                             dtype=bool)
             self.threshold_calc.add_data_and_labels(scores, labels)
 
         if self.pW:
             self.pW.finProgress("CV2TNProg")
 
-        recogScores = pd.DataFrame(data = {'testImageIndex' : testImageIndices,'username' : usernames, 'recogImageIndex' : recogImageIndices,'recogUsername' : recogUsernames,'recogScore' : recogImageScores}).set_index('recogImageIndex').sort_values(by='testImageIndex')
+        recogScores = pd.DataFrame(
+            data = {
+                'testImageIndex':  testImageIndices,
+                'username':        usernames, 
+                'recogImageIndex': recogImageIndices,
+                'recogUsername' :  recogUsernames,
+                'recogScore' :     recogImageScores
+            }).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
         # Calculate optimal threshold (for this data)
-        f_score_level = 0.25 #recall is x times as important as precision
-        self.threshold_calc.set_thres_range(min_threshold = 160, max_threshold = 185, step_num = 300) #choose more accurately with smaller range and/or more steps
+        f_score_level = 0.25  # recall is x times as important as precision
+        self.threshold_calc.set_thres_range(min_threshold = 160, max_threshold = 185, step_num = 300)  #choose more accurately with smaller range and/or more steps
         self.threshold_calc.calc_and_print_results(f_score_level)
 
         return recogScores
