@@ -1,0 +1,2 @@
+[alias]
+   vimdiff=vimdiff -u ~/.vim/vim/vimrc

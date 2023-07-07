@@ -17,6 +17,7 @@ import datetime as dt
 from pytz import timezone
 from gridfs import GridFSBucket
 import pymongo
+import typing
 
 
 class BBDB:
@@ -56,12 +57,6 @@ class BBDB:
         """
         self.cluster.close()
     
-    def closeGraceful(self):
-        """
-        not needed for mongodb
-        """
-        self.close()
-
     def closeGraceful(self):
         """
         not needed for mongodb
@@ -158,7 +153,7 @@ class BBDB:
         login if it succeeds.
         """
         localTime = dt.datetime.now(tz=timezone('Europe/Amsterdam'))
-        if self._user.find_one({"_id":user_id}):
+        if self._user.find_one({"_id": str(user_id)}):
             self._login_attempt.insert_one({
                 "user_id" : str(user_id),
                 "date" : localTime,
@@ -211,14 +206,14 @@ class BBDB:
         try:
             self._login_attempt.update_one(
                 {
-                    "user_id": user_id,
+                    "user_id": str(user_id),
                     "date": time
                 },
                 { 
                     "$set" : {
-                    "login_suc": True,
-                    "success_resp_type": 0,
-                    "inserted_pic_uuid": str(inserted_pic_uuid),
+                        "login_suc": True,
+                        "success_resp_type": 0,
+                        "inserted_pic_uuid": str(inserted_pic_uuid),
                     }
                 })
             return inserted_pic_uuid
@@ -303,7 +298,7 @@ class BBDB:
             user_dict[uuid.UUID(user["_id"])] = user["username"]
         return user_dict
             
-    def getUserWithId(self, user_id: uuid.UUID) -> str:
+    def getUserWithId(self, user_id: uuid.UUID) -> typing.Optional[str]:
         """
         Returns the username corresponding to the user_id.
 
@@ -339,7 +334,7 @@ class BBDB:
             return True
         return False
 
-    def getUser(self, username: str) -> uuid.UUID:
+    def getUser(self, username: str) -> typing.Optional[uuid.UUID]:
         """
         Returns the uuid corresponding to the username.
 
@@ -398,7 +393,7 @@ class BBDB:
 class wire_DB(BBDB):
     def __init__(self, mongo_client=None):
         BBDB.__init__(self, mongo_client=mongo_client)
-        if not self._resource_context.find({"name": "wire"}):
+        if not self._resource_context.find_one({"name": "wire"}):
             for _ in range(self._RETRY_AFTER_FAILURE):
                 try: 
                     self._resource_context.insert_one({
@@ -410,30 +405,31 @@ class wire_DB(BBDB):
                 except pymongo.errors.DuplicateKeyError:
                     pass
 
-        self.wire_context_collection = self._resource_context.find_one({"name": "wire"})
-
-    def getTrainingPictures(self, user_uuid: uuid.UUID = None):
+    def getTrainingPictures(self, user_uuid: typing.Optional[uuid.UUID] = None):
         """
         Returns training pictures from the database from the wire resource context
         """
         # TODO: We need to be able to verify whether a certain user with the 
         # user_id exists before we check
+        wire_context_collection = self._resource_context.find_one({"name": "wire"})
+        assert(wire_context_collection is not None)
+
         resources = None
         if user_uuid: 
             resources = self._resource.find({
-                        "_id": {"$in": self.wire_context_collection["res_id"]},
+                        "_id": {"$in": wire_context_collection["res_id"]},
                         "user_id": str(user_uuid),
                     })
         else: 
             resources = self._resource.find({
-                        "_id": {"$in": self.wire_context_collection["res_id"]},
+                        "_id": {"$in": wire_context_collection["res_id"]},
                     })
 
         pics = []
         ids = []
         for r in resources:
             pics.append(pickle.loads(r["res"]))
-            ids.append(r["_id"])
+            ids.append(uuid.UUID(r["_id"]))
 
         return pics, ids
     
@@ -454,6 +450,8 @@ class wire_DB(BBDB):
         """
         if type(pic) != np.ndarray or type(user_uuid) != uuid.UUID:
             raise TypeError
+        if not self.checkUserIDExists(user_uuid):
+            raise UserDoesntExist("The user doesn't exist.")
         
         pic_uuid = uuid.uuid4()
         for _ in range(self._RETRY_AFTER_FAILURE):
@@ -473,6 +471,7 @@ class wire_DB(BBDB):
         self._resource_context.update_one(
                 {"name": "wire"},
                 {"$addToSet": {"res_id": str(pic_uuid)}})
+
         return pic_uuid
 
     def insertPicture(self, pic : np.ndarray, user_uuid : uuid.UUID):
@@ -524,7 +523,7 @@ class vid_DB(BBDB):
         if type(user_uuid) != uuid.UUID:
            raise TypeError
 
-        fs = GridFSBucket(self.db, "resource")
+        fs = GridFSBucket(self._db, "resource")
         vid_uuid = str(uuid.uuid4())
         for i in range(self._RETRY_AFTER_FAILURE):
             try:
@@ -578,6 +577,9 @@ class frontend_DB(BBDB):
 
 
 class UsernameExists(Exception):
+    pass
+
+class UserDoesntExist(Exception):
     pass
 
 """

@@ -10,7 +10,7 @@ from PIL import Image
 import numpy as np
 import cv2
 
-from DatabaseManagement import vid_DB
+from DatabaseManagement import vid_DB, UserDoesntExist
 
 class WireDBTest(unittest.TestCase):
     def output_assertEqual(self, check, expected):
@@ -26,16 +26,27 @@ class WireDBTest(unittest.TestCase):
         enable_gridfs_integration()
 
     def test_video_insertion_non_existent_user(self):
-        # TODO: Implement
-        pass
-
-    def test_video_insertion_and_retrival(self):
-        # TODO: make sure that user_uuid exists
         source = "videos/Program in C Song.mp4"
         compare = "tmp/test.mp4"
 
+        self.db.register_user("me0", None)
+        self.db.register_user("me1", None)
+        self.db.register_user("me2", None)
+
         stream_insert = open(source, "rb+")
-        vid_uuid = self.db.insertVideo(stream_insert, uuid.uuid1())
+        self.assertRaises(UserDoesntExist, 
+                          self.db.insertVideo, 
+                          stream_insert, uuid.uuid1())
+        stream_insert.close()
+
+    def test_video_insertion_and_retrival(self):
+        source = "videos/Program in C Song.mp4"
+        compare = "tmp/test.mp4"
+
+        user_id = self.db.register_user("me", None)
+
+        stream_insert = open(source, "rb+")
+        vid_uuid = self.db.insertVideo(stream_insert, user_id)
         stream_insert.close()
 
         stream_out = open(compare, "wb+")
