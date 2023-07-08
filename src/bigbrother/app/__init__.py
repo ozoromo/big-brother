@@ -28,9 +28,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','WiReTest'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','FaceRecognition','haar_and_lbph'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','FaceRecognition'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','DBM'))
-from modifiedFaceRecog import recogFace
-from face_rec_main import train_add_faces, authorize_faces
-from main import load_images as load_test_imgs
+#from modifiedFaceRecog import recogFace
+#from face_rec_main import train_add_faces, authorize_faces
+#from main import load_images as load_test_imgs
 import FaceDetection
 #from app import routes
 
