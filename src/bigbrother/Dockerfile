@@ -4,7 +4,7 @@ WORKDIR /bigbrother
 
 COPY . /bigbrother
 
-RUN python -m pip install --upgrade pip
+RUN python -m pip install --upgrade --force pip
 
 RUN python -m pip install cmake
 
@@ -27,6 +27,7 @@ RUN python -m pip install onnx
 RUN python -m pip install onnx_tf
 RUN python -m pip install onnxruntime
 RUN python -m pip install tensorflow
+RUN python -m pip install tensorflow-probability
 RUN python -m pip install imutils
 RUN python -m pip install dlib-binary
 
@@ -40,7 +41,21 @@ RUN python -m pip install Pillow
 #pickle
 RUN python -m pip install uuid
 
-#RUN python -m pip install open-faces
+RUN python -m pip install pytz
+
+RUN python -m pip install scipy
+RUN python -m pip install scikit-learn
+RUN python -m pip install scikit-image
+RUN python -m pip install protobuf
+#RUN python -m pip install openssl
+RUN python -m pip install nose
+RUN python -m pip install protobuf
+RUN python -m pip install nolearn
+
+
+
+
+RUN python -m pip install open-faces
 
 EXPOSE 8000
 
