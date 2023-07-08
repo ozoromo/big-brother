@@ -803,4 +803,5 @@ if __name__=='__main__':
         #socketio.run(app, host='0.0.0.0', port=80, debug=True)
 #app.run()
         #app.run(host='85.214.39.122', port='80', ssl_context=('/etc/letsencrypt/live/h2938366.stratoserver.net/fullchain.pem','/etc/letsencrypt/live/h2938366.stratoserver.net/privkey.pem'))
-        socketio.run(application, host='h2938366.stratoserver.net', port='80', debug=True, ssl_context=('fullchain.pem','privkey.pem'))
+        # socketio.run(application, host='h2938366.stratoserver.net', port='80', debug=True, ssl_context=('fullchain.pem','privkey.pem'))
+        application.run(host='0.0.0.0', port=5000)
