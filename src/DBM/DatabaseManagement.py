@@ -554,8 +554,9 @@ class vid_DB(BBDB):
 
     def __init__(self,dbhost=None):
         BBDB.__init__(self, dbhost)
+        self._VIDEO_RESOURCE_BUCKET = "vid_resource"
 
-    def insertVideo(self, vid, user_uuid: uuid.UUID):
+    def insertVideo(self, vid, user_uuid: uuid.UUID, filename: str, video_transcript: str):
         """
         Inserts a new video into the database and returns the 
         uuid of the inserted video.
@@ -565,6 +566,8 @@ class vid_DB(BBDB):
         This has to be a file-like object that implements `read()`. 
         Alternatively it's also allowed to be a string.
         user_uuid -- ID of the user that owns the video.
+        filename -- Filename of the inserted data. The filename doesn't have to left empty
+        video_transcript -- The transcript of the video.
 
         Return:
         Returns the uuid of the video that has been inserted into the database.
@@ -574,21 +577,25 @@ class vid_DB(BBDB):
         """
         if not self.checkUserIDExists(user_uuid):
             raise UserDoesntExist("The user doesn't exist.")
-        if type(user_uuid) != uuid.UUID:
+        if type(user_uuid) != uuid.UUID or type(filename) != str \
+           or type(video_transcript) != str:
            raise TypeError
 
-        fs = GridFSBucket(self._db, "resource")
+        fs = GridFSBucket(self._db, self._VIDEO_RESOURCE_BUCKET)
         vid_uuid = str(uuid.uuid4())
         for i in range(self._RETRY_AFTER_FAILURE):
             try:
                 fs.upload_from_stream_with_id(
                     vid_uuid,
-                    str(vid_uuid),
+                    str(user_uuid),
                     source = vid,
                     metadata = {
+                        "vid_id": vid_uuid,
                         "user_id": str(user_uuid),
                         "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
-                    }
+                        "filename": filename,
+                        "video_transcript": video_transcript,
+                    },
                 )
                 break
             # TODO: Are there more errors that should be handled?
@@ -609,16 +616,45 @@ class vid_DB(BBDB):
         vid_uuid: This is the id of the video that you want to get.
         stream -- The destination stream of the video that is getting downloaded.
         This has to be a file-like object that implements `write()`. 
+        
+        Return:
+        Returns a list with [user_uuid, filename, video_transcript].
 
         Exception:
         TypeError -- Gets risen if the type of the input isn't the expected type.
+        FileNotFoundError -- If the video with the id doesn't exist.
         """
         if type(vid_uuid) != uuid.UUID:
            raise TypeError
 
-        fs = GridFSBucket(self._db, "resource")
+        fs = GridFSBucket(self._db, self._VIDEO_RESOURCE_BUCKET)
         fs.download_to_stream(str(vid_uuid), stream)
+        
+        user_uuid = filename = video_transcript = None
+        # TODO: Is there some better way of avoiding errors with cursor?
+        # peraps use exceptions with next operation
+        for gridout in fs.find({"metadata.vid_id": str(vid_uuid)}):
+            meta = gridout.metadata
+            user_uuid = meta["user_id"]
+            filename = meta["filename"]
+            video_transcript = meta["video_transcript"]
+            break
+        if user_uuid is None:
+            raise FileNotFoundError
 
+        return [uuid.UUID(user_uuid), filename, video_transcript]
+
+    def getVideoIDOfUser(self, user_uuid: uuid.UUID):
+        if type(user_uuid) != uuid.UUID:
+           raise TypeError
+
+        fs = GridFSBucket(self._db, self._VIDEO_RESOURCE_BUCKET)
+        
+        vid_ids = []
+        for gridout in fs.find({"metadata.user_id": str(user_uuid)}):
+            meta = gridout.metadata
+            vid_ids.append(uuid.UUID(meta["vid_id"]))
+        return vid_ids
 
 class opencv_DB(BBDB):
     def __init__(self):
