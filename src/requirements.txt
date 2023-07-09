@@ -24,6 +24,7 @@ tensorflow_probability==0.16.0
 imutils
 open-faces
 keras==2.8.0
+face_recognition
 
 ### Math/Plotting ###
 numpy
