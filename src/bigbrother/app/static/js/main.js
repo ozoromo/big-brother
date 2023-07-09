@@ -48,10 +48,43 @@ $(document).ready(function(){
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     var dataURL = canvas.toDataURL('image/jpeg');
 
-    var link = document.createElement('a');
-    link.href = dataURL;
-    link.download = 'snapshot.jpeg';
-    link.click();
+    var userRef = document.getElementById('user-data');
+    var attribute = userRef.getAttribute('data-user');
+
+    var jsonString = attribute.replace(/'/g, '"')
+    var jsonObj = JSON.parse(jsonString)
+
+    var request = new XMLHttpRequest();
+    request.open('POST', '/verifypicture')
+    request.setRequestHeader('Content-Type', 'application/json');
+
+    var data = {
+      username: jsonObj.username,
+      image: dataURL
+    };
+    var json = JSON.stringify(data);
+
+    request.onload = function () {
+      if(request.status === 200)
+      {
+        console.log("Picture has been send successfully");
+        var response = JSON.parse(request.responseText)
+        var url = new URL(response.redirect, window.location.href);
+        for (var key in response.data) {
+          url.searchParams.append(key, response.data[key]);
+        }
+        window.location.href = url.href;
+      }
+      else
+        console.log("Error while sending picture: ", request.status)
+    };
+
+    request.send(json);
+
+    //var link = document.createElement('a');
+    //link.href = dataURL;
+    //link.download = 'snapshot.jpeg';
+    //link.click();
   }
 
   // Starte den Timer beim Laden der Seite
