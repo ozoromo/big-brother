@@ -49,5 +49,5 @@ COPY . /usr/big-brother/src
 # Flask app config and starting
 ENV LOCALDEBUG=0
 ENV FLASK_DEBUG=0
-EXPOSE 5000
+EXPOSE 6000
 CMD ["python", "./bigbrother/app/__init__.py"]
