@@ -2,6 +2,6 @@ services:
   web:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: src/Dockerfile
     ports:
       - "8000:6000"
