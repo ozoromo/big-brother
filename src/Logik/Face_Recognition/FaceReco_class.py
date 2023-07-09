@@ -23,7 +23,12 @@ class FaceReco:
         '''
 
         img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
-        encodeimg2 = face_recognition.face_encodings(img2)[0]
+        encodings = face_recognition.face_encodings(img2)
+
+        if len(encodings) == 0:
+            return [False], [1]
+
+        encodeimg2 = encodings[0]
         results = face_recognition.compare_faces([image_encoding], encodeimg2)  # true/false
         faceDis = face_recognition.face_distance([image_encoding], encodeimg2)  #distance between two photos, measure of comparsion in range [0,1], the closer to 0, the greater similarity
         return (results, faceDis)

@@ -22,12 +22,13 @@
     </div>
     <div>
         <h1 id="timer">5</h1>
-        <h1>Bitte stillhalten!</p>
+        <p>Bitte stillhalten!</p>
     </div>
 {% endblock %}
 
 {% block js %}
     {{ super() }}
+    <div id="user-data" data-user="{{ data }}"></div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
