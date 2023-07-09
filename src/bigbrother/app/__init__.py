@@ -247,10 +247,15 @@ def login():
             #print("test4",file=sys.stdout)
             filename = secure_filename(f.filename)
             file_path = os.path.join(application.instance_path, filename)
-
+            if f and filename and file_path is not None:
+                f.save(file_path)
+                
+            else:
+                rejectionDict['reason'] = "Image Not uploaded!"
+                return render_template('rejection.html',  rejectionDict = rejectionDict, title='Sign In', form=form)
             #Save Picture
             #print("test5",file=sys.stdout)
-            f.save(file_path)
+            
             #print("test6",file=sys.stdout)
             cookie = request.cookies.get('session_uuid')
 
@@ -265,6 +270,7 @@ def login():
 
             else:
                 return render_template('rejection.html',  rejectionDict = rejectionDict, title='Sign In', form=form)
+            
         else:
             print("'{}' not found!".format(user['username']),file=sys.stdout)
             rejectionDict['reason'] = "'{}' not found!".format(user['username'])
