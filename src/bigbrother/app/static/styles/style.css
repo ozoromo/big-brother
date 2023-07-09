@@ -83,6 +83,9 @@ table tr td img {
 .col:nth-child(2){
 	grid-area: b;
 }
+.col:nth-child(2){
+	grid-area: c;
+}
 
 .card{
 	grid-template-areas:
@@ -94,6 +97,9 @@ table tr td img {
 }
 .col:nth-child(2){
 	grid-area: b;
+}
+.col:nth-child(2){
+	grid-area: c;
 }
 
 

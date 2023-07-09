@@ -168,6 +168,10 @@ def validationsignup():
 def team():
     return render_template("team.html")
 
+@application.route("/team2")
+def team2():
+    return render_template("team_23.html")
+
 @application.route("/algorithms")
 def algorithms():
     return render_template("algorithms.html")
