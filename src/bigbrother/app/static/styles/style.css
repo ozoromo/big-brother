@@ -76,6 +76,7 @@ table tr td img {
 
 .cols{
 	display: grid;
+	opacity: 0.85;
 }
 .col:first-child{
 	grid-area: a;
@@ -106,18 +107,19 @@ table tr td img {
 
 
 @media (max-width: 768px){
-	.cols{
-		grid-template-areas:
-		"a"
-		"b";
-	}
+    .cols{
+        grid-template-areas:
+        "a"
+        "b"
+        "c";
+    }
 }
 
 @media (min-width: 768px){
-	.cols{
-		grid-template-areas:
-		"a b";
-	}
+    .cols{
+        grid-template-areas:
+        "a b c";
+    }
 }
 
 /*tabelle userpage*/
