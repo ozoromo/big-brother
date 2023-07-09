@@ -44,7 +44,7 @@ COPY requirements.txt /usr/big-brother/src/
 #RUN python -m pip install --no-cache-dir -r requirements.txt
 RUN python -m pip install -r requirements.txt
 
-COPY . /usr/big-brother/src
+COPY . /big-brother/src
 
 # Flask app config and starting
 ENV LOCALDEBUG=0
