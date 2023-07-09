@@ -349,7 +349,7 @@ class BBDB:
         for user in users:
             user_dict[uuid.UUID(user["_id"])] = user["username"]
         return user_dict
-            
+
     def getUserWithId(self, user_id: uuid.UUID) -> typing.Optional[str]:
         """
         Returns the username corresponding to the user_id.
@@ -675,7 +675,15 @@ class UserDoesntExist(Exception):
 """
 # only for testing, remove in production
 if __name__ == '__main__':
-    DB = BBDB()
-    DB.register_user("mike")
-    print(list(DB.user_table.find()))
-"""
+    #DB = BBDB()
+    #DB.register_user("mike")
+    #print(list(DB.user_table.find()))
+
+    print("LMAO")
+    #wireDB = wire_DB()
+    #user = User.BigBrotherUser("0", "name", wireDB)
+
+    #pics, uuids = wireDB.getTrainingPictures("*")
+    #print(pics)
+    #print(uuids)
+#"""
