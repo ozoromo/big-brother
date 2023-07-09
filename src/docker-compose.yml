@@ -4,4 +4,4 @@ services:
       context: .
       dockerfile: src/Dockerfile
     ports:
-      - "8000:6000"
+      - "8000:5000"
