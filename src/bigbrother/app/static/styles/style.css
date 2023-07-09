@@ -26,6 +26,7 @@ h1 {
 	font-size: 36px;
 	font-weight: 600;
 	letter-spacing: 1px;
+	opacity: 1;
 	}
 
 #center{
@@ -84,7 +85,7 @@ table tr td img {
 .col:nth-child(2){
 	grid-area: b;
 }
-.col:nth-child(2){
+.col:nth-child(3){
 	grid-area: c;
 }
 
@@ -99,7 +100,7 @@ table tr td img {
 .col:nth-child(2){
 	grid-area: b;
 }
-.col:nth-child(2){
+.col:nth-child(3){
 	grid-area: c;
 }
 
