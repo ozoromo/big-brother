@@ -1,7 +1,0 @@
-services:
-  web:
-    build: 
-      context: .
-      dockerfile: src/Dockerfile
-    ports:
-      - "8000:5000"
