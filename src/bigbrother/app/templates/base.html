@@ -42,9 +42,18 @@
                             <a class="nav-link" href="{{ url_for('createcamera') }}">Sign Up</a>
                         </li>-->
 
-                        <li class="nav-item">
-                          <a class="nav-link" href="{{ url_for('team') }}">Meet the Team</a>
-                        </li>
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if current_user.is_authenticated %}
+                            {% else %}
+                                Meet the Teams
+                            {% endif %}
+                            </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="\team">Team 2021</a>
+                                    <a class="dropdown-item" href="\team2">Team 2023</a>
+                                </div>
+                        </div>
 
                         <li class="nav-item">
                           <a class="nav-link" href="{{ url_for('algorithms') }}">Our Algorithms</a>

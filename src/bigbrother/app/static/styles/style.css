@@ -76,12 +76,16 @@ table tr td img {
 
 .cols{
 	display: grid;
+	opacity: 0.85;
 }
 .col:first-child{
 	grid-area: a;
 }
 .col:nth-child(2){
 	grid-area: b;
+}
+.col:nth-child(2){
+	grid-area: c;
 }
 
 .card{
@@ -95,23 +99,27 @@ table tr td img {
 .col:nth-child(2){
 	grid-area: b;
 }
+.col:nth-child(2){
+	grid-area: c;
+}
 
 
 
 
 @media (max-width: 768px){
-	.cols{
-		grid-template-areas:
-		"a"
-		"b";
-	}
+    .cols{
+        grid-template-areas:
+        "a"
+        "b"
+        "c";
+    }
 }
 
 @media (min-width: 768px){
-	.cols{
-		grid-template-areas:
-		"a b";
-	}
+    .cols{
+        grid-template-areas:
+        "a b c";
+    }
 }
 
 /*tabelle userpage*/

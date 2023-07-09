@@ -40,7 +40,7 @@ WORKDIR /usr/big-brother/src
 # installations
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -U wheel cmake
-COPY requirements.txt /usr/big-brother/src/
+COPY requirements.txt /usr/big-brother/src/requirements.txt
 #RUN python -m pip install --no-cache-dir -r requirements.txt
 RUN python -m pip install -r requirements.txt
 
@@ -49,5 +49,5 @@ COPY . /usr/big-brother/src
 # Flask app config and starting
 ENV LOCALDEBUG=0
 ENV FLASK_DEBUG=0
-EXPOSE 5000
+EXPOSE 6000
 CMD ["python", "./bigbrother/app/__init__.py"]
