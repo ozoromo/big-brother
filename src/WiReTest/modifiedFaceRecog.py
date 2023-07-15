@@ -34,7 +34,8 @@ def recogFace(im_data):
             imgs_test.append(cv2.cvtColor(
                 cv2.resize(img, dsize=(98,116), interpolation=cv2.INTER_CUBIC),
                 cv2.COLOR_BGR2GRAY))
-        except cv2.error:
+        except cv2.error as e:
+            print(e)
             print("[Warning] Returning Wire Algo")
             return
 

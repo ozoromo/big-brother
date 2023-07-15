@@ -237,7 +237,7 @@ def login():
 
         user = {
                     'username': form.name.data,
-                    'pic' : request.files['pic']
+                    'pic' : request.files.get('pic', None)
                 }
 
         #Verify user
@@ -249,26 +249,35 @@ def login():
             # TODO: Take a look at why it was set to user_uuid[0]
             # user_uuid =uuid.UUID(user_uuid[0]) old code outputted a list
             #user_uuid = uuid.UUID(user_uuid)
-            user['uuid'] = user_uuid
             #Get Picture Path
             #print("test3",file=sys.stdout)
-            f = user['pic']
             #print("test4",file=sys.stdout)
-            filename = secure_filename(f.filename)
-            file_path = os.path.join(application.instance_path, filename)
-            if f and filename and file_path is not None:
-                f.save(file_path)
-                
-            else:
+
+            user['uuid'] = user_uuid
+            storage = user['pic']
+
+            #filename = secure_filename(pic.filename)
+            #file_path = os.path.join(application.instance_path, filename)
+
+            if storage is None or not storage.content_type.startswith('image/'):
                 rejectionDict['reason'] = "Image Not uploaded!"
                 return render_template('rejection.html',  rejectionDict = rejectionDict, title='Sign In', form=form)
+
             #Save Picture
             #print("test5",file=sys.stdout)
-            
             #print("test6",file=sys.stdout)
+
             cookie = request.cookies.get('session_uuid')
 
-            result = ws.authenticatePicture(user,np.asarray(cv2.imread(file_path)),cookie)
+            im_bytes = storage.stream.read()
+            image = Image.open(io.BytesIO(im_bytes))
+            array = np.array(image)
+
+            image.close()
+            storage.close()
+
+            #(729, 1280, 3)
+            result = ws.authenticatePicture(user, array, cookie)
 
             if result:
 
@@ -315,9 +324,9 @@ def create():
         #print("test7",file=sys.stdout)
         user = {
                     'username': form.name.data,
-                    'pic1' : request.files['pic1'],
-                    'pic2' : request.files['pic2'],
-                    'pic3' : request.files['pic3'],
+                    'pic1' : request.files.get('pic1', None),
+                    'pic2' : request.files.get('pic2', None),
+                    'pic3' : request.files.get('pic3', None),
                 }
 
         user_uuid = None
@@ -338,23 +347,40 @@ def create():
                 ]
 
             user_uuid = ws.DB.register_user(user['username'], None)
+            i = 0
+            encodings_saved = False
+            for storage in pictures:
+                i += 1
+                if storage is None or not storage.content_type.startswith('image/'):
+                    rejectionDict['reason'] = f"Image {i} not provided"
+                    ws.DB.deleteUserWithId(user_uuid)
+                    return render_template('rejection.html', rejectionDict=rejectionDict, title='Reject', form=form)
 
-            for pic in pictures:
+                #filename = secure_filename(pic.filename)
+                #print(filename)
+                #file_path = os.path.join(application.instance_path, filename)
+                #pic.save(file_path)
+                #pic_array = cv2.imread(file_path,0)
 
-                filename = secure_filename(pic.filename)
-                print(pic.filename)
-                file_path = os.path.join(application.instance_path, filename)
+                im_bytes = storage.stream.read()
+                image = Image.open(io.BytesIO(im_bytes))
+                array = np.array(image)
 
-            #Save Picture
+                if not encodings_saved:
+                    try:
+                        img = cv2.cvtColor(array, cv2.COLOR_BGR2RGB)
+                        encodings = face_recognition.face_encodings(img)
+                        #print("encodings: ", encodings)
 
-                pic.save(file_path)
+                        ws.DB.update_user_enc(user_uuid, encodings[0])
+                        encodings_saved = True
+                    except:
+                        print("error while calculating encodings")
 
-                #print("test3",file=sys.stdout)
+                image.close()
+                storage.close()
 
-                pic_array = cv2.imread(file_path,0)
-
-                pic_resized = cv2.resize(pic_array, dsize=(98, 116), interpolation=cv2.INTER_CUBIC)
-
+                pic_resized = cv2.resize(array, dsize=(98, 116), interpolation=cv2.INTER_CUBIC)
 
                 pic_uuid = ws.DB.insertTrainingPicture(np.asarray(pic_resized, dtype=np.float64),user_uuid)
 
@@ -365,12 +391,9 @@ def create():
                 #print("'{}' not found!".format(user['username']),file=sys.stdout)
                 #return render_template('rejection.html',  title='Sign In', form=form)
 
-
-
             print("Created User '{}' with uuid: {}".format(user['username'],user_uuid),file=sys.stdout)
 
         else:
-
             print("'{}' already exists!".format(user['username']),file=sys.stdout)
 
             rejectionDict['reason'] = "Benutzername '{}' nicht Verfügbar".format(user['username'])
@@ -762,33 +785,31 @@ def createcamera():
     return render_template('createcamera.html', title='Create an account', form = form)
 
 
-@application.route('/verifypicture', methods=['GET', 'POST'])
+@application.route('/verifypicture', methods=['POST'])
 def verifyPicture():
 
-    rejectionDict = {
-
-        'reason': 'Unknown',
-        'redirect': 'login',
-        'redirectPretty': 'Zurück zur Anmeldung',
-    }
-    rejection_data = {"rejectionDict": rejectionDict, "title": "Sign In"}
+    #POST request gets send from main.js in the sendSnapshot() function.
 
     if request.method == 'POST':
 
         data = request.get_json()
 
+        #json data needs to have the encoded image & username
+
         if 'image' not in data:
-            return {"redirect": "/rejection", "data": rejection_data}
+            return {"redirect": "/rejection"} #, "data": rejection_data}
 
         if 'username' not in data:
-            return {"redirect": "/rejection", "data": rejection_data}
+            return {"redirect": "/rejection"} #, "data": rejection_data}
 
         username = data.get('username')
         img_url = data.get('image').split(',')
 
+        #data url is split into 'image type' and 'actual data'
         if len(img_url) < 2:
-            return {"redirect": "/rejection", "data": rejection_data}
+            return {"redirect": "/rejection"} #, "data": rejection_data}
 
+        #decode image
         img_data = img_url[1]
         buffer = np.frombuffer(base64.b64decode(img_data), dtype=np.uint8)
         camera_img = cv2.imdecode(buffer, cv2.COLOR_BGR2RGB)
@@ -798,33 +819,22 @@ def verifyPicture():
 
         if user_uuid:
 
-            imgs_raw, uuids = ws.DB.getTrainingPictures(user_uuid=user_uuid)
+            user_enc = ws.DB.get_user_enc(user_uuid)
+            print("User Enc: ", user_enc)
+
+            if user_enc is None or len(user_enc) == 0:
+                return {"redirect": "/rejection"}
+
+            #p2p function results are List<bool>, List<float>
             logik = LogikFaceRec.FaceReco()
+            (results, dists) = logik.photo_to_photo(user_enc, camera_img)
 
-            #cv2.imwrite("./im1.jpg", imgs_raw[0])
+            print("p2p results: ")
+            print(results)
+            print(dists)
 
-            result = False
-            for user_img in imgs_raw:
-                #print("picture")
-                try:
-                    rgb_img = cv2.cvtColor(user_img, cv2.COLOR_BGR2RGB)
-                except:
-                    print("error converting picture")
-                    continue
-
-                image_encoding = face_recognition.face_encodings(rgb_img)
-
-                if len(image_encoding) == 0:
-                    return {"redirect": "/rejection", "data": rejection_data}
-
-                (results, _) = logik.photo_to_photo(image_encoding[0], camera_img)
-                print("Results:")
-                print(results)
-                if results[0]:
-                    result = True
-                    break
-
-            print(result)
+            #if successfull login but page does not change !
+            result = results[0]
             if result:
 
                 thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
@@ -834,15 +844,23 @@ def verifyPicture():
                     "name": username
                 }
 
-                return {"redirect": "/validationauthenticated", "data": userData}
+                #TODO:
+                #the json object returned will be used in main.js to switch to target page
+                #this does not work with /validationauthenticated because its not a valid endpoint
+                #that page gets usually shown under the /login endpoint with the photo login.
+                #return render_template doesnt work here IDK why
+                #but if you get render_template to work you need to remove the onload function in main.js 73
+
+                #return render_template('validationauthenticated.html', user=user)
+                return {"redirect": "/validationauthenticated"} #, "data": userData}
 
             else:
-                return {"redirect": "/rejection", "data": rejection_data}
+                return {"redirect": "/rejection"} #, "data": rejection_data}
 
         else:
-            return {"redirect": "/rejection", "data": rejection_data}
+            return {"redirect": "/rejection"} #, "data": rejection_data}
 
-    return {"redirect": "/rejection", "data": rejection_data}
+    return {"redirect": "/rejection"} #, "data": rejection_data}
 
 def registerUser(username, pictures):
     user = {
