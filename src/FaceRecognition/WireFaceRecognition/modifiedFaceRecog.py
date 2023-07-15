@@ -5,25 +5,20 @@
 # @Last modified by:   Julius U. Heller
 # @Last modified time: 2021-06-20T14:45:34+02:00
 
-
-
-import main
-import numpy as np
-import matplotlib as mpl
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','DBM'))
-import DatabaseManagement
+
+import numpy as np
+import matplotlib as mpl
 import cv2
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'DBM'))
+import DatabaseManagement
+import main
 
 # def recogFace(returnQueue,im_data):
 def recogFace(im_data):
-    #im_data:
-    #im_data[0] = image path
-    #im_data[1] = user uuid
 
-    #imgs_test_raw = [np.asarray(cv2.imread(im_data[0]), dtype=np.float64)]
     imgs_test_raw = [im_data[0]]
     imgs_test = []
 
@@ -41,7 +36,9 @@ def recogFace(im_data):
 
     print("Loading train Images...")
     curDir = os.path.dirname(os.path.abspath(__file__))
-    imgs_train, dim_x, dim_y, uuids = main.load_images(f"{curDir}/data/train/", user_uuid, ".png")
+    # TODO: Find out why the training data is hardcoded in here! Shouldn't some sort
+    # of database be used???
+    imgs_train, dim_x, dim_y, uuids = main.load_images(f"{curDir}/../../../res/data/train/", user_uuid, ".png")
 
     print("Training...")
     flat_images = main.setup_data_matrix(imgs_train)

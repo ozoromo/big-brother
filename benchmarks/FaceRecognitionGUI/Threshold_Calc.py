@@ -13,7 +13,7 @@ class Threshold_Calc:
     def __init__(self, data, labels):
         self.data = data
         self.labels = labels
-        self.f_Score_Level = 0
+        self.f_Score_Level = 1
         self.thresh = 0
         self.f_Score = 0
 
@@ -65,8 +65,8 @@ class Threshold_Calc:
         if not isinstance(data, np.ndarray) or not isinstance(labels, np.ndarray):
             data = self.data
             labels = self.labels
-        under_threshold = (data <= threshold)
-        bool_arr = np.logical_and(under_threshold, np.invert(labels))
+        under_threshold = (data > threshold)
+        bool_arr = np.logical_and(under_threshold, labels)
         return np.sum(bool_arr)
 
     def get_num_fn(self, threshold: float, data = None, labels = None) -> int:
@@ -77,8 +77,8 @@ class Threshold_Calc:
             data = self.data
             labels = self.labels
 
-        over_threshold = (data > threshold)
-        bool_arr = np.logical_and(over_threshold, labels)
+        over_threshold = (data <= threshold)
+        bool_arr = np.logical_and(over_threshold, np.invert(labels))
         return np.sum(bool_arr)
 
     def calc_recall(self, threshold: float, data = None, labels = None) -> float:
@@ -92,24 +92,31 @@ class Threshold_Calc:
 
         tp = self.get_num_tp(threshold, data = data, labels = labels)
         fn = self.get_num_fn(threshold, data = data, labels = labels)
-        return tp / (tp + fn)
+
+        # Case when tp is zero
+        if tp == 0:
+            return 0.0
+
+        return tp / (tp + fn) if (tp + fn) != 0 else 0.0
 
 
     def calc_precision(self, threshold: float, data = None, labels = None) -> float:
         """
-        Calculates precision for a given threshold. Precision is proportion of true positives in all the points that the model says are positive: 
+        Calculates precision for a given threshold. Precision is proportion of true positives in all the points that the model says are positive:
         true positives / (true positives + false positives)
         """
         if not isinstance(data, np.ndarray) or not isinstance(labels, np.ndarray):
             data = self.data
             labels = self.labels
 
-        tp = self.get_num_tp(threshold, data = data, labels = labels)
-        fp = self.get_num_fp(threshold, data = data, labels = labels)
-        #print(tp)
-        #print(fp)
-    
-        return tp / (tp + fp)
+        tp = self.get_num_tp(threshold, data=data, labels=labels)
+        fp = self.get_num_fp(threshold, data=data, labels=labels)
+
+        # Case when tp is zero
+        if tp == 0:
+            return 0.0
+
+        return tp / (tp + fp) if (tp + fp) != 0 else 0.0
 
     def calc_f_score(self, threshold: float, f_score_level=1, data = None, labels = None) -> float:
         """
@@ -119,16 +126,25 @@ class Threshold_Calc:
             data = self.data
             labels = self.labels
 
-        #formula from wikipedia
-        beta_sqr = f_score_level**2
-        prec = self.calc_precision(threshold, data = data, labels =labels)
-        rec = self.calc_recall(threshold, data = data, labels = labels)
-        score = (1 + beta_sqr) * ((prec * rec) / ((beta_sqr * prec) + rec))
-        return score
+        tp = self.get_num_tp(threshold, data=data, labels=labels)
+        fp = self.get_num_fp(threshold, data=data, labels=labels)
+        fn = self.get_num_fn(threshold, data=data, labels=labels)
+
+        # Case when tp is zero
+        if tp == 0:
+            return 0.0
+
+        # formula from wikipedia
+        beta_sqr = f_score_level ** 2
+        prec = tp / (tp + fp) if (tp + fp) != 0 else 0.0
+        rec = tp / (tp + fn) if (tp + fn) != 0 else 0.0
+        score = ((1 + beta_sqr) * prec * rec) / ((beta_sqr * prec) + rec)
+
+        return score if not np.isnan(score) else 0.0
 
     def calc_threshold_range(self, min_threshold = 0, max_threshold = 0, step_num = 10, data = None) -> list:
         """
-        Generates a list of thresholds bbetween [min_threshold, max_threshold] with {steps_num} steps between them. 
+        Generates a list of thresholds bbetween [min_threshold, max_threshold] with {steps_num} steps between them.
         If no values are given, the min. and max. are calculated based on data in self.data
         """
         if not isinstance(data, np.ndarray):
@@ -154,9 +170,9 @@ class Threshold_Calc:
 
         for i, threshold in enumerate(tested_thresholds):
             f_scores[i] = self.calc_f_score(
-                    threshold, 
-                    f_score_level=f_score_level, 
-                    data=data, 
+                    threshold,
+                    f_score_level=f_score_level,
+                    data=data,
                     labels=labels
                 )
 
@@ -170,9 +186,9 @@ class Threshold_Calc:
         Allows for user defined range of thresholds that should be tested, out of which the optimum is picked
         """
         self.threshold_range = self.calc_threshold_range(
-                min_threshold=min_threshold, 
-                max_threshold=max_threshold, 
-                step_num=step_num, 
+                min_threshold=min_threshold,
+                max_threshold=max_threshold,
+                step_num=step_num,
                 data=data
             )
 
@@ -191,12 +207,11 @@ class Threshold_Calc:
             data = self.data
             labels = self.labels
 
-        print(data, labels)
         tested_thresholds = self.get_thres_range()
         thres, f_score = self.threshold_with_max_f_score(
-                tested_thresholds, 
-                f_score_level=f_score_level, 
-                data=data, 
+                tested_thresholds,
+                f_score_level=f_score_level,
+                data=data,
                 labels=labels
             )
         print(f"Calculated optimal threshold with maximum f_{f_score_level}-score is: {thres} and has a f-score of {f_score}")
@@ -211,6 +226,6 @@ class Threshold_Calc:
         false_neg = self.get_num_fn(thres, data = data, labels = labels)
         print(f"At that threshold there are {true_pos} true positives, {true_neg} true negatives, {false_pos} False Positives and {false_neg} False Negatives")
         print()
-        print("csv format: <f-score-level,threshold,f-score,tp,tn,fp,fn,recall,precision>")
-        print(f'{f_score_level},{thres},{f_score},{true_pos},{true_neg},{false_pos},{false_neg},{self.calc_recall(thres,data,labels)},{self.calc_precision(thres,data,labels)}')
+        print("csv format: <f-score-level,threshold,f-score,tp,tn,fp,fn,recall,precision,beta_sqr>")
+        print(f'{f_score_level},{thres},{f_score},{true_pos},{true_neg},{false_pos},{false_neg},{self.calc_recall(thres,data,labels)},{self.calc_precision(thres,data,labels)},{f_score_level ** 2}')
 
