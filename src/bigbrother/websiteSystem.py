@@ -5,10 +5,10 @@ from sys import stdout
 import sys
 from app.user import BigBrotherUser
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','WiReTest'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','FaceRecognition','haar_and_lbph'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','FaceRecognition'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','DBM'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..','FaceRecognition','haar_and_lbph'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..','FaceRecognition', 'WireFaceRecognition'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..','FaceRecognition'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..','DBM'))
 
 from modifiedFaceRecog import recogFace
 from face_rec_main import train_add_faces, authorize_faces
@@ -33,7 +33,6 @@ import traceback
 from imageio import imread
 from PIL import Image
 import copy
-from modifiedFaceRecog import recogFace
 
 
 class websiteSystem:

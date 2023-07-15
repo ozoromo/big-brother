@@ -18,8 +18,20 @@ import matplotlib.dates as mdates
 from matplotlib.collections import LineCollection
 import matplotlib.pyplot as plt
 import time
+from enum import Enum
 
 import BV_Utils as BVU
+
+class BenchmarkType(Enum):
+    TP = 0
+    TN = 1
+    OFTN = 2
+    OFTP = 3
+    CV2TN = 4
+    CV2TP = 5
+    Mixed = 6
+    FaceRecog2023 = 7
+
 
 class BVWindow:
     def __init__(self,GUI,windowStatus,name):
@@ -46,7 +58,7 @@ class BVWindow:
         self.masterFrame.place_forget()
         self.windowStatus = "hidden"
 
-    def buildSIPDynamicLabels(self,master,amount):
+    def buildSIPDynamicLabels(self, master, amount):
         labels = []
         portLen = amount
         spacing = (1 - 1/portLen)/portLen
@@ -60,7 +72,13 @@ class BVWindow:
             y += spacing
         return labels
 
-    def updateBenchmark(self,benchmarkType):
+    # TODO: Refactor this method. It isn't designed well.
+    def updateBenchmark(self, benchmarkType: BenchmarkType):
+        # TODO: self.getUserLimitEntry() is not defined in this class, but
+        # rather in the class that inherits this class. This compiles, but
+        # it seems to me that this code isn't clean! This needs to get resolved
+        # changed! This is also the case for a lot of the methods that get
+        # called in updateBenchmark()!
         userlimit = self.getUserLimitEntry()
         userTimes = None
 
@@ -72,26 +90,27 @@ class BVWindow:
         if self.parent.bR.exitFlag:
             return
 
-        if benchmarkType == "TP":
+        if benchmarkType == BenchmarkType.TP:
             self.scores = self.parent.bR.run_true_positives()
             userTimes = self.parent.bR.TPUserTimer.getTimes()
-        elif benchmarkType == "TN":
+        elif benchmarkType == BenchmarkType.TN:
             self.scores = self.parent.bR.run_true_negatives()
             userTimes = self.parent.bR.TNUserTimer.getTimes()
-        elif benchmarkType == "OFTN":
+        elif benchmarkType == BenchmarkType.OFTN:
+            pass
             # TODO: openface_run_true_negatives_doesn't exist somehow
-            self.scores = self.parent.bR.openface_run_true_positives()
-            userTimes = self.parent.bR.OFTNUserTimer.getTimes()
-        elif benchmarkType == "OFTP":
+            #self.scores = self.parent.bR.openface_run_true_positives()
+            #userTimes = self.parent.bR.OFTNUserTimer.getTimes()
+        elif benchmarkType == BenchmarkType.OFTP:
             self.scores = self.parent.bR.openface_run_true_positives()
             userTimes = self.parent.bR.OFTPUserTimer.getTimes()
-        elif benchmarkType == "CV2TN":
+        elif benchmarkType == BenchmarkType.CV2TN:
             self.scores = self.parent.bR.opencv_run_true_negatives()
             userTimes = self.parent.bR.CV2TNUserTimer.getTimes()
-        elif benchmarkType == "CV2TP":
+        elif benchmarkType == BenchmarkType.CV2TP:
             self.scores = self.parent.bR.opencv_run_true_positives()
             userTimes = self.parent.bR.CV2TPUserTimer.getTimes()
-        elif benchmarkType == "Mixed":
+        elif benchmarkType == BenchmarkType.Mixed:
             numSelfIm = 5
             numDecoy = 5
             numDecoyIm = 10
@@ -104,27 +123,31 @@ class BVWindow:
                 return
             self.scores = self.parent.bR.run_mixed_positives(numSelfIm ,numDecoy,numDecoyIm)
             userTimes = self.parent.bR.MixedUserTimer.getTimes()
+        elif benchmarkType == BenchmarkType.FaceRecog2023:
+            self.scores = self.parent.bR.face_recog_2023_run_benchmark()
+            userTimes = self.parent.bR.FaceRecog2023UserTimer.getTimes()
+
         self.updateListbox()
 
         # Config Time Labels
-        self.DynTimeLabels[0].config(text="Benchmark Time : {}s".format(round(userTimes['executeTime'].sum(),2)))
-        self.DynTimeLabels[1].config(text="Avg. User Time : {}s".format(round(userTimes['executeTime'].mean(),2)))
+        self.DynTimeLabels[0].config(text="Benchmark Time: {}s".format(round(userTimes['executeTime'].sum(), 2)))
+        self.DynTimeLabels[1].config(text="Avg. User Time: {}s".format(round(userTimes['executeTime'].mean(), 2)))
         maxUserTime = userTimes[['user','executeTime']].iloc[userTimes['executeTime'].idxmax()]
-        self.DynTimeLabels[2].config(text="Max User Time : {} {}s".format(maxUserTime[0].username,round(maxUserTime[1],2)))
+        self.DynTimeLabels[2].config(text="Max User Time: {} {}s".format(maxUserTime[0].username,round(maxUserTime[1], 2)))
         minUserTime = userTimes[['user','executeTime']].iloc[userTimes['executeTime'].idxmin()]
-        self.DynTimeLabels[3].config(text="Min User Time : {} {}s".format(minUserTime[0].username,round(minUserTime[1],2)))
-        self.DynTimeLabels[4].config(text="Min/Max Variance: {}s".format(round(maxUserTime[1] - minUserTime[1],2)))
+        self.DynTimeLabels[3].config(text="Min User Time: {} {}s".format(minUserTime[0].username,round(minUserTime[1], 2)))
+        self.DynTimeLabels[4].config(text="Min/Max Variance: {}s".format(round(maxUserTime[1] - minUserTime[1], 2)))
 
         # Config Benchmark Meta Data Labels
-        self.DynMetaDataLabels_1[0].config(text="Benchmark Meta Data",style = 'title.TLabel')
-        self.DynMetaDataLabels_1[1].config(text="Loaded Training Pictures : {}".format(self.parent.bR.trainPictureCount))
-        self.DynMetaDataLabels_1[2].config(text="Loaded Input Pictures : {}".format(self.parent.bR.recogPictureCount))
-        self.DynMetaDataLabels_1[3].config(text="Overall Score Mean : {}".format(round(self.scores['recogScore'].mean(),2)))
+        self.DynMetaDataLabels_1[0].config(text="Benchmark Meta Data", style='title.TLabel')
+        self.DynMetaDataLabels_1[1].config(text="Loaded Training Pictures: {}".format(self.parent.bR.trainPictureCount))
+        self.DynMetaDataLabels_1[2].config(text="Loaded Input Pictures: {}".format(self.parent.bR.recogPictureCount))
+        self.DynMetaDataLabels_1[3].config(text="Overall Score Mean: {}".format(round(self.scores['recogScore'].mean(), 2)))
 
-        self.DynMetaDataLabels_2[0].config(text="",style = 'title.TLabel')
-        self.DynMetaDataLabels_2[1].config(text="F score Level  : {}".format(self.parent.threshold_calc.f_Score_Level))
+        self.DynMetaDataLabels_2[0].config(text="", style = 'title.TLabel')
+        self.DynMetaDataLabels_2[1].config(text="F score Level: {}".format(self.parent.threshold_calc.f_Score_Level))
         self.DynMetaDataLabels_2[2].config(text="F Score: {}".format(self.parent.threshold_calc.f_Score))
-        self.DynMetaDataLabels_2[3].config(text="Threshold : {}".format(self.parent.threshold_calc.thresh))
+        self.DynMetaDataLabels_2[3].config(text="Threshold: {}".format(self.parent.threshold_calc.thresh))
 
 
 class UserViewer(BVWindow):
@@ -529,7 +552,7 @@ class GraphViewer(BVWindow):
         self.canvas.draw()
         self.plotCanvas.draw()
 
-    def getUserLimitEntry (self):
+    def getUserLimitEntry(self):
         userLimit = 0
         try:
             userLimit = int(self.userLimitEntry.get())
@@ -544,14 +567,17 @@ class TPViewer(GraphViewer):
 
         # Starting GraphViewer Superclass
         GraphViewer.__init__(self,GUI,windowStatus,"TPViewer")
+
+        self.benchmarkType = BenchmarkType.TP
+
+        # Configuring GUI elements
         self.titleLabel.config(text = "True Positive Viewer" ,style = 'title.TLabel')
         self.plotPrettyLabel = "True Positive Pictures"
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
 
-        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("TP"))
+        self.updateBenchmark(self.benchmarkType)
 
-        self.updateBenchmark("TP")
-
-        if (self.windowStatus == "visible"):
+        if self.windowStatus == "visible":
             self.show()
 
 
@@ -561,14 +587,16 @@ class TNViewer(GraphViewer):
         # Starting GraphViewer Superclass
         GraphViewer.__init__(self,GUI,windowStatus,"TNViewer")
 
+        self.benchmarkType = BenchmarkType.TN
+
         # Configuring GUI elements
         self.titleLabel.config(text = "True Negative Viewer",style = 'title.TLabel')
         self.plotPrettyLabel = "True Negative Pictures"
-        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("TN"))
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
 
-        self.updateBenchmark("TN")
+        self.updateBenchmark(self.benchmarkType)
 
-        if (self.windowStatus == "visible"):
+        if self.windowStatus == "visible":
             self.show()
 
 
@@ -578,14 +606,16 @@ class OFTNViewer(GraphViewer):
         # Starting GraphViewer Superclass
         GraphViewer.__init__(self,GUI,windowStatus,"OFTNViewer")
 
+        self.benchmarkType = BenchmarkType.OFTN
+
         # Configuring GUI elements
         self.titleLabel.config(text = "Openface True Negative Viewer",style = 'title.TLabel')
         self.plotPrettyLabel = "Openface True Negative Pictures"
-        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("OFTN"))
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
 
-        self.updateBenchmark("OFTN")
+        self.updateBenchmark(self.benchmarkType)
 
-        if (self.windowStatus == "visible"):
+        if self.windowStatus == "visible":
             self.show()
 
 class OFTPViewer(GraphViewer):
@@ -594,14 +624,16 @@ class OFTPViewer(GraphViewer):
         # Starting GraphViewer Superclass
         GraphViewer.__init__(self,GUI,windowStatus,"OFTPViewer")
 
+        self.benchmarkType = BenchmarkType.OFTP
+
         # Configuring GUI elements
         self.titleLabel.config(text = "Openface True Positive Viewer" ,style = 'title.TLabel')
         self.plotPrettyLabel = "Openface True Positive Pictures"
-        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("OFTP"))
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
 
-        self.updateBenchmark("OFTP")
+        self.updateBenchmark(self.benchmarkType)
 
-        if (self.windowStatus == "visible"):
+        if self.windowStatus == "visible":
             self.show()
 
 class CV2TNViewer(GraphViewer):
@@ -610,15 +642,18 @@ class CV2TNViewer(GraphViewer):
         # Starting GraphViewer Superclass
         GraphViewer.__init__(self,GUI,windowStatus,"CV2TNViewer")
 
+        self.benchmarkType = BenchmarkType.CV2TN
+
         # Configuring GUI elements
         self.titleLabel.config(text = "CV2 True Negative Viewer",style = 'title.TLabel')
         self.plotPrettyLabel = "CV2 True Negative Pictures"
-        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("CV2TN"))
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
 
-        self.updateBenchmark("CV2TN")
+        self.updateBenchmark(self.benchmarkType)
 
-        if (self.windowStatus == "visible"):
+        if self.windowStatus == "visible":
             self.show()
+
 
 class CV2TPViewer(GraphViewer):
     def __init__(self,GUI,windowStatus):
@@ -626,21 +661,26 @@ class CV2TPViewer(GraphViewer):
         # Starting GraphViewer Superclass
         GraphViewer.__init__(self,GUI,windowStatus,"CV2TPViewer")
 
+        self.benchmarkType = BenchmarkType.CV2TP
+
         # Configuring GUI elements
         self.titleLabel.config(text = "CV2 True Positive Viewer" ,style = 'title.TLabel')
         self.plotPrettyLabel = "CV2 True Positive Pictures"
-        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("CV2TP"))
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
 
-        self.updateBenchmark("CV2TP")
+        self.updateBenchmark(self.benchmarkType)
 
-        if (self.windowStatus == "visible"):
+        if self.windowStatus == "visible":
             self.show()
+
 
 class MixedViewer(GraphViewer):
     def __init__(self,GUI,windowStatus):
 
         # Starting GraphViewer Superclass
         GraphViewer.__init__(self,GUI,windowStatus,"MixedViewer")
+
+        self.benchmarkType = BenchmarkType.Mixed
 
         # Configuring GUI elements
         self.runTestOnParameterButton.configure(text = "Run with Parameters")
@@ -671,10 +711,29 @@ class MixedViewer(GraphViewer):
 
         self.plotPrettyLabel = "Mixed Pictures"
 
-        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark("Mixed"))
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
 
 
-        self.updateBenchmark("Mixed")
+        self.updateBenchmark(self.benchmarkType)
+
+        if (self.windowStatus == "visible"):
+            self.show()
+
+
+class FaceRecog2023Viewer(GraphViewer):
+    def __init__(self,GUI,windowStatus):
+
+        # Starting GraphViewer Superclass
+        GraphViewer.__init__(self, GUI, windowStatus,"FaceRecog2023")
+
+        self.benchmarkType = BenchmarkType.FaceRecog2023
+
+        # Configuring GUI elements
+        self.titleLabel.config(text = "FaceRecog2023" ,style = 'title.TLabel')
+        self.plotPrettyLabel = "Face Recognition 2023"
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
+
+        self.updateBenchmark(self.benchmarkType)
 
         if (self.windowStatus == "visible"):
             self.show()

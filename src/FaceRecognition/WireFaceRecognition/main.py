@@ -12,7 +12,7 @@ import lib
 import matplotlib as mpl
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__),'..','DBM'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'..', '..','DBM'))
 import DatabaseManagement
 import uuid
 import cv2
@@ -76,7 +76,7 @@ def insertTrainImages(path: str):
     # Useful functions: lib.list_directory(), matplotlib.image.imread(), numpy.asarray()
     table_name = ""
     curDir = os.path.dirname(os.path.abspath(__file__))
-    if path == f"{curDir}/data/train/":
+    if path == f"{curDir}/../../../res/data/train/":
         table_name = "backend.wire_train"
     else:
         table_name = "backend.wire_test"
@@ -142,12 +142,12 @@ def load_images(path: str, user_uuid: uuid.UUID, file_ending: str = ".png") -> T
     DB = DatabaseManagement.wire_DB()
     uuids = []
 
-    if path == f"{curDir}/data/train/":
+    if path == f"{curDir}/../../../res/data/train/":
         images,uuids = DB.getTrainingPictures(user_uuid=user_uuid)
 
         for image_index, image in enumerate(images):
             # images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.COLOR_BGR2GRAY)
-            images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.CV_32S)
+            images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)), cv2.CV_32S)
         
         for img_str in sorted(img_str_list):
             if img_str[-3:] != "png":
@@ -166,19 +166,12 @@ def load_images(path: str, user_uuid: uuid.UUID, file_ending: str = ".png") -> T
             im_path = path + img_str
 
             images.append(np.asarray(mpl.image.imread(im_path), dtype=np.float64))
-            #images.append(mpl.image.imread(im_path))
-
-
-    #print(images)
 
     #TODO: Nur png durchlassen
 
     # TODO set dimensions according to first image in images
-    #print(type(images[0]))
     dimension_y = images[0].shape[0]
     dimension_x = images[0].shape[1]
-
-    #print("Fin DB Download")
 
     return images, dimension_x, dimension_y, uuids
 

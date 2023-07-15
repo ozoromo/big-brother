@@ -126,11 +126,9 @@ class progresWindow:
         #
 
         try:
-
             if self.progressbars[name]:
                 print("Warning: Name already in class!")
                 return
-
         except KeyError:
             pass
 

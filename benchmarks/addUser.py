@@ -1,7 +1,8 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'DBM'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src', 'DBM'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'WireTest'))
 
 import numpy as np
 import lib

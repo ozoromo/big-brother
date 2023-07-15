@@ -11,17 +11,26 @@
 import sys
 import os
 
+# debugging
+from inspect import currentframe, getframeinfo
+
+# Databasemanagement Libraries
+sys.path.append(os.path.join(os.path.dirname(__file__), '..','..', 'src', 'DBM'))
+
 #Facerecog Libraries
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','WiReTest'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','DBM'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','FaceRecognition'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..','FaceRecognition', 'haar_and_lbph'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition', 'haar_and_lbph'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition', 'WireFaceRecognition'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'Logik', 'Face_Recognition'))
 import main
 import uuid
 import cv2
 import face_rec_main
 from cv2RecogClass import cv2Recog
+from FaceDetectionClass import FaceDetection
 from Threshold_Calc import Threshold_Calc
+import face_recognition
+import FaceReco_class
 
 # Dataset Library
 from sklearn.datasets import fetch_lfw_people
@@ -36,6 +45,7 @@ import pylab
 import pandas as pd
 import numpy as np
 import random
+from PIL import Image
 
 #Gui Libraries
 import tkinter as tk
@@ -46,6 +56,10 @@ import BV_Windows as BVW
 #Time Management
 import time as t
 
+# deepcopy
+from copy import copy, deepcopy
+
+
 class userRecog():
     #
     # User Object
@@ -54,10 +68,20 @@ class userRecog():
 
     def __init__(self,username):
         self.username = username
-        self.recogPictures = []
-        self.trainPictures = []
+        self.recogPictures = [] # 10
+        self.trainPictures = [] # 20
         self.recogScores = None
         self.imgShape = None
+
+    def deepcopy(self):
+        ret = userRecog(self.username)
+        ret.recogPictures = deepcopy(self.recogPictures)
+        ret.trainPictures = deepcopy(self.trainPictures)
+        ret.recogPictures = self.recogPictures.copy()
+        ret.trainPictures = self.trainPictures.copy()
+        ret.recogScores = self.recogScores
+        ret.imgShape = self.imgShape
+        return ret
 
 
 class benchRecog():
@@ -88,7 +112,8 @@ class benchRecog():
         self.OFTPUserTimer = BVU.UserTimer()
         self.OFTNUserTimer = BVU.UserTimer()
         self.MixedUserTimer = BVU.UserTimer()
-
+        self.FaceRecog2023UserTimer = BVU.UserTimer()
+    
         self.exitFlag = False
         self.cv2Inst = cv2Recog()
 
@@ -156,7 +181,6 @@ class benchRecog():
 
         # Init Users: Assignes Images to their right owner, assignes Username and necessary Variables
         self.users = []
-        self.dbUsers = self.master.DbUsers
         userCount = self.userLimit
         userFin = 0
 
@@ -182,9 +206,9 @@ class benchRecog():
             user_.recogPictures = np.zeros((dataRecog.shape[0], dataRecog[0].shape[0]))
             user_.trainPictures = np.zeros((dataTrain.shape[0], dataTrain[0].shape[0]))
             for index, img in enumerate(dataRecog):
-                user_.recogPictures[index] += img
+                user_.recogPictures[index] = img
             for index, img in enumerate(dataTrain):
-                user_.trainPictures[index] += img
+                user_.trainPictures[index] = img
 
             self.users.append(user_)
             userFin += 1
@@ -193,7 +217,8 @@ class benchRecog():
         if self.pW:
             self.pW.finProgress("benchProg")
 
-        self.users = self.master.DbUsers
+        # reset users
+        self.users = self.master.DbUsers # TODO: This should be fixed (Don't know why they did that)
         self.dbUsers = self.master.DbUsers
 
         self.image_shape = self.master.imShape
@@ -245,14 +270,6 @@ class benchRecog():
         coeffs_test: Eigenface coefficient of test images
         """
         # TODO: Properly comment this method
-        """
-        # Doesnt need to be executed, done in Benchmark Init
-        # TODO: load test data set
-        # TODO: project test data set into eigenbasis
-        #coeffs_test = np.zeros(coeffs_train.shape)
-        #coeffs_test = np.zeros((len(imgs_test),))
-        #coeffs_test = project_faces(pcs, imgs_test, mean_data)
-        """
         d_matrix = imgs_test
         test_pcs, test_sval, test_mean = main.calculate_pca(d_matrix)
         coeffs_test = self.modified_project_faces(pcs, imgs_test, mean_data)
@@ -318,12 +335,12 @@ class benchRecog():
                 rand = random.randint(0, userCount - 1)
 
             # Images are flattened
-            imgs_train = self.users[rand].trainPictures
-            imgs_test = user_.recogPictures
+            imgs_train = self.users[rand].trainPictures.copy()
+            imgs_test = user_.recogPictures.copy()
 
             # Running WiRe Algo on user
             try:
-               scores = self.wireAlgo(imgs_test ,imgs_train)
+               scores = self.wireAlgo(imgs_test.copy(), imgs_train.copy())
             except ValueError as e:
                 print("WARNING: wireAlgo terminated with an error:")
                 print(e)
@@ -356,6 +373,16 @@ class benchRecog():
             }
         ).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
+        # TODO: recogScore is np.nan sometimes check whether this is still the case
+        frame_info = getframeinfo(currentframe())
+        print(
+f"""
+Description: This is the output of the true negative test. There might be a np.nan number that needs to get fixed.
+File: {frame_info.filename}
+Line: {frame_info.lineno}
+recogScore values:\n {recogScores}
+"""
+        )
         return recogScores
 
     def run_mixed_positives(self, numSelfImages, numDecoyUsers, numDecoyUserImages):
@@ -387,6 +414,7 @@ class benchRecog():
         self.MixedUserTimer.clear()
 
         for user_ in self.users:
+            user_ = user_.deepcopy()
 
             if self.pW:
                 self.pW.update(
@@ -404,7 +432,7 @@ class benchRecog():
 
             #Fetch User pictures
             #imgs_train = user_.trainPictures # Images are flattened
-            imgs_test = user_.recogPictures
+            imgs_test = user_.recogPictures.copy()
             #Make Sure Parameter isnt higher than actual length of list
             numSelfImages = np.min((numSelfImages,len(user_.trainPictures)))
             numDecoyUserImages = np.min((numDecoyUserImages,len(user_.trainPictures)))
@@ -423,7 +451,7 @@ class benchRecog():
 
             for decoyUserIndex in range(decoyRange):
                 #Get user
-                decoyUser = self.users[decoyUserIndex]
+                decoyUser = self.users[decoyUserIndex].deepcopy()
 
                 decoyUsers.append(decoyUser)
                 #Select Images per decoy User
@@ -431,10 +459,8 @@ class benchRecog():
                 decoyImages = decoyUser.trainPictures[:numDecoyUserImages]
                 #Concatenate lists
 
-                #print(decoyUserIndex * numDecoyUserImages,":",(decoyUserIndex * numDecoyUserImages) + numDecoyUserImages)
                 imgs_train[decoyUserIndex * numDecoyUserImages:(decoyUserIndex * numDecoyUserImages) + numDecoyUserImages] += decoyImages
                 #Usernames must be mapped exactly like images_train for identification
-
 
             selfImages = user_.trainPictures[:numSelfImages]
 
@@ -461,8 +487,6 @@ class benchRecog():
                 recogImageScores.append(recognisedImageScore)
 
                 usernames.append(user_.username)
-                #print("recogIndex : {} numDecoys : {}".format(recognisedImageIndex,numDecoyUserImages))
-                #print(recognisedImageIndex // numDecoyUserImages)
                 recogUsernames.append(decoyUsers[recognisedImageIndex // numDecoyUserImages].username)
 
             userFin += 1
@@ -518,8 +542,8 @@ class benchRecog():
             self.TPUserTimer.startTimer(user_)
 
             # Fetch User pictures
-            imgs_train = user_.trainPictures # Images are flattened
-            imgs_test = user_.recogPictures
+            imgs_train = user_.trainPictures.copy() # Images are flattened
+            imgs_test = user_.recogPictures.copy()
 
             try:
                 scores = self.wireAlgo(imgs_test ,imgs_train)
@@ -551,6 +575,15 @@ class benchRecog():
                 'recogScore':      recogImageScores
             }).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
+        frame_info = getframeinfo(currentframe())
+        print(
+f"""
+Description: This is the output of the true positive test. There might be a np.nan number that needs to get fixed.
+File: {frame_info.filename}
+Line: {frame_info.lineno}
+recogScore values:\n {recogScores}
+"""
+        )
         return recogScores
 
 
@@ -565,7 +598,7 @@ class benchRecog():
         for scoreIndex, scoreTuple in enumerate(scores.itertuples()):
             if slotIndex > 10:
                 return
-            query_image = user_.recogPictures[int(scoreTuple[1])]
+            query_image = user_.recogPictures.copy()[int(scoreTuple[1])]
 
             fig.add_subplot(5, 2 , slotIndex)
             #plt.imshow(query_image.reshape(self.image_shape[0],self.image_shape[1]), cmap="Greys_r")
@@ -658,8 +691,8 @@ class benchRecog():
             self.OFTPUserTimer.startTimer(user_)
 
             #Fetch User pictures
-            imgs_train = user_.trainPictures # Images are flattened
-            imgs_test = user_.recogPictures
+            imgs_train = user_.trainPictures.copy() # Images are flattened
+            imgs_test = user_.recogPictures.copy()
 
             # Running Openface Algo on user
             scores = self.openface_algo(imgs_train, imgs_test, crop_and_align=True)
@@ -761,7 +794,11 @@ class benchRecog():
         recogImageScores = []
         usernames = []
 
+        # reset previously used resources
         self.CV2TPUserTimer.clear()
+        # TODO: The calculation is not reseted, because we need to store the
+        # data. We need to restructure the code in order to make this possible
+        # self.threshold_calc = Threshold_Calc(None, None)
 
         for user_ in self.users:
             if self.pW:
@@ -779,8 +816,8 @@ class benchRecog():
             self.CV2TPUserTimer.startTimer(user_)
 
             #Fetch User pictures
-            imgs_train = user_.trainPictures # Images are flattened
-            imgs_test = user_.recogPictures
+            imgs_train = user_.trainPictures.copy() # Images are flattened
+            imgs_test = user_.recogPictures.copy()
 
             # Running opencv haar and lpph Algo on user
             scores = self.opencv_single_dist_algo(imgs_test, imgs_train)
@@ -795,7 +832,6 @@ class benchRecog():
                 recogImageScores.append(recognisedImageScore)
                 usernames.append(user_.username)
 
-            # TODO: Find out what it does
             # Data to calculate optimal Threshold
             # we're in true positive case so all labels are True
             labels = np.full(shape=(len(imgs_train),len(imgs_test)), 
@@ -809,6 +845,15 @@ class benchRecog():
         if self.pW:
             self.pW.finProgress("OpenCVTPProg")
 
+        # Calculate f-score
+        f_score_level = 1
+        self.threshold_calc.set_thres_range(
+            min_threshold=0, 
+            max_threshold=300,
+            step_num=300
+        )
+        self.threshold_calc.calc_and_print_results(f_score_level)
+
         recogScores = pd.DataFrame(
             data = {
                 'testImageIndex': testImageIndices,
@@ -817,6 +862,16 @@ class benchRecog():
                 'recogUsername' : usernames,
                 'recogScore' : recogImageScores
             }).set_index('recogImageIndex').sort_values(by='testImageIndex')
+
+        frame_info = getframeinfo(currentframe())
+        print(
+f"""
+Description: This is the output of the true positive test that inserts data.
+File: {frame_info.filename}
+Line: {frame_info.lineno}
+recogScore values:\n {recogScores}
+"""
+        )
 
         return recogScores
 
@@ -833,7 +888,11 @@ class benchRecog():
         usernames = []
         recogUsernames = []
 
+        # reset previously used resources
         self.CV2TNUserTimer.clear()
+        # TODO: The calculation is not reseted, because we need to store the
+        # data. We need to restructure the code in order to make this possible
+        # self.threshold_calc = Threshold_Calc(None, None)
 
         for user_index,user_ in enumerate(self.users):
             if self.pW:
@@ -856,8 +915,8 @@ class benchRecog():
             while rand == user_index:
                 rand = random.randint(0,userCount - 1)
 
-            imgs_train = self.users[rand].trainPictures # Images are flattened
-            imgs_test = user_.recogPictures
+            imgs_train = self.users[rand].trainPictures.copy() # Images are flattened
+            imgs_test = user_.recogPictures.copy()
 
             scores = self.opencv_single_dist_algo(imgs_test, imgs_train)
 
@@ -872,15 +931,15 @@ class benchRecog():
                 usernames.append(user_.username)
                 recogUsernames.append(self.users[rand].username)
 
-            userFin += 1
-            self.CV2TNUserTimer.endTimer(user_)
-
             # Data to calculate optimal Threshold
-            # We're in true positive case so all labels are True
+            # We're in negative case so all labels are False
             labels = np.full(shape=(len(imgs_train), len(imgs_test)), 
-                             fill_value=False, 
+                             fill_value=False,
                              dtype=bool)
             self.threshold_calc.add_data_and_labels(scores, labels)
+
+            userFin += 1
+            self.CV2TNUserTimer.endTimer(user_)
 
         if self.pW:
             self.pW.finProgress("CV2TNProg")
@@ -895,8 +954,190 @@ class benchRecog():
             }).set_index('recogImageIndex').sort_values(by='testImageIndex')
 
         # Calculate optimal threshold (for this data)
-        f_score_level = 0.25  # recall is x times as important as precision
-        self.threshold_calc.set_thres_range(min_threshold = 160, max_threshold = 185, step_num = 300)  #choose more accurately with smaller range and/or more steps
+        # To prioritize precision, you can set a smaller beta value such as 0.5
+        # To prioritize recall, you can set a larger beta value such as 2.
+        f_score_level = 1  # Beta = 1 is the default value. (prev. one was 0.25, which prioritised precision over recall)
+        self.threshold_calc.set_thres_range(
+            min_threshold=0, 
+            max_threshold=300, 
+            step_num=300
+        )
         self.threshold_calc.calc_and_print_results(f_score_level)
+
+        frame_info = getframeinfo(currentframe())
+        print(
+f"""
+Description: This is the output of the true negative test that inserts data.
+File: {frame_info.filename}
+Line: {frame_info.lineno}
+recogScore values:\n {recogScores}
+"""
+        )
+
+        return recogScores
+
+    def face_recog_2023_run_benchmark(self):
+        def execute_algorithm(train_imgs , test_imgs):
+            scores = np.empty((len(train_imgs), len(test_imgs)))
+            scores[:] = np.nan
+            faceRecognitionInstance = FaceReco_class.FaceReco()
+
+            for train_index, train_img in enumerate(train_imgs):
+                train_img = train_img.reshape((self.image_shape[0],self.image_shape[1]))
+                train_img = train_img.astype("uint8")
+
+                # calculate encoding
+                pil_img = Image.fromarray(train_img)
+                pil_img.save("train.jpg")
+                img_train = face_recognition.load_image_file("train.jpg")
+                image_encoding = face_recognition.face_encodings(img_train)
+
+                for test_index, test_img in enumerate(test_imgs):
+                    ## it is possible that the encoding can't be calculated
+                    if image_encoding == []:
+                        # NOTE: The score is set to 1, because this is the maximum distance
+                        # and the picture is assumed to be completely different
+                        score = [1]
+                    else:
+                        # calculate distance
+                        test_img = test_img.reshape((self.image_shape[0],self.image_shape[1]))
+                        test_img = test_img.astype("uint8")
+                        pil_img = Image.fromarray(test_img)
+                        pil_img.save("test.jpg")
+                        img_test = face_recognition.load_image_file("test.jpg")
+
+                        _, score = faceRecognitionInstance.photo_to_photo(image_encoding[0], img_test)
+                    scores[train_index][test_index] = score[0]
+            os.remove("test.jpg")
+            os.remove("train.jpg")
+            return scores
+
+        LABEL_FOR_PROGRESS_OF_TEST = "FaceRecog2023Prog"
+
+        if self.pW:
+            self.pW.createProgressbar(LABEL_FOR_PROGRESS_OF_TEST)
+
+        userCount = len(self.users)
+        userFin = 0
+
+        testImageIndices = []
+        recogImageIndices = []
+        recogImageScores = []
+        usernames = []
+        recogUsernames = []
+
+        # reset previously used resources
+        self.FaceRecog2023UserTimer.clear()
+        self.threshold_calc = Threshold_Calc(None, None)
+
+        for user_index,user_ in enumerate(self.users):
+            if self.pW:
+                self.pW.update(
+                    LABEL_FOR_PROGRESS_OF_TEST,
+                    "[FaceRecog2023] Benchmarking User: {}/{}...".format(user_.username,self.userLimit),
+                    userFin/userCount * 100
+                )
+
+            if self.root:
+                self.root.update()
+
+            if len(user_.trainPictures) == 0:
+                print("WARNING: Training pictures empty!")
+                continue
+
+            self.FaceRecog2023UserTimer.startTimer(user_)
+
+            # negative case
+            ## Fetch User pictures
+            rand = random.randint(0,userCount - 1)
+            while rand == user_index:
+                rand = random.randint(0,userCount - 1)
+
+            imgs_train = self.users[rand].trainPictures.copy() # Images are flattened
+            imgs_test = user_.recogPictures.copy()
+
+            ## calculate scores
+            scores = execute_algorithm(imgs_train, imgs_test)
+
+            ## Prepare Score Dataframe
+            user_.recogScores = None
+            for testImageIndex in range(scores.shape[1]):
+                recognisedImageIndex = np.argmin(scores[:, testImageIndex])
+                recognisedImageScore = np.min(scores[:, testImageIndex])
+                testImageIndices.append(testImageIndex)
+                recogImageIndices.append(recognisedImageIndex)
+                recogImageScores.append(recognisedImageScore)
+                usernames.append(user_.username)
+                recogUsernames.append(self.users[rand].username)
+
+            ## Data to calculate optimal Threshold
+            ## We're in negative case so all labels are False
+            labels = np.full(shape=(len(imgs_train), len(imgs_test)), 
+                             fill_value=False,
+                             dtype=bool)
+            self.threshold_calc.add_data_and_labels(scores, labels)
+
+            # positive case
+            ## Fetch User pictures
+            imgs_train = user_.trainPictures.copy() # Images are flattened
+            imgs_test = user_.recogPictures.copy()
+
+            ## calculate scores
+            scores = execute_algorithm(imgs_train, imgs_test)
+
+            ## Prepare Score Dataframe
+            user_.recogScores = None
+            for testImageIndex in range(scores.shape[1]):
+                recognisedImageIndex = np.argmin(scores[:, testImageIndex])
+                recognisedImageScore = np.min(scores[:, testImageIndex])
+                testImageIndices.append(testImageIndex)
+                recogImageIndices.append(recognisedImageIndex)
+                recogImageScores.append(recognisedImageScore)
+                usernames.append(user_.username)
+                # can be seen as sort of padding
+                recogUsernames.append(user_.username)
+
+            ## Data to calculate optimal Threshold
+            ## we're in true positive case so all labels are True
+            labels = np.full(shape=(len(imgs_train),len(imgs_test)), 
+                             fill_value=True, 
+                             dtype=bool)
+            self.threshold_calc.add_data_and_labels(scores, labels)
+
+            userFin += 1
+            self.FaceRecog2023UserTimer.endTimer(user_)
+
+        if self.pW:
+            self.pW.finProgress(LABEL_FOR_PROGRESS_OF_TEST)
+
+        recogScores = pd.DataFrame(
+            data = {
+                'testImageIndex':  testImageIndices,
+                'username':        usernames, 
+                'recogImageIndex': recogImageIndices,
+                'recogUsername' :  recogUsernames,
+                'recogScore' :     recogImageScores
+            }).set_index('recogImageIndex').sort_values(by='testImageIndex')
+
+        # Calculate optimal threshold (for this data)
+        # To prioritize precision, you can set a smaller beta value such as 0.5
+        # To prioritize recall, you can set a larger beta value such as 2.
+        f_score_level = 0.5  # Beta = 1 is the default value. (prev. one was 0.25, which prioritised precision over recall)
+        self.threshold_calc.set_thres_range(
+            min_threshold=0, 
+            max_threshold=300, 
+            step_num=300
+        )
+        self.threshold_calc.calc_and_print_results(f_score_level)
+
+        frame_info = getframeinfo(currentframe())
+        print(
+f"""
+Description: This is the output of the true negative test that inserts data.
+File: {frame_info.filename}
+Line: {frame_info.lineno}
+recogScore values:\n {recogScores}
+"""
+        )
 
         return recogScores
