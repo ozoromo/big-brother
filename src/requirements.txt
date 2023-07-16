@@ -48,6 +48,6 @@ dnspython
 ### aditional ###
 protobuf==3.20.*
 
-### EduVid ###
-openai-whisper==20230314
-moviepy==1.0.3
+### EduVid (funktioniert nicht)###
+###openai-whisper==20230314
+###moviepy==1.0.3
