@@ -37,7 +37,7 @@ class CameraForm(Form):
     name = TextField('Name:', validators=[DataRequired()])
     submit = SubmitField('Sign In')
     
-class VideoUploadForm(FlaskForm):
+class VideoUploadForm(Form):
     name = TextField('Name:', validators=[DataRequired()])
     video = FileField('Video:', validators=[DataRequired()])
     submit = SubmitField('Hochladen')
