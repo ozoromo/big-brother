@@ -864,16 +864,16 @@ def verifyPicture():
                 #return render_template('validationauthenticated.html',  user=user) #, "data": userData}
 
             else:
+                thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
+                flask_login.login_user(thisUser)
+
+            
                 userData = {
                     "name": username
                     
                 }
 
-                thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
-                flask_login.login_user(thisUser)
-
-
-                return render_template("validationauthenticated.html")
+                return {"redirect": "/validationauthenticated"}
 
         else:
             return {"redirect": "/rejection"} #, "data": rejection_data}
