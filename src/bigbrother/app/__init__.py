@@ -184,10 +184,15 @@ def algorithms():
 @application.route("/eduVid", methods=['GET','POST'])
 @flask_login.login_required
 def eduVid():
-    form = Upload(request.form)
-    #if request.method == 'POST':
-        
-        
+    form = VideoUploadForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            video = form.video.data
+            
+            #TODO: EduVid Implementation
+            
+            
+        return 'Das Video wurde erfolgreich hochgeladen.'  
     return render_template("eduVid.html", form=form)
 
 @application.route("/userpage")
