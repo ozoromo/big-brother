@@ -50,4 +50,4 @@ COPY . /usr/big-brother/src
 ENV LOCALDEBUG=0
 ENV FLASK_DEBUG=0
 EXPOSE 5000
-CMD ["python", "./bigbrother/app/__init__.py"]
+CMD ["python", "./src/bigbrother/app/__init__.py"]

@@ -873,7 +873,7 @@ def verifyPicture():
                     
                 }
 
-                return {"redirect": "/validationauthenticated"}
+                return render_template('validationauthenticated.html',  user=user)
 
         else:
             return {"redirect": "/rejection"} #, "data": rejection_data}
