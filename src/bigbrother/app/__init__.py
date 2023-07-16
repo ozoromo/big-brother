@@ -844,18 +844,9 @@ def verifyPicture():
 
             #if successfull login but page does not change !
             result = results[0]
-            if result:
-
-                thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
-                flask_login.login_user(thisUser)
-
-            
-                userData = {
-                    "name": username
-                    
-                }
-
-                return render_template('validationauthenticated.html',  user=user)
+            if result is None:
+                return {"redirect": "/rejection"} #, "data": rejection_data}
+                
 
                 #TODO:
                 #the json object returned will be used in main.js to switch to target page
@@ -868,7 +859,16 @@ def verifyPicture():
                 #return render_template('validationauthenticated.html',  user=user) #, "data": userData}
 
             else:
-                return {"redirect": "/rejection"} #, "data": rejection_data}
+                thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
+                flask_login.login_user(thisUser)
+
+            
+                userData = {
+                    "name": username
+                    
+                }
+
+                return render_template('validationauthenticated.html',  user=user)
 
         else:
             return {"redirect": "/rejection"} #, "data": rejection_data}
