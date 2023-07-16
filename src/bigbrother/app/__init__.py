@@ -43,7 +43,7 @@ from flask import render_template, flash, redirect, url_for
 #kim: kommt bald weg
 from app.forms import LoginForm, CreateForm, LoginCameraForm
 #kim: neuer import
-from app.forms import SignUpForm, SignInForm, CameraForm
+from app.forms import SignUpForm, SignInForm, CameraForm, VideoUploadForm
 
 import ssl
 from werkzeug.utils import secure_filename
