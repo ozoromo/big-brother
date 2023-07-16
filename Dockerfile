@@ -44,10 +44,10 @@ COPY requirements.txt /usr/big-brother/requirements.txt
 #RUN python -m pip install --no-cache-dir -r requirements.txt
 RUN python -m pip install -r requirements.txt
 
-COPY . /usr/big-brother/src
+COPY . /usr/big-brother
 
 # Flask app config and starting
 ENV LOCALDEBUG=0
 ENV FLASK_DEBUG=0
 EXPOSE 5000
-CMD ["python", "./src/bigbrother/app/__init__.py"]
+CMD ["python", "./bigbrother/app/__init__.py"]
