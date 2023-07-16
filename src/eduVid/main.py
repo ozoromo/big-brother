@@ -4,9 +4,9 @@ import whisper
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'processes'))
 from slides_extractor import SlideExtractor
-from slides_ocr import SlideOCR
-from summarization import TextSummarizer
-from keyword_extractor import KeywordExtractor
+#from slides_ocr import SlideOCR
+#from summarization import TextSummarizer
+#from keyword_extractor import KeywordExtractor
 from speech2text import VideoScript
 
 # define function which wipes folder content
@@ -40,13 +40,13 @@ if __name__ == "__main__":
     # TODO: install Tesseract on server and link it
 
         # path for tesseract
-    tesseract_path = r'E:\E Apps\Tesseract-OCR\tesseract.exe'
+    #tesseract_path = r'E:\E Apps\Tesseract-OCR\tesseract.exe'
         # set where OCR txt file should be saved
-    ocr_file = os.path.join(main_directory, "output", 'OCR_output.txt')
+    #ocr_file = os.path.join(main_directory, "output", 'OCR_output.txt')
         # set where summary txt file should be saved
-    summary_file = os.path.join(main_directory, "output", "summary.txt")
+    #summary_file = os.path.join(main_directory, "output", "summary.txt")
         # set where keywords should be saved
-    keywords_file = os.path.join(main_directory, "output", 'keywords.txt')
+    #keywords_file = os.path.join(main_directory, "output", 'keywords.txt')
 
     # ---------------------------------------------------------------------------------------------
 
@@ -73,10 +73,11 @@ if __name__ == "__main__":
     slide_extractor_ = SlideExtractor(video_path, slides_folder)
     slide_extractor_.extract_slides_from_video()
 
+    '''
     # ---------------------------------------------------------------------------------------------
     # ---OCR---------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------------
-
+    
     # execute OCR
     slide_ocr_ = SlideOCR(tesseract_path, slides_folder, ocr_file)
     slide_ocr_.ocr_text_from_slides()
@@ -97,3 +98,4 @@ if __name__ == "__main__":
     keyword_extractor = KeywordExtractor()
     extracted_keywords = keyword_extractor.extract_keywords(summary_file)
     keyword_extractor.save_keywords(extracted_keywords, keywords_file)
+    '''
