@@ -103,7 +103,7 @@ def logout():
     flask_login.logout_user()
     return render_template('index.html', title='Home',form=form)
     #return redirect(url_for('index'))
-
+    
 @application.route("/deleteuser")
 @flask_login.login_required
 def deleteuser():
@@ -181,9 +181,14 @@ def team2():
 def algorithms():
     return render_template("algorithms.html")
 
-@application.route("/eduVid")
+@application.route("/eduVid", methods=['GET','POST'])
+@flask_login.login_required
 def eduVid():
-    return render_template("eduVid.html")
+    form = Upload(request.form)
+    #if request.method == 'POST':
+        
+        
+    return render_template("eduVid.html", form=form)
 
 @application.route("/userpage")
 def userpage():
