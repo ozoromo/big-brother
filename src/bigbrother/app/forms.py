@@ -36,9 +36,11 @@ class SignInForm(Form):
 class CameraForm(Form):
     name = TextField('Name:', validators=[DataRequired()])
     submit = SubmitField('Sign In')
-
-
-
+    
+class VideoUploadForm(FlaskForm):
+    video = FileField('Video:', validators=[DataRequired()])
+    submit = SubmitField('Hochladen')
+    
 
 #kim: eigentlich müll diese drei forms
 class CreateForm(FlaskForm):
