@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Zu EduVid{% endblock %}
+{% block title %}EduVid{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
@@ -11,7 +11,7 @@
 {% block content %}
     <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
         <div class="card-body">
-            <h3 class="card-title">Upload</h3>
+            <h3 class="card-title">Video Upload</h3>
             <form  action="" method="post" role="form" enctype='multipart/form-data'>
                 {{ form.csrf_token }}
                 <div style="margin-left: 0%; margin-right: 0%">
