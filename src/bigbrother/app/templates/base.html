@@ -71,9 +71,7 @@
                                 Login
                             {% endif %}
                         </a>
-                        {% if current_user.is_authenticated %}
-
-                        {% else %}
+                        {% if not current_user.is_authenticated %}
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="\logincamera">Login with Camera</a>
                                 <!--<a class="dropdown-item" href="\createcamera">Sign up with Camera</a>-->
