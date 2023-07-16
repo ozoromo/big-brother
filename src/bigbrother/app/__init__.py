@@ -103,7 +103,7 @@ def logout():
     flask_login.logout_user()
     return render_template('index.html', title='Home',form=form)
     #return redirect(url_for('index'))
-
+    
 @application.route("/deleteuser")
 @flask_login.login_required
 def deleteuser():
@@ -181,9 +181,19 @@ def team2():
 def algorithms():
     return render_template("algorithms.html")
 
-@application.route("/eduVid")
+@application.route("/eduVid", methods=['GET','POST'])
+@flask_login.login_required
 def eduVid():
-    return render_template("eduVid.html")
+    form = VideoUploadForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            video = form.video.data
+            
+            #TODO: EduVid Implementation
+            
+            
+        return 'Das Video wurde erfolgreich hochgeladen.'  
+    return render_template("eduVid.html", form=form)
 
 @application.route("/userpage")
 def userpage():
@@ -839,18 +849,9 @@ def verifyPicture():
 
             #if successfull login but page does not change !
             result = results[0]
-            if result:
-
-                thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
-                flask_login.login_user(thisUser)
-
-            
-                userData = {
-                    "name": username
-                    
-                }
-
-                return render_template('validationauthenticated.html',  user=user)
+            if result is None:
+                return {"redirect": "/rejection"} #, "data": rejection_data}
+                
 
                 #TODO:
                 #the json object returned will be used in main.js to switch to target page
@@ -863,7 +864,16 @@ def verifyPicture():
                 #return render_template('validationauthenticated.html',  user=user) #, "data": userData}
 
             else:
-                return {"redirect": "/rejection"} #, "data": rejection_data}
+                thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
+                flask_login.login_user(thisUser)
+
+            
+                userData = {
+                    "name": username
+                    
+                }
+
+                return render_template('validationauthenticated.html',  user=user)
 
         else:
             return {"redirect": "/rejection"} #, "data": rejection_data}
