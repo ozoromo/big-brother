@@ -188,6 +188,10 @@ def eduVid():
     if request.method == 'POST':
         if form.validate_on_submit():
             video = form.video.data
+            
+            #TODO: EduVid Implementation
+            
+            
         return 'Das Video wurde erfolgreich hochgeladen.'  
     return render_template("eduVid.html", form=form)
 
