@@ -181,6 +181,10 @@ def team2():
 def algorithms():
     return render_template("algorithms.html")
 
+@application.route("/eduVid")
+def eduVid():
+    return render_template("eduVid.html")
+
 @application.route("/userpage")
 def userpage():
 
@@ -840,9 +844,13 @@ def verifyPicture():
                 thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
                 flask_login.login_user(thisUser)
 
+            
                 userData = {
                     "name": username
+                    
                 }
+
+                return render_template('validationauthenticated.html',  user=user)
 
                 #TODO:
                 #the json object returned will be used in main.js to switch to target page
@@ -852,7 +860,7 @@ def verifyPicture():
                 #but if you get render_template to work you need to remove the onload function in main.js 73
 
                 #return render_template('validationauthenticated.html', user=user)
-                return {"redirect": "/validationauthenticated"} #, "data": userData}
+                #return render_template('validationauthenticated.html',  user=user) #, "data": userData}
 
             else:
                 return {"redirect": "/rejection"} #, "data": rejection_data}

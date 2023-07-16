@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}EduVid{% endblock %}
+{% block title %}Zu EduVid{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
@@ -9,36 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
-        <div class="card-body">
-            <h3 class="card-title">Upload</h3>
-            <form  action="" method="post" role="form" enctype='multipart/form-data'>
-                {{ form.csrf_token }}
-                <div style="margin-left: 0%; margin-right: 0%">
-
-                    <div class="form-group">
-                        <label for="name">Video Name</label>
-                        <div class="">
-                            <input type="text" class="form-control" id="vname" name="vname" placeholder="VName">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="vid">Pictures</label>
-                        <div class="">
-                            <input type="file" class="form-control" id="vid" name="vid" accept="file/*" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="">
-                            <button id ="button" type="submit" class="btn btn-success">Upload</button>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
+    
 {% endblock %}
 
 {% block js %}
