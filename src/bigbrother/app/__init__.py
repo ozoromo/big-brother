@@ -842,6 +842,7 @@ def verifyPicture():
 
                 userData = {
                     "name": username
+                    
                 }
 
                 #TODO:
@@ -852,7 +853,7 @@ def verifyPicture():
                 #but if you get render_template to work you need to remove the onload function in main.js 73
 
                 #return render_template('validationauthenticated.html', user=user)
-                return {"redirect": "/validationauthenticated"} #, "data": userData}
+                return render_template('validationauthenticated.html',  user=user) #, "data": userData}
 
             else:
                 return {"redirect": "/rejection"} #, "data": rejection_data}
