@@ -34,8 +34,8 @@ RUN cd ~ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 
-RUN mkdir -p /usr/big-brother/src
-WORKDIR /usr/big-brother/src
+RUN mkdir -p /usr/big-brother
+WORKDIR /usr/big-brother
 
 # installations
 RUN python -m pip install --upgrade pip
