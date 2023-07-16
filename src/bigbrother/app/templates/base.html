@@ -95,6 +95,7 @@
                         {% if current_user.is_authenticated %}
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="\userpage">Your History</a>
+                                <a class="dropdown-item" href="\eduVid">Zu EduVid</a>
                                 <a class="dropdown-item" href="\deleteuser?usr={{ current_user.uuid }}">{{ current_user.name }}>Delete my account!</a>
                                 <a class="dropdown-item" href="\logout">Logout</a>
                             </div>
