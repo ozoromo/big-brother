@@ -874,7 +874,7 @@ def verifyPicture():
                 }
 
                 #back to base?
-                return {"redirect": "/validationauthenticated"}
+                return {"redirect": "/base"}
 
         else:
             return {"redirect": "/rejection"} #, "data": rejection_data}
