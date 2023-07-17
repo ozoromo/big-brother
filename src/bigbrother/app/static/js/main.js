@@ -53,12 +53,12 @@ $(document).ready(function(){
     var attribute = userRef.getAttribute('data-user');
 
     //parse it to json
-    var jsonString = attribute.replace(/'/g, '"')
-    var jsonObj = JSON.parse(jsonString)
+    var jsonString = attribute.replace(/'/g, '"');
+    var jsonObj = JSON.parse(jsonString);
 
     //http request to verifypicture backend-point
     var request = new XMLHttpRequest();
-    request.open('POST', '/verifypicture')
+    request.open('POST', '/verifypicture');
     request.setRequestHeader('Content-Type', 'application/json');
 
     //create json for username and imageurl
@@ -77,7 +77,7 @@ $(document).ready(function(){
         //does not work for the validationauthenticated html page
 
         console.log("Picture has been send successfully");
-        var response = JSON.parse(request.responseText)
+        var response = JSON.parse(request.responseText);
         var url = new URL(response.redirect, window.location.href);
         for (var key in response.data) {
           url.searchParams.append(key, response.data[key]);
@@ -87,7 +87,7 @@ $(document).ready(function(){
         window.location.href = url.href;
       }
       else
-        console.log("Error while sending picture: ", request.status)
+        console.log("Error while sending picture: ", request.status);
     };
 
     request.send(json);
