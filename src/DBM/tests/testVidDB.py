@@ -72,7 +72,6 @@ class VidDBTest(unittest.TestCase):
 
     def test_retrieval_vid_ids_from_certain_user(self):
         source = "videos/Program in C Song.mp4"
-        compare = "tmp/test.mp4"
         filename = "file"
         video_transcript = "Some transcript"
 
@@ -96,6 +95,41 @@ class VidDBTest(unittest.TestCase):
         vid_ids.sort()
         ret_vid_ids.sort()
         self.assertEqual(vid_ids, ret_vid_ids)
+
+    def test_basic_video_deletion(self):
+        """
+        Tests whether videos with a certain ID can be deleted.
+        """
+        source = "videos/Program in C Song.mp4"
+
+        filename = "file"
+        video_transcript = "Some transcript"
+        num_vid_to_test = 10
+        vid_ids = []
+
+        # inserting videos
+        user_id = self.db.register_user(f"me", None)
+        for i in range(num_vid_to_test):
+            stream_insert = open(source, "rb+")
+            vid_uuid = self.db.insertVideo(
+                    stream_insert, 
+                    user_id, 
+                    filename, 
+                    video_transcript
+                )
+            stream_insert.close()
+            vid_ids.append(vid_uuid)
+        vid_ids.sort()
+
+        # deleting videos
+        for _ in range(num_vid_to_test):
+            vid_to_delete = vid_ids.pop()
+            self.assertTrue(self.db.deleteVideo(vid_to_delete))
+
+            # compare
+            ret_vid_ids = self.db.getVideoIDOfUser(user_id)
+            ret_vid_ids.sort()
+            self.assertEqual(vid_ids, ret_vid_ids)
 
 if __name__ == "__main__":
     unittest.main()

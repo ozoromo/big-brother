@@ -29,6 +29,7 @@ renderer:
       contents:
         - 'DatabaseManagement.BBDB.*'
         - 'DatabaseManagement.wire_DB.*'
+        - 'DatabaseManagement.vid_DB.*'
         - 'DatabaseManagement.opencv_DB.*'
         - 'DatabaseManagement.frontend_DB.*'
         - 'DatabaseManagement.UsernameExists'

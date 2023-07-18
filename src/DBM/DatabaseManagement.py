@@ -644,7 +644,20 @@ class vid_DB(BBDB):
 
         return [uuid.UUID(user_uuid), filename, video_transcript]
 
-    def getVideoIDOfUser(self, user_uuid: uuid.UUID):
+    def getVideoIDOfUser(self, user_uuid: uuid.UUID) -> typing.List[uuid.UUID]:
+        """
+        Outputs list of video ids from videos that belong to a certain user.
+
+        Arguments:
+        user_uuid: This is the ID of the user from which you want to have the
+        IDs of the video that belong to the user.
+        
+        Return:
+        Returns a list of video IDs.
+
+        Exception:
+        TypeError -- Gets risen if the type of the input isn't the expected type.
+        """
         if type(user_uuid) != uuid.UUID:
            raise TypeError
 
@@ -655,6 +668,28 @@ class vid_DB(BBDB):
             meta = gridout.metadata
             vid_ids.append(uuid.UUID(meta["vid_id"]))
         return vid_ids
+
+    def deleteVideo(self, vid_uuid: uuid.UUID) -> bool:
+        """
+        Deletes a video.
+
+        Arguments:
+        vid_uuid: ID of the video that you want to delete.
+        
+        Return:
+        Returns True if the video has been deleted and false otherwise.
+
+        Exception:
+        TypeError -- Gets risen if the type of the input isn't the expected type.
+        gridfs.errors.NoFile -- Gets risen if the video doesn't exist.
+        """
+        if type(vid_uuid) != uuid.UUID:
+           raise TypeError
+
+        fs = GridFSBucket(self._db, self._VIDEO_RESOURCE_BUCKET)
+        fs.delete(str(vid_uuid))
+
+        return True
 
 class opencv_DB(BBDB):
     def __init__(self):

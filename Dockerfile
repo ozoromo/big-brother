@@ -5,6 +5,14 @@ ENV PIP_ROOT_USER_ACTION=ignore
 # from: https://github.com/ageitgey/face_recognition/blob/master/Dockerfile
 # Used to build dlib
 RUN apt-get -y update
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tesseract-ocr
+
+ADD . /tesseract
+WORKDIR /tesseract
+
+RUN travis compile | sed -e "s/--branch\\\=\\\'\\\'/--branch=master/g" | bash
+
 RUN apt-get install -y --fix-missing \
     build-essential \
     cmake \
