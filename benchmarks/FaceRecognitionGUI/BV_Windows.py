@@ -31,6 +31,8 @@ class BenchmarkType(Enum):
     CV2TP = 5
     Mixed = 6
     FaceRecog2023 = 7
+    FaceRecog2023Positive = 8
+    FaceRecog2023Negative = 9
 
 
 class BVWindow:
@@ -126,6 +128,12 @@ class BVWindow:
         elif benchmarkType == BenchmarkType.FaceRecog2023:
             self.scores = self.parent.bR.face_recog_2023_run_benchmark()
             userTimes = self.parent.bR.FaceRecog2023UserTimer.getTimes()
+        elif benchmarkType == BenchmarkType.FaceRecog2023Positive:
+            self.scores = self.parent.bR.face_recog_2023_run_positive()
+            userTimes = self.parent.bR.FaceRecog2023PositiveUserTimer.getTimes()
+        elif benchmarkType == BenchmarkType.FaceRecog2023Negative:
+            self.scores = self.parent.bR.face_recog_2023_run_negative()
+            userTimes = self.parent.bR.FaceRecog2023NegativeUserTimer.getTimes()
 
         self.updateListbox()
 
@@ -738,6 +746,43 @@ class FaceRecog2023Viewer(GraphViewer):
         if (self.windowStatus == "visible"):
             self.show()
 
+
+class FaceRecog2023PositiveViewer(GraphViewer):
+    def __init__(self,GUI,windowStatus):
+
+        # Starting GraphViewer Superclass
+        GraphViewer.__init__(self, GUI, windowStatus,"FaceRecog2023Positive")
+
+        self.benchmarkType = BenchmarkType.FaceRecog2023Positive
+
+        # Configuring GUI elements
+        self.titleLabel.config(text = "FaceRecog2023Positive" ,style = 'title.TLabel')
+        self.plotPrettyLabel = "Face Recognition 2023 Positive"
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
+
+        self.updateBenchmark(self.benchmarkType)
+
+        if (self.windowStatus == "visible"):
+            self.show()
+
+
+class FaceRecog2023NegativeViewer(GraphViewer):
+    def __init__(self,GUI,windowStatus):
+
+        # Starting GraphViewer Superclass
+        GraphViewer.__init__(self, GUI, windowStatus,"FaceRecog2023Negative")
+
+        self.benchmarkType = BenchmarkType.FaceRecog2023Negative
+
+        # Configuring GUI elements
+        self.titleLabel.config(text = "FaceRecog2023Negative" ,style = 'title.TLabel')
+        self.plotPrettyLabel = "Face Recognition 2023 Negative"
+        self.runTestOnParameterButton.config(command = lambda: self.updateBenchmark(self.benchmarkType))
+
+        self.updateBenchmark(self.benchmarkType)
+
+        if (self.windowStatus == "visible"):
+            self.show()
 
 if __name__ == '__main__':
     from BVGUI import BVGUI
