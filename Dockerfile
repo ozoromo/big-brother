@@ -34,20 +34,20 @@ RUN cd ~ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 
-RUN mkdir -p /usr/big-brother/src
-WORKDIR /usr/big-brother/src
+RUN mkdir -p /usr/big-brother
+WORKDIR /usr/big-brother
 
 # installations
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -U wheel cmake
-COPY requirements.txt /usr/big-brother/src/requirements.txt
+COPY requirements.txt /usr/big-brother/requirements.txt
 #RUN python -m pip install --no-cache-dir -r requirements.txt
 RUN python -m pip install -r requirements.txt
 
-COPY . /usr/big-brother/src
+COPY . /usr/big-brother
 
 # Flask app config and starting
 ENV LOCALDEBUG=0
 ENV FLASK_DEBUG=0
 EXPOSE 5000
-CMD ["python", "./bigbrother/app/__init__.py"]
+CMD ["python", "/usr/big-brother/src/bigbrother/app/__init__.py"]

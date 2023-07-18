@@ -43,7 +43,7 @@ from flask import render_template, flash, redirect, url_for
 #kim: kommt bald weg
 from app.forms import LoginForm, CreateForm, LoginCameraForm
 #kim: neuer import
-from app.forms import SignUpForm, SignInForm, CameraForm
+from app.forms import SignUpForm, SignInForm, CameraForm, VideoUploadForm
 
 import ssl
 from werkzeug.utils import secure_filename
@@ -799,8 +799,30 @@ def createcamera():
     return render_template('createcamera.html', title='Create an account', form = form)
 
 
-@application.route('/verifypicture', methods=['POST'])
+@application.route('/verifypicture', methods=['GET', 'POST'])
 def verifyPicture():
+
+    if request.method == 'GET':
+
+        if not 'username' in request.args:
+
+            rejectionDict = {
+
+                'reason': 'Unknown',
+                'redirect': '/',
+                'redirectPretty': 'Nothing to verify',
+            }
+
+            return render_template('rejection.html', rejectionDict=rejectionDict)
+
+        username = request.args.get('username')
+
+        user_data = {
+            "name": username,
+            "username": username
+        }
+
+        return render_template('validationauthenticated.html', user=user_data)
 
     #POST request gets send from main.js in the sendSnapshot() function.
 
@@ -849,31 +871,19 @@ def verifyPicture():
 
             #if successfull login but page does not change !
             result = results[0]
-            if result is None:
+            if not result:
                 return {"redirect": "/rejection"} #, "data": rejection_data}
-                
-
-                #TODO:
-                #the json object returned will be used in main.js to switch to target page
-                #this does not work with /validationauthenticated because its not a valid endpoint
-                #that page gets usually shown under the /login endpoint with the photo login.
-                #return render_template doesnt work here IDK why
-                #but if you get render_template to work you need to remove the onload function in main.js 73
-
-                #return render_template('validationauthenticated.html', user=user)
-                #return render_template('validationauthenticated.html',  user=user) #, "data": userData}
 
             else:
                 thisUser = BigBrotherUser(user_uuid, user['username'], ws.DB)
                 flask_login.login_user(thisUser)
 
-            
-                userData = {
-                    "name": username
-                    
+                user_data = {
+                    "username": username
                 }
 
-                return render_template('validationauthenticated.html',  user=user)
+                #back to base?
+                return {"redirect": "/verifypicture", "data": user_data}
 
         else:
             return {"redirect": "/rejection"} #, "data": rejection_data}

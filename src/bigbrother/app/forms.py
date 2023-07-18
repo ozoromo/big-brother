@@ -39,7 +39,7 @@ class CameraForm(Form):
     
 class VideoUploadForm(Form):
     name = TextField('Name:', validators=[DataRequired()])
-    video = FileField('Video:', validators=[DataRequired()])
+    video = FileField('Video:', validators=[DataRequired(),FileAllowed(['.mp4'], 'MP4 Videos only!')])
     submit = SubmitField('Hochladen')
     
 

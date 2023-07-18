@@ -104,19 +104,24 @@ class BVGUI (tk.Frame):
         self.UV = BVW.UserViewer(self, "visible", "UserViewer")
         self.pW.update("FrameInit","Initialising CV2 True Positive Viewer...", 40)
         self.CV2TP = BVW.CV2TPViewer(self, "hidden")
-        self.pW.update("FrameInit","Initialising CV2 True Negative Viewer...", 60)
+        self.pW.update("FrameInit","Initialising CV2 True Negative Viewer...", 50)
         self.CV2TN = BVW.CV2TNViewer(self, "hidden")
-        self.pW.update("FrameInit","Initialising Face Recognition 2023 Viewer...", 75)
+        self.pW.update("FrameInit","Initialising Face Recognition 2023 Viewer...", 60)
         self.FaceRecog2023 = BVW.FaceRecog2023Viewer(self, "hidden")
+        self.pW.update("FrameInit","Initialising Face Recognition 2023 Positive Viewer...", 70)
+        self.FaceRecog2023Positive = BVW.FaceRecog2023PositiveViewer(self, "hidden")
+        self.pW.update("FrameInit","Initialising Face Recognition 2023 Negative Viewer...", 80)
+        self.FaceRecog2023Negative = BVW.FaceRecog2023NegativeViewer(self, "hidden")
         ## add viewers that are available on all systems
         self.BVWindows = [
                 self.TPV, self.TNV, self.MV, self.UV,
-                self.CV2TP, self.CV2TN, self.FaceRecog2023
+                self.CV2TP, self.CV2TN, self.FaceRecog2023, 
+                self.FaceRecog2023Positive, self.FaceRecog2023Negative
              ]
         ## linux specific windows
         if platform.system() == 'Linux':
             self.OFTP = BVW.OFTPViewer(self,"hidden")
-            self.pW.update("FrameInit","Initialising Openface True Positive Viewer...", 87)
+            self.pW.update("FrameInit","Initialising Openface True Positive Viewer...", 90)
             self.BVWindows.append(self.OFTP)
 
             self.OFTN = BVW.OFTNViewer(self,"hidden")
@@ -231,13 +236,29 @@ class BVGUI (tk.Frame):
         self.menubar.add_cascade(label="CV2 Benchmarks", menu=self.cv2Bar)
 
         # Creating and initializing menubar of Face Recognition 2023 benchmark
-        self.menubar.add_command(
+        self.faceRecog2023Bar = tk.Menu(self.master,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
+        self.faceRecog2023Bar.add_command(
                 activebackground="#ececec",
                 activeforeground="#000000",
                 background="#d9d9d9",
                 foreground="#000000",
-                label="FaceRecog2023 Viewer",
-                command= lambda: self.switchWindow("FaceRecog2023"))
+                label="FaceRecog2023 Benchmark Viewer",
+                command = lambda: self.switchWindow("FaceRecog2023"))
+        self.faceRecog2023Bar.add_command(
+                activebackground="#ececec",
+                activeforeground="#000000",
+                background="#d9d9d9",
+                foreground="#000000",
+                label="FaceRecog2023 Positive Viewer",
+                command = lambda: self.switchWindow("FaceRecog2023Positive"))
+        self.faceRecog2023Bar.add_command(
+                activebackground="#ececec",
+                activeforeground="#000000",
+                background="#d9d9d9",
+                foreground="#000000",
+                label="FaceRecog2023 Negative Viewer",
+                command = lambda: self.switchWindow("FaceRecog2023Negative"))
+        self.menubar.add_cascade(label="FaceRecog2023", menu=self.faceRecog2023Bar)
 
         # Creating and initializing menubar for CV2 benchmarks
         self.menubar.add_command(
@@ -305,8 +326,9 @@ class BVGUI (tk.Frame):
 
             self.pW.update("bbInit","Fetching Big Brother Users : {}".format(value),(counter / len(userDict)) * 100)
         for pic_index, pic in enumerate(pics):
-
             #flattened = pic.reshape(pic.shape[0] * pic.shape[1])
+            if len(pic.shape) == 3 and pic.shape[2] == 3:
+                pic = cv2.cvtColor(pic.astype("uint8"), cv2.COLOR_BGR2GRAY)
             flattened = pic.flatten()
 
             if flattened.shape[0] > maxPicSize:
@@ -316,7 +338,7 @@ class BVGUI (tk.Frame):
         self.imShape = maxShape
         UserPicDf = pd.DataFrame(data = {'user_uuid' : user_uuids, 'pic_uuid' : pic_uuids, 'pic_data' : pics}).set_index('user_uuid')
         newUserDict = {}
-
+        print(maxShape)
         for user_uuid in user_uuids:
             counter += 1
             username = userDict[user_uuid]
@@ -362,6 +384,10 @@ class BVGUI (tk.Frame):
 
             for index,picTuple in enumerate(user_pics.itertuples()):
                 pic = getattr(picTuple,'pic_data')
+                # Convert into grayscale to avoid size
+                if len(pic.shape) == 3 and pic.shape[2] == 3:
+                    pic = cv2.cvtColor(pic.astype("uint8"), cv2.COLOR_BGR2GRAY)
+
                 if pic.shape[0] == 0 or pic.shape[1] == 0:
                     #create empty pic if its corrupted
                     pic = np.random.randint(255, size=(maxShape[0],maxShape[1],3),dtype=np.uint8)
