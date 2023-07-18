@@ -1,12 +1,13 @@
 import os
 import sys
 import whisper
+import zipfile
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'processes'))
 from slides_extractor import SlideExtractor
-#from slides_ocr import SlideOCR
-#from summarization import TextSummarizer
-#from keyword_extractor import KeywordExtractor
+from slides_ocr import SlideOCR
+from summarization import TextSummarizer
+from keyword_extractor import KeywordExtractor
 from speech2text import VideoScript
 
 # define function which wipes folder content
@@ -19,6 +20,19 @@ def wipe_folder(folder_path):
             dir_path = os.path.join(root, dir_name)
             os.rmdir(dir_path)
 
+def zip_output_files(main_directory, output_path, zip_path):
+    # Name of the zip file to be created
+    zip_filename = "output_files.zip"
+
+    #  path of the zip file
+    zip_file_path = os.path.join(zip_path, zip_filename)
+
+    with zipfile.ZipFile(zip_file_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for folder_path, _, file_names in os.walk(output_path):
+            for file_name in file_names:
+                file_path = os.path.join(folder_path, file_name)
+                zipf.write(file_path, os.path.relpath(file_path, output_path))
+
 # Usage example:
 if __name__ == "__main__":
 
@@ -29,6 +43,8 @@ if __name__ == "__main__":
     main_directory = os.path.dirname(os.path.abspath(__file__))
         # define folder in which output files should be saved
     output_path = os.path.join(main_directory, "output")
+        # path were zip dir will land
+    zip_path = os.path.join(main_directory, "zipf")
 
     # TODO: implement functionality to enable user to upload his mp4 file
 
@@ -40,13 +56,13 @@ if __name__ == "__main__":
     # TODO: install Tesseract on server and link it
 
         # path for tesseract
-    #tesseract_path = r'E:\E Apps\Tesseract-OCR\tesseract.exe'
+    tesseract_path = '/tesseract'
         # set where OCR txt file should be saved
-    #ocr_file = os.path.join(main_directory, "output", 'OCR_output.txt')
+    ocr_file = os.path.join(main_directory, "output", 'OCR_output.txt')
         # set where summary txt file should be saved
-    #summary_file = os.path.join(main_directory, "output", "summary.txt")
+    summary_file = os.path.join(main_directory, "output", "summary.txt")
         # set where keywords should be saved
-    #keywords_file = os.path.join(main_directory, "output", 'keywords.txt')
+    keywords_file = os.path.join(main_directory, "output", 'keywords.txt')
 
     # ---------------------------------------------------------------------------------------------
 
@@ -73,7 +89,7 @@ if __name__ == "__main__":
     slide_extractor_ = SlideExtractor(video_path, slides_folder)
     slide_extractor_.extract_slides_from_video()
 
-    '''
+
     # ---------------------------------------------------------------------------------------------
     # ---OCR---------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------------
@@ -98,4 +114,7 @@ if __name__ == "__main__":
     keyword_extractor = KeywordExtractor()
     extracted_keywords = keyword_extractor.extract_keywords(summary_file)
     keyword_extractor.save_keywords(extracted_keywords, keywords_file)
-    '''
+
+    # zip results
+    wipe_folder(zip_path)
+    zip_output_files(main_directory, output_path, zip_path)
