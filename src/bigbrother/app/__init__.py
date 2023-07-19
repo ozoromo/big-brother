@@ -181,6 +181,23 @@ def team2():
 def algorithms():
     return render_template("algorithms.html")
 
+@application.route("/gestureReco", methods=['GET','POST'])
+@flask_login.login_required
+def gestureReco():
+    form = CameraForm(request.form)
+
+    rejectionDict = {
+
+                    'reason' : 'Unknown',
+                    'redirect' : 'login',
+                    'redirectPretty' : 'Zurück zur Anmeldung',
+    }
+
+    if request.method == 'POST' and form.validate():
+
+        flash('Thanks for logging in')
+
+
 @application.route("/eduVid", methods=['GET','POST'])
 @flask_login.login_required
 def eduVid():
