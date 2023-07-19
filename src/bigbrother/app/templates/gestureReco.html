@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Login with Gesture{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
+        <div class="card-body">
+            <h3 class="card-title">Log in with Gesture</h3>
+            <form  action="" method="post" role="form" enctype='multipart/form-data'>
+                {{ form.csrf_token }}
+                <div style="margin-left: 10%; margin-right: 10%">
+                    <div class="form-group">
+                        {#<label for="name" class="col-sm-1 col-form-label">Name</label>#}
+                        <div class="">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                        </div>
+                        <br>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button id="button" type="submit" class="btn btn-success">Login</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}
