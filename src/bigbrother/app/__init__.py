@@ -197,6 +197,7 @@ def gestureReco():
 
         flash('Thanks for logging in')
 
+        return render_template("gestureReco.html", form=form)
 
 @application.route("/eduVid", methods=['GET','POST'])
 @flask_login.login_required
