@@ -3,6 +3,9 @@ import numpy as np
 import mediapipe as mp
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+import os
+#from tensorflow import keras
+#from keras.models import load_model
 
 
 class GestureReco:
@@ -14,10 +17,15 @@ class GestureReco:
 
         # initialize tensorflow
         # Load the gesture recognizer model
-        self.model = load_model('mp_hand_gesture')
+
+        path = os.path.dirname(os.path.abspath(__file__))
+        model_dir = os.path.abspath(os.path.join(path, 'mp_hand_gesture'))
+        self.model = load_model(model_dir)
+
+        gesture_dir = os.path.abspath(os.path.join(path, 'gesture.names'))
 
         # Load class names
-        with open('gesture.names', 'r') as f:
+        with open(gesture_dir, 'r') as f:
             self.classNames = f.read().split('\n')
         #print(self.classNames)
 
