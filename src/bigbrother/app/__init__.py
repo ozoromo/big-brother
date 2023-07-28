@@ -214,6 +214,7 @@ def gestureReco():
         capture.release()
         cv2.destroyAllWindows()
 
+        return render_template('gestureRecoJS.html', title='Camera')
 
     return render_template("rejection.html", rejectionDict=rejectionDict)
 
