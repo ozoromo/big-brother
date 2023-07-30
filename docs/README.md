@@ -39,7 +39,7 @@ has a structure that is more readable.
 - Two ways of registration users
   -> With username + 3 pictures
   -> With username + video
-- Two ways of signing in
+- Three ways of signing in
   -> With username + a picture
   -> With username + video (live face)
   -> With username + video (live gesture)
@@ -85,6 +85,7 @@ has a structure that is more readable.
     - validationsignup.html:
       -> appears when sign up was successful
     - webcam.html:
+
     - webcamCreate.html:
       -> connection to createWithCamera.js
     - webcamJS.html:
