@@ -41,17 +41,76 @@ has a structure that is more readable.
   -> With username + video
 - Two ways of signing in
   -> With username + a picture
-  -> With username + video
+  -> With username + video (live face)
+  -> With username + video (live gesture)
 ...
   
 - EduVid:
 
 - FaceRec:
+  -> recognise face of registered user
+  -> face for login via photo or video (live face)
+  -> In case of large deviation of the face -> login fails
+  -> otherwise success
 
 ### Project structure & Routes
 - HTML files
+    - algorithms.html:
+      -> information about our algorithm
+    - base.html:
+      -> 
+    - create.html:
+      -> registration with 3 photos + username
+    - createcamera.html:
+    - eduVid.html:
+      -> only uploading a video at the moment + name of the video
+    - gestureReco.html:
+      -> login with gesture
+    - gestureRecoJS.html:
+      -> needed for photo of certain gesture
+      -> connecting to gestureRecognition.js
+    - index.html:
+    - login.html:
+    - logincamera.html:
+    - rejection.html:
+      -> if certain process fails error message appears
+    - team_23.html:
+      -> the internship team of SS23
+    - team.html: 
+      -> the internship team of 2021
+    - test.html:
+    - userpage.html:
+    - validationauthenticated.html:
+      -> appears when sign in was successful
+    - validationsignup.html:
+      -> appears when sign up was successful
+    - webcam.html:
+    - webcamCreate.html:
+      -> connection to createWithCamera.js
+    - webcamJS.html:
+      -> connection to main.js
+
 - JS files
--> main.js: 
+    - createWithCamera.js:
+      -> taking photo for registration (not used)
+    - gestureRecognition.js:
+      -> taking photo for login with certain gesture
+    - main.js: 
+      -> taking photo for login via face recognition
+
+- PY Files
+    - __init__.py:
+      -> is used to execute the code
+      -> contains all routes & their functionalities
+    - camera.py:
+      -> access to camera
+    - forms.py:
+      -> submit end user data
+    - routes.py:
+      -> routes of the html files, not used, already in __init__py implemented
+    - user.py:
+      -> keeps the information about user
+    - utils.py:
 
 ## Logik-Group
 
