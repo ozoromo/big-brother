@@ -36,6 +36,7 @@ scipy
 ### Logic group ###
 nose
 nolearn
+mediapipe
 
 ### Data ###
 scikit-learn
@@ -51,3 +52,4 @@ protobuf==3.20.*
 ### EduVid (funktioniert nicht)###
 ###openai-whisper==20230314###
 ###moviepy==1.0.3###
+
