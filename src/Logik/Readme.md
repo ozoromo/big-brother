@@ -48,5 +48,5 @@ It also removes the original image files after encoding.
     - The addToEncodings() function is called to save the encoding to a file in the "encodings" folder. The original image file is removed from "toBeEncoded" folder using os.remove().
   
 ### example_usage_FaceReco_class
-example_usage_FaceReco_class is basically just an example of using a previously written FaceReco_class.
+A code named example_usage_FaceReco_class is basically just an example of using a previously written FaceReco_class.
 ## Gesture-recognition
