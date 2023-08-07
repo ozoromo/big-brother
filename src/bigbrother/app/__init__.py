@@ -37,6 +37,7 @@ import FaceDetection
 import face_recognition
 #from app import routes
 import Face_Recognition.FaceReco_class as LogikFaceRec
+import Gesture_Recognition.GestureReco_class as GestureRec
 
 from flask import render_template, flash, redirect, url_for
 
@@ -180,6 +181,42 @@ def team2():
 @application.route("/algorithms")
 def algorithms():
     return render_template("algorithms.html")
+
+@application.route("/gestureReco", methods=['GET','POST'])
+def gestureReco():
+    form = CameraForm(request.form)
+
+    rejectionDict = {
+        'reason' : 'Unknown',
+        'redirect' : 'login',
+        'redirectPretty' : 'Zurück zur Anmeldung',
+    }
+
+    if request.method == 'GET':
+        return render_template("gestureReco.html", form=form)
+
+    if request.method == 'POST' and form.validate():
+
+        capture = cv2.VideoCapture(0)
+        gesture = GestureRec.GestureReco()
+
+        while True:
+            _, frame = capture.read()
+            frame, className = gesture.read_each_frame_from_webcam(frame)
+            cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+
+            # Show the final output
+            cv2.imshow("Output", frame)
+
+            if cv2.waitKey(1) == ord('q'):
+                break
+
+        capture.release()
+        cv2.destroyAllWindows()
+
+        return render_template('gestureRecoJS.html', title='Camera')
+
+    return render_template("rejection.html", rejectionDict=rejectionDict)
 
 @application.route("/eduVid", methods=['GET','POST'])
 @flask_login.login_required

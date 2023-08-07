@@ -3,24 +3,116 @@ We are still trying to write the documentation. We will split it up soon so that
 has a structure that is more readable.
 
 ## Frontend-Group
-- Run Code:
+### Deployment
+- The project is deployed over Coolify (coolify.adastruct.com) | For username & password contact Mr. D. Foucard
+- Build over Docker, Docker file is in project folder
+- Main Branch of git-repository gets deployed
+- URL: "https://bigbrother.adastruct.com" | Port & Exposed Port: 5000
+
+### Start project
+- We used VSCode (https://code.visualstudio.com/)
+- Download Python & Flask:
     - Watch these two videos to install flask on VS Code:
     - Install Python 3.10.2: https://www.youtube.com/watch?v=uxZuFm5tmhM
     - IMPORTANT: we need Python 3.10.2 to download all the packages
     - Install Flask on VS Code: https://www.youtube.com/watch?v=S8aFNcYpSfI 
     - Last step on video is to let the code run -> dont work
-- Install Visual c++: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
+- Install Visual c++ Redistributables: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
 -> for Package dlib-binary
-- Write on the same terminal, while in your env (environment): pip install ..\..\requirements.txt
-- Write: python -m flask --app .\app\__init__.py --debug run
-- If doesnt run install the package it requires (one line above you input): pip install ... and again write the code above to let it run
-- commands for packages you could need:
-    - PIL: pip install pillow opencv-python opencv-contrib-python
-    - Opencv-python: pip install opencv-python opencv-contrib-python
-    - wtforms: pip install wtforms==2.3.3
-    - Flask_SocketIO= pip install Flask_SocketIO==4.3.1
-- IMPORTANT: gitignore the env (environment) to avoid committing it to main.
--  routes, structures, functionalities, explanation 
+
+- Start a virtual environment: "env\scripts\activate" | Type "deactivate" to get out of the virtual environment
+-> IMPORTANT: gitignore the env (environment) to avoid committing it to main (create a file named .gitignore)
+- Upgrade pip: "python -m pip install --upgrade pip"
+- Write on the same terminal, while in your env (environment): pip install ..\..\requirements.txt | If this doesnt work, install them one by one with "python pip install -m [name]"
+-> Requirements & versions are written in the requirements.txt file, which is in the project folder | If no versions are mentioned, use current versions (Date: 30.07.2023)
+- Type "python -m flask --app .\app\__init__.py --debug run" to start the app
+- Open your browser and type in the URL/IP in your terminal
+
+(Over Docker)
+- It's possible to start the app over docker
+- Install Docker Desktop over "https://www.docker.com/" and run it | Additionaly add the docker plugin in VSCode
+- Type: "docker build -t [container name] ." to build the container
+- Type: "docker run -p 127.0.0.1:5000 [container name]" to run the container
+- Open your browser and type in "127.0.0.1:5000"
+
+### Functionality
+- Two ways of registration users
+  -> With username + 3 pictures
+  -> With username + video
+- Three ways of signing in
+  -> With username + a picture
+  -> With username + video (live face)
+  -> With username + video (live gesture)
+...
+  
+- EduVid:
+
+- FaceRec:
+  -> recognise face of registered user
+  -> face for login via photo or video (live face)
+  -> In case of large deviation of the face -> login fails
+  -> otherwise success
+
+### Project structure & Routes
+- HTML files
+    - algorithms.html:
+      -> information about our algorithm
+    - base.html:
+      -> 
+    - create.html:
+      -> registration with 3 photos + username
+    - createcamera.html:
+    - eduVid.html:
+      -> only uploading a video at the moment + name of the video
+    - gestureReco.html:
+      -> login with gesture
+    - gestureRecoJS.html:
+      -> needed for photo of certain gesture
+      -> connecting to gestureRecognition.js
+    - index.html:
+    - login.html:
+    - logincamera.html:
+    - rejection.html:
+      -> if certain process fails error message appears
+    - team_23.html:
+      -> the internship team of SS23
+    - team.html: 
+      -> the internship team of 2021
+    - test.html:
+    - userpage.html:
+    - validationauthenticated.html:
+      -> appears when sign in was successful
+    - validationsignup.html:
+      -> appears when sign up was successful
+    - webcam.html:
+
+    - webcamCreate.html:
+      -> connection to createWithCamera.js
+    - webcamJS.html:
+      -> connection to main.js
+
+- JS files
+    - createWithCamera.js:
+      -> taking photo for registration (not used)
+    - gestureRecognition.js:
+      -> taking photo for login with certain gesture
+    - main.js: 
+      -> taking photo for login via face recognition
+
+- PY Files
+    - __init__.py:
+      -> is used to execute the code
+      -> contains all routes & their functionalities
+    - camera.py:
+      -> access to camera
+    - forms.py:
+      -> submit end user data
+    - routes.py:
+      -> routes of the html files, not used, already in __init__py implemented
+    - user.py:
+      -> keeps the information about user
+    - utils.py:
+
 ## Logik-Group
 
 ## Database-Group
