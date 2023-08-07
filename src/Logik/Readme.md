@@ -1,4 +1,4 @@
-# Logik-Group Documenatation 
+# Logik-Group Documentation 
 ## Face-recognition
 The purpose of "Face-recognition" is to determine whether two images show the same person. 
 - During the work we based on article and two youtube videos:
