@@ -1,12 +1,3 @@
-# @Author: Julius U. Heller <thekalk>
-# @Date:   2021-05-26T01:00:49+02:00
-# @Project: ODS-Praktikum-Big-Brother
-# @Filename: benchmark.py
-# @Last modified by:   thekalk
-# @Last modified time: 2021-06-09T14:53:39+02:00
-
-
-
 #System Libraries
 import sys
 import os
@@ -23,7 +14,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'Face
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition', 'haar_and_lbph'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition', 'WireFaceRecognition'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'Logik', 'Face_Recognition'))
-import main
+import wireUtils
 import uuid
 import cv2
 import face_rec_main
@@ -297,7 +288,7 @@ class benchRecog():
         """
         # TODO: Properly comment this method
         d_matrix = imgs_test
-        test_pcs, test_sval, test_mean = main.calculate_pca(d_matrix)
+        test_pcs, test_sval, test_mean = wireUtils.calculate_pca(d_matrix)
         coeffs_test = self.modified_project_faces(pcs, imgs_test, mean_data)
 
         # The score is the (angular) distance between the images
@@ -313,9 +304,9 @@ class benchRecog():
 
     def wireAlgo(self, imgs_test, imgs_train):
         # TODO: Properly comment this section
-        pcs, sv, mean_data  = main.calculate_pca(imgs_train) 
+        pcs, sv, mean_data  = wireUtils.calculate_pca(imgs_train) 
         cutoff_threshold = 0.8
-        k = main.accumulated_energy(sv, cutoff_threshold)
+        k = wireUtils.accumulated_energy(sv, cutoff_threshold)
         pcs = pcs[0:k,:]
         coeffs_train = self.modified_project_faces(pcs, imgs_train, mean_data)
         scores, imgs_test, coeffs_test = self.modified_identify_faces(
@@ -770,10 +761,10 @@ recogScore values:\n {recogScores}
 
         # use temporary integer ID to train a completely new model and check if it recognized the same person in authorisation login picture
         temp_ID = 22
-        face_rec_main.train_add_faces(temp_ID, imgs_train, new_model=True, save_model=False, crop_to_face=False)
+        face_rec_wireUtils.train_add_faces(temp_ID, imgs_train, new_model=True, save_model=False, crop_to_face=False)
 
         # Authorize: check if the training pitures are the same person as the given login picture
-        _, dists = face_rec_main.authorize_faces(temp_ID, imgs_test, crop_to_face=False)
+        _, dists = face_rec_wireUtils.authorize_faces(temp_ID, imgs_test, crop_to_face=False)
 
         return dists
 

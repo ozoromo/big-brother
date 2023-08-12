@@ -7,8 +7,6 @@ import base64
 import io
 from PIL import Image
 import numpy as np
-import pickle
-from pymongo import MongoClient
 
 
 class BigBrotherUser(UserMixin):
@@ -16,7 +14,7 @@ class BigBrotherUser(UserMixin):
     This class keeps the information about the user
     """
 
-    # TODO: Find out the types 
+    # TODO: Find out the types
     def __init__(self, user_uuid, name, DB):
 
         self.uuid = user_uuid
@@ -41,7 +39,7 @@ class BigBrotherUser(UserMixin):
         self.recogFlag = False
 
     def sync(self):
-        pics, uuids = self.DB.getTrainingPictures(user_uuid = self.uuid)
+        pics, uuids = self.DB.getTrainingPictures(user_uuid=self.uuid)
         self.trainingPicturesWebsiteFormat = []
 
         for pic_index, pic in enumerate(pics):
@@ -57,10 +55,7 @@ class BigBrotherUser(UserMixin):
                 self.trainingPictures.append((uuids[pic_index], pic))
             except ValueError:
                 print("Illegal Image Loaded!")
-                # print(format("User: {}\n UUID: {}\npic_uuid: {}", self.name,self.uuid,uuids[pic_index]))
                 print("User: {}\n UUID: {}\npic_uuid: {}".format(self.name, self.uuid, uuids[pic_index]))
-                print(pic.astype('uint8'))
-                print(pic.astype('uint8').shape)
                 return
 
         self.logData = self.DB.getLoginLogOfUser(user_uuid=self.uuid)
@@ -78,6 +73,6 @@ class BigBrotherUser(UserMixin):
             self.childUser.append(child_user)
         """
         self.childUser = []
-       
+
     def get_id(self):
         return self.uuid
