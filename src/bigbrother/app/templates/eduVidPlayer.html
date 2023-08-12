@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}EduVid{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="card text-center" style="margin: 0 20%;">
+        <div class="card-body" style="padding: 0.25rem 1rem 0;">
+            <h3 class="card-title">Video: {{ video_info['title'] }}</h3>
+        </div>
+
+        <div class="video-container" style="display: flex; justify-content: center;">
+            <video controls autoplay id="eduVid-element">
+                <source src="{{ video_info['url'] }}">
+            </video>
+        </div>
+
+        <h4 class="time-stamp-title">Timestamps:</h4>
+        <div class="grid-container">
+            {% for entry in video_info.time_stamps %}
+                <div class="grid-item">
+                    {% for label, time in entry.items() %}
+                        <button type="button" onclick="onTimeStampClick(this)"
+                                value="{{ time }}">
+                            {{ label }}: {{ formatSeconds(time) }}
+                        </button>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/eduVid.js') }}"></script>
+    {{ super() }}
+{% endblock %}

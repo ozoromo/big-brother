@@ -39,9 +39,13 @@ class CameraForm(Form):
     
 class VideoUploadForm(Form):
     name = TextField('Name:', validators=[DataRequired()])
-    video = FileField('Video:', validators=[DataRequired(),FileAllowed(['.mp4'], 'MP4 Videos only!')])
+    video = FileField('Video:', validators=[DataRequired()])
     submit = SubmitField('Hochladen')
-    
+
+class EduVidForm(Form):
+    eduName = TextField('Name')
+    eduVid = FileField('Video')
+    submit = SubmitField('Hochladen')
 
 #kim: eigentlich müll diese drei forms
 class CreateForm(FlaskForm):
