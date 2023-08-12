@@ -1,12 +1,3 @@
-# @Author: Julius U. Heller <thekalk>
-# @Date:   2021-05-19T19:15:24+02:00
-# @Project: ODS-Praktikum-Big-Brother
-# @Filename: main.py
-# @Last modified by:   thekalk
-# @Last modified time: 2021-06-14T16:59:31+02:00
-
-
-
 import numpy as np
 import lib
 import matplotlib as mpl

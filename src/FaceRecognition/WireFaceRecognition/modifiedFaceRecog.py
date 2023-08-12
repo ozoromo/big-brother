@@ -1,10 +1,3 @@
-# @Author: Julius U. Heller <thekalk>
-# @Date:   2021-05-19T19:15:24+02:00
-# @Project: ODS-Praktikum-Big-Brother
-# @Filename: modifiedFaceRecog.py
-# @Last modified by:   Julius U. Heller
-# @Last modified time: 2021-06-20T14:45:34+02:00
-
 import os
 import sys
 
@@ -14,7 +7,7 @@ import cv2
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'DBM'))
 import DatabaseManagement
-import main
+import wireUtils
 
 # def recogFace(returnQueue,im_data):
 def recogFace(im_data):
@@ -38,21 +31,21 @@ def recogFace(im_data):
     curDir = os.path.dirname(os.path.abspath(__file__))
     # TODO: Find out why the training data is hardcoded in here! Shouldn't some sort
     # of database be used???
-    imgs_train, dim_x, dim_y, uuids = main.load_images(f"{curDir}/../../../res/data/train/", user_uuid, ".png")
+    imgs_train, dim_x, dim_y, uuids = wireUtils.load_images(f"{curDir}/../../../res/data/train/", user_uuid, ".png")
 
     print("Training...")
-    flat_images = main.setup_data_matrix(imgs_train)
-    pcs, sv, mean_data  = main.calculate_pca(flat_images )
+    flat_images = wireUtils.setup_data_matrix(imgs_train)
+    pcs, sv, mean_data  = wireUtils.calculate_pca(flat_images )
     cutoff_threshold = 0.8
-    k = main.accumulated_energy(sv, cutoff_threshold)
+    k = wireUtils.accumulated_energy(sv, cutoff_threshold)
 
     # cut off number of pcs if desired
     pcs = pcs[0:k,:]
     # compute coefficients of input in eigenbasis
     print("Projecting...")
-    coeffs_train = main.project_faces(pcs, imgs_train, mean_data)
+    coeffs_train = wireUtils.project_faces(pcs, imgs_train, mean_data)
     print("Identifying...")
-    scores, imgs_test, coeffs_test = main.identify_faces(coeffs_train, pcs, mean_data,imgs_test)
+    scores, imgs_test, coeffs_test = wireUtils.identify_faces(coeffs_train, pcs, mean_data,imgs_test)
 
     usernames = []
     for i in range(scores.shape[1]):

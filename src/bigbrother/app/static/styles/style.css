@@ -260,3 +260,24 @@ img{
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust minmax values as needed */
+  gap: 5px; /* Adjust the padding between elements */
+}
+
+.grid-item {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.grid-item button {
+	border-radius: 0.4rem;
+}
+
+.grid-item button:hover {
+	background-color: #CCCCCC;
+}
