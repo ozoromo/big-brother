@@ -30,6 +30,9 @@ class GestureReco:
         #print(self.classNames)
 
     def read_each_frame_from_webcam(self, frame):
+        """
+        Receive a frame, then return the frame with the recognized hand gesture highlighted as well as the name of the gesture.
+        """
         x, y, c = frame.shape
 
         # Flip the frame vertically
