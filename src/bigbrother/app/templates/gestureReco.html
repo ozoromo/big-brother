@@ -13,19 +13,25 @@
         <div class="card-body">
             <h3 class="card-title">Log in with Gesture</h3>
             <form  action="" method="post" role="form" enctype='multipart/form-data'>
-                {{ form.csrf_token }}
-                <div style="margin-left: 10%; margin-right: 10%">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
                     <div class="form-group">
-                        {#<label for="name" class="col-sm-1 col-form-label">Name</label>#}
-                        <div class="">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Name">
-                        </div>
-                        <br>
+                        {{ form.name.label(class="form-control-label") }}
+
+                        {% if form.name.errors %}
+                            {{ form.name(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.name(class="form-control form-control-lg") }}
+                        {% endif %}
                     </div>
-                    <br>
-                    <div class="form-group">
-                        <button id="button" type="submit" class="btn btn-success">Login</button>
-                    </div>
+                </fieldset>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
                 </div>
             </form>
         </div>

@@ -6,7 +6,7 @@ from flask import render_template, make_response, request, Blueprint
 
 # Own libraries
 from app import ws
-from app.login.routes import logincamera
+from app.blueprints.login.routes import logincamera
 
 
 main = Blueprint('main', __name__)
@@ -30,18 +30,24 @@ def algorithms():
 @main.route("/index", methods=["GET", "POST"])
 @main.route("/", methods=["GET", "POST"])
 def index():
-    form = None
+    # TODO: What is this condition used for. Why don't we directly send the POST
+    # request to the route of the logincamera function?
+    # TODO: This should probably be avoided, because it would be best for the
+    # home route not to contain anything related to the login if possible
     if request.method == "POST":
-        # TODO: Is this really necessary?
         return logincamera()
+
+    form = None
+    template = render_template(
+        "index.html",
+        BigBrotherUserList=ws.BigBrotherUserList,
+        form=form
+    )
 
     cookie = request.cookies.get("session_uuid")
     if not cookie:
-
-        response = make_response(render_template("index.html", BigBrotherUserList=ws.BigBrotherUserList, form=form))
-        uuid_ = uuid.uuid4()
-        print("setting new uuid: ", uuid_)
-        response.set_cookie("session_uuid", str(uuid_))
-
+        response = make_response(template)
+        response.set_cookie("session_uuid", str(uuid.uuid4()))
         return response
-    return render_template("index.html", BigBrotherUserList=ws.BigBrotherUserList, form=form)
+
+    return template

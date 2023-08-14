@@ -1,25 +1,21 @@
-# Standard libraries
 import os
 import sys
 
 
-# Third party
-from flask import (render_template, request, Blueprint, url_for, 
+from flask import (render_template, request, Blueprint, url_for,
                    send_from_directory)
 import flask_login
 
 import cv2
 import cv2.misc
 
-# Own libraries
-# Tells python where to search for modules
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'Logik'))
 
-# GUI and frontend libraries
-from app.logic.forms import VideoUploadForm, CameraForm, EduVidForm
+# Tells python where to search for modules
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "Logik"))
+
+from app.blueprints.logic.forms import VideoUploadForm, CameraForm
 from app import application
 
-# ML libraries
 import Gesture_Recognition.GestureReco_class as GestureRec
 
 
@@ -28,7 +24,7 @@ logic = Blueprint("logic", __name__)
 
 @logic.route("/gestureReco", methods=["GET", "POST"])
 def gestureReco():
-    form = CameraForm(request.form)
+    form = CameraForm()
 
     rejectionDict = {
         "reason": "Unknown",
@@ -39,8 +35,7 @@ def gestureReco():
     if request.method == "GET":
         return render_template("gestureReco.html", form=form)
 
-    if request.method == 'POST' and form.validate():
-
+    if form.validate_on_submit():
         capture = cv2.VideoCapture(0)
         gesture = GestureRec.GestureReco()
 
@@ -52,49 +47,43 @@ def gestureReco():
             # Show the final output
             cv2.imshow("Output", frame)
 
-            if cv2.waitKey(1) == ord('q'):
+            if cv2.waitKey(1) == ord("q"):
                 break
 
         capture.release()
         cv2.destroyAllWindows()
 
-        return render_template('gestureRecoJS.html', title='Camera')
+        return render_template("gestureRecoJS.html", title="Camera")
 
     return render_template("rejection.html", rejectionDict=rejectionDict)
 
 
-@logic.route('/videos/<filename>')
+@logic.route("/videos/<filename>")
 def serve_video(filename):
-    return send_from_directory(application.config['TMP_VIDEO_FOLDER'], filename)
+    return send_from_directory(application.config["TMP_VIDEO_FOLDER"], filename)
 
 
-@logic.route("/eduVid", methods=['GET', 'POST'])
+@logic.route("/eduVid", methods=["GET", "POST"])
 @flask_login.login_required
 def eduVid():
+    form = VideoUploadForm()
 
-    form = EduVidForm(request.form)
-
-    if request.method == 'POST':
-        name = request.form.get('eduName')
-        video = request.files.get('eduVid')
-
-        if not name:
-            return render_template("eduVid.html", form=form)
-        if not video:
-            return render_template("eduVid.html", form=form)
+    if form.validate_on_submit():
+        name = form.name.data
+        video = form.video.data
 
         # deletes every video file in tmp folder
-        for vid_file in os.listdir(application.config['TMP_VIDEO_FOLDER']):
+        for vid_file in os.listdir(application.config["TMP_VIDEO_FOLDER"]):
             if vid_file.endswith(".md"):
                 continue
-            del_path = os.path.join(application.config['TMP_VIDEO_FOLDER'], vid_file)
+            del_path = os.path.join(application.config["TMP_VIDEO_FOLDER"], vid_file)
             if os.path.isfile(del_path):
                 os.remove(del_path)
 
-        file_path = os.path.join(application.config['TMP_VIDEO_FOLDER'], video.filename)
+        file_path = os.path.join(application.config["TMP_VIDEO_FOLDER"], video.filename)
         video.save(file_path)
 
-        video_url = url_for('logic.serve_video', filename=video.filename)
+        video_url = url_for("logic.serve_video", filename=video.filename)
 
         # TODO: get time stamps from logic
         # time stamps should be <label>:<time in seconds>
@@ -114,8 +103,6 @@ def eduVid():
                 {"EOF": 7777.0}
             ]
         }
-
         return render_template("eduVidPlayer.html", video_info=video_info)
 
     return render_template("eduVid.html", form=form)
-

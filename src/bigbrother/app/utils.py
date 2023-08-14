@@ -1,13 +1,20 @@
-from PIL import Image
-from io import BytesIO
-import base64
+def formatSeconds(seconds):
+    if not isinstance(seconds, (int, float)) or seconds < 0:
+        return "Invalid input"
 
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    remaining_seconds = int(seconds % 60)
 
-def pil_image_to_base64(pil_image):
-    buf = BytesIO()
-    pil_image.save(buf, format="JPEG")
-    return base64.b64encode(buf.getvalue())
+    formatted_time_parts = []
 
+    if hours > 0:
+        formatted_time_parts.append(f"{hours}h")
 
-def base64_to_pil_image(base64_img):
-    return Image.open(BytesIO(base64.b64decode(base64_img)))
+    if minutes > 0:
+        formatted_time_parts.append(f"{minutes}m")
+
+    if remaining_seconds > 0:
+        formatted_time_parts.append(f"{remaining_seconds}s")
+
+    return "".join(formatted_time_parts)
