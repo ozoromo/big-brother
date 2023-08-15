@@ -2,32 +2,37 @@
 TODO: Add a description of the module
 """
 
-from flask_login import UserMixin
-import base64
 import io
-from PIL import Image
+import uuid
+import base64
+
 import numpy as np
+from flask_login import UserMixin
+from PIL import Image
 
 
 class BigBrotherUser(UserMixin):
     """
-    This class keeps the information about the user
+    This class keeps the information about the user.
     """
 
-    # TODO: Find out the types
-    def __init__(self, user_uuid, name, DB):
+    # TODO: Verify whether the uuids are really all from type uuid.UUID.
+    def __init__(self, user_uuid: uuid.UUID, name: str, DB):
+        """
+        Exceptions:
+        TypeError -- Gets raised if the arguments are of the wrong type.
+        """
+        if type(user_uuid) != uuid.UUID:
+            raise TypeError
 
         self.uuid = user_uuid
         self.name = name
         self.DB = DB
 
-        if type(user_uuid) == tuple:
-            self.uuid = user_uuid[0]
-
         self.trainingPictures = []
         """ logData: Used for logs. Stores past login dates as well as
         the picture IDs that are associated with those logins that came
-        from the user with the uuid: self.uuid"""
+        from the user with the uuid: self.uuid """
         self.logData = []
         self.trainingPicturesWebsiteFormat = []
 
@@ -44,7 +49,7 @@ class BigBrotherUser(UserMixin):
 
         for pic_index, pic in enumerate(pics):
             try:
-                if pic.shape[0] == 0 or pic.shape[1] == 0:
+                if (pic.shape[0] == 0) or (pic.shape[1]) == 0:
                     pic = np.random.randint(255, size=(10, 10, 3), dtype=np.uint8)
 
                 file_object = io.BytesIO()
@@ -54,12 +59,11 @@ class BigBrotherUser(UserMixin):
                 self.trainingPicturesWebsiteFormat.append((uuids[pic_index], base64img))
                 self.trainingPictures.append((uuids[pic_index], pic))
             except ValueError:
-                print("Illegal Image Loaded!")
+                print("ValueError: Illegal Image Loaded!")
                 print("User: {}\n UUID: {}\npic_uuid: {}".format(self.name, self.uuid, uuids[pic_index]))
                 return
 
         self.logData = self.DB.getLoginLogOfUser(user_uuid=self.uuid)
-        print(self.logData)
         # TODO: Setting permissions for admin?
         """
         admin_collection = self.DB['admin_table']
@@ -72,6 +76,8 @@ class BigBrotherUser(UserMixin):
             self.admin = True
             self.childUser.append(child_user)
         """
+        # TODO: What is this supposed to do? Is it ther to build some sort of
+        # hierarchy?
         self.childUser = []
 
     def get_id(self):

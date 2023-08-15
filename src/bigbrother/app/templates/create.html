@@ -13,41 +13,67 @@
         <div class="card-body" style="margin-top: 0%">
             <h3 class="card-title">Sign up</h3>
             <form  action="" method="post" role="form" enctype='multipart/form-data'>
-                {{ form.csrf_token  }}
-                <div style="margin-right: 10%;margin-left: 10%">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
                     <div class="form-group">
-                        <label for="name" class="">Name</label>
-                            <div class="">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
-                            </div>
-                    </div>
+                        {{ form.name.label(class="form-control-label") }}
 
+                        {% if form.name.errors %}
+                            {{ form.name(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.name(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
                     <div class="form-group">
-                        <label for="pic" class="">Picture 1</label>
-                            <div class="">
-                                <input type="file" class="form-control" id="pic1" name="pic1" accept="image/*" />
-                            </div>
-                    </div>
+                        {{ form.pic1.label(class="form-control-label") }}
 
+                        {% if form.pic1.errors %}
+                            {{ form.pic1(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.pic1.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.pic1(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
                     <div class="form-group">
-                        <label for="pic" class="">Picture 2</label>
-                            <div class="">
-                                <input type="file" class="form-control" id="pic2" name="pic2" accept="image/*" />
-                            </div>
-                    </div>
+                        {{ form.pic2.label(class="form-control-label") }}
 
+                        {% if form.pic2.errors %}
+                            {{ form.pic2(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.pic2.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.pic2(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
                     <div class="form-group">
-                        <label for="pic" class="">Picture 3</label>
-                            <div class="">
-                                <input type="file" class="form-control" id="pic3" name="pic3" accept="image/*" />
-                            </div>
-                    </div>
+                        {{ form.pic3.label(class="form-control-label") }}
 
-                    <div class="form-group row justify-content-center">
-                        <div class="">
-                            <button id ="button" type="submit" class="btn btn-success">Sign Up</button>
-                        </div>
+                        {% if form.pic3.errors %}
+                            {{ form.pic3(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.pic3.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.pic3(class="form-control form-control-lg") }}
+                        {% endif %}
                     </div>
+                </fieldset>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
                 </div>
             </form>
         </div>
