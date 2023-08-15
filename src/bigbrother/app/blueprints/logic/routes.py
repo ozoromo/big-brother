@@ -11,12 +11,12 @@ import cv2.misc
 
 
 # Tells python where to search for modules
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "Logik"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 
 from app.blueprints.logic.forms import VideoUploadForm, CameraForm
 from app import application
 
-import Gesture_Recognition.GestureReco_class as GestureRec
+from gesture_recognizer import GestureRecognizer
 
 
 logic = Blueprint("logic", __name__)
@@ -37,11 +37,11 @@ def gestureReco():
 
     if form.validate_on_submit():
         capture = cv2.VideoCapture(0)
-        gesture = GestureRec.GestureReco()
+        gesture = GestureRecognizer()
 
         while True:
             _, frame = capture.read()
-            frame, className = gesture.read_each_frame_from_webcam(frame)
+            frame, className = gesture.recognize(frame)
             cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
 
             # Show the final output
