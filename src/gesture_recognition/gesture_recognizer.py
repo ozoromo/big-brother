@@ -1,19 +1,18 @@
+import os
+
 import cv2
 import numpy as np
 import mediapipe as mp
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-import os
-#from tensorflow import keras
-#from keras.models import load_model
 
 
-class GestureReco:
+class GestureRecognizer:
     def __init__(self):
         # initialize mediapipe
-        self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
-        self.mpDraw = mp.solutions.drawing_utils
+        self.mp_hands = mp.solutions.hands
+        self.hands = self.mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
+        self.mp_draw = mp.solutions.drawing_utils
 
         # initialize tensorflow
         # Load the gesture recognizer model
@@ -26,10 +25,9 @@ class GestureReco:
 
         # Load class names
         with open(gesture_dir, 'r') as f:
-            self.classNames = f.read().split('\n')
-        #print(self.classNames)
+            self.class_names = f.read().split('\n')
 
-    def read_each_frame_from_webcam(self, frame):
+    def recognize(self, frame):
         """
         Receive a frame, then return the frame with the recognized hand gesture highlighted as well as the name of the gesture.
         """
@@ -43,7 +41,7 @@ class GestureReco:
         # Get hand landmark prediction
         result = self.hands.process(framergb)
 
-        className = ''
+        class_name = ""
 
         # post process the result
         if result.multi_hand_landmarks:
@@ -57,12 +55,10 @@ class GestureReco:
                     landmarks.append([lmx, lmy])
 
                 # Drawing landmarks on frames
-                self.mpDraw.draw_landmarks(frame, handslms, self.mpHands.HAND_CONNECTIONS)
+                self.mp_draw.draw_landmarks(frame, handslms, self.mp_hands.HAND_CONNECTIONS)
 
                 # Predict gesture in Hand Gesture Recognition project
                 prediction = self.model.predict([landmarks])
-                # print(prediction)
-                classID = np.argmax(prediction)
-                className = self.classNames[classID]
-
-        return frame, className
+                class_id = np.argmax(prediction)
+                class_name = self.class_names[class_id]
+        return frame, class_name
