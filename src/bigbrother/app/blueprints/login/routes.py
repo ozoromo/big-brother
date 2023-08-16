@@ -5,6 +5,7 @@ import sys
 import base64
 import copy
 import queue
+import uuid
 
 
 # Third party
@@ -12,6 +13,8 @@ import queue
 from flask import render_template, request, flash, Blueprint
 from flask_socketio import emit
 import flask_login
+
+import werkzeug
 
 # Math
 import numpy as np
@@ -41,7 +44,6 @@ blueprint_login = Blueprint("blueprint_login", __name__)
 
 @login_manager.user_loader
 def load_user(user_id):
-    # TODO: Make sure that the user_id is always from type uuid.UUID
     loaded_user = ws.get_user_by_id(user_id)
     loaded_user.sync()
     return loaded_user
@@ -49,8 +51,26 @@ def load_user(user_id):
 
 @blueprint_login.route("/loginstep")
 def loginstep():
+    # TODO: Why do we have a global user. What is this route for?
     flask_login.login_user(user["bbUser"])
     return render_template("validationauthenticated.html")
+
+
+def convert_picture_stream_to_numpy_array(pic: werkzeug.datastructures.FileStorage):
+    """
+    Converts picture to numpy array.
+
+    The pictures that come from the forms are of type werkzeug.datastructures.
+    FileStorage. This function converts the pictures from the forms into a
+    numpy image.
+
+    """
+    im_bytes = pic.stream.read()
+    image = Image.open(io.BytesIO(im_bytes))
+    np_image = np.array(image)
+    image.close()
+    pic.close()
+    return np_image
 
 
 # TODO: Restructure to correct the abstraction levels.
@@ -58,56 +78,36 @@ def loginstep():
 def login():
     form = LoginForm()
 
-    rejectionDict = {
-        "reason": "Unknown",
-        "redirect": "login",
-        "redirectPretty": "Back to login",
-    }
-
     if form.validate_on_submit():
         flash("Thanks for logging in")
 
+        user_uuid = ws.DB.getUser(form.name.data)
+        bb_user = ws.get_user_by_id(user_uuid)
+        login_attempt_time = ws.DB.login_user(user_uuid)
+
         user = {
             "username": form.name.data,
-            "pic": form.pic.data
+            "uuid": user_uuid,
         }
-
-        # Verify user
-        user_uuid = ws.DB.getUser(user["username"])
-        # user exists
-        if user_uuid:
-            user["uuid"] = user_uuid
-            storage = user["pic"]
-
-            if storage is None or not storage.content_type.startswith("image/"):
-                rejectionDict["reason"] = "Image Not uploaded!"
-                return render_template("rejection.html", rejectionDict=rejectionDict, title="Login", form=form)
-
-            # Save Picture
-            cookie = request.cookies.get("session_uuid")
-
-            im_bytes = storage.stream.read()
-            image = Image.open(io.BytesIO(im_bytes))
-            array = np.array(image)
-
-            image.close()
-            storage.close()
-
-            result = ws.authenticatePicture(user, array, cookie)
-            if result:
-                thisUser = BigBrotherUser(user_uuid, user["username"], ws.DB)
-                flask_login.login_user(thisUser)
-
-                return render_template("validationauthenticated.html", user=user)
-            else:
-                return render_template("rejection.html",
-                                       rejectionDict=rejectionDict,
-                                       title="Login",
-                                       form=form)
+        np_image = convert_picture_stream_to_numpy_array(form.pic.data)
+        cookie = request.cookies.get("session_uuid")
+        result = ws.authenticatePicture(user, np_image, cookie)
+        if result:
+            # TODO: The inserted picture has to be somehow documented
+            ws.DB.update_login(user_uuid, login_attempt_time, result)
+            flask_login.login_user(bb_user)
+            return render_template("validationauthenticated.html")
         else:
-            rejectionDict["reason"] = "'{}' not found!".format(user["username"])
-            return render_template("rejection.html", rejectionDict=rejectionDict,
-                                   title="Login", form=form)
+            return render_template(
+                "rejection.html",
+                rejectionDict={
+                    "reason": "Unknown",
+                    "redirect": "login",
+                    "redirectPretty": "Back to login",
+                },
+                title="Login",
+                form=form
+            )
     return render_template("login.html", title="Login", form=form)
 
 
@@ -184,9 +184,9 @@ def test_message(input_):
             ws.setAuthorizedAbort(cookie, True)
 
             ws.DB.update_login(
-                user_uuid=user["uuid"],
-                time=user["login_attempt_time"],
-                inserted_pic_uuid=res
+                user["uuid"],
+                user["login_attempt_time"],
+                res
             )
             ws.DB.commit()
 
@@ -207,49 +207,34 @@ def test_message(input_):
 @blueprint_login.route("/logincamera", methods=["GET", "POST"])
 def logincamera():
     form = CameraLoginForm()
-    rejectionDict = {
-        "reason": "Unknown",
-        "redirect": "login",
-        "redirectPretty": "Back to login",
-    }
 
     if form.validate_on_submit():
         flash("Thanks for logging in")
 
-        # Fetch Username
-        global user
         user_uuid = ws.DB.getUser(form.name.data)
+        bb_user = ws.get_user_by_id(user_uuid),
+        login_attempt_time = ws.DB.login_user(user_uuid)
 
-        if not user_uuid:
-            print("'{}' not found!".format(form.name.data), file=sys.stdout)
-            rejectionDict["reason"] = "'{}' not found!".format(form.name.data)
-            return render_template("rejection.html", rejectionDict=rejectionDict, title="Login", form=form)
-
-        bbUser = None
-
-        for user in ws.BigBrotherUserList:
-            if user.uuid == user_uuid:
-                bbUser = user
-                break
-
+        global user
         user = {
             "username": form.name.data,
             "isWorking": False,
             "uuid": user_uuid,
-            "bbUser": bbUser
+            "bbUser": bb_user,
+            "login_attempt_time": login_attempt_time
         }
         data = {
             "username": form.name.data
         }
 
-        # TODO: Figure out whether the commented out line is important or not!
-        # user["login_attempt_time"] = ws.DB.login_user(uuid_id=user_uuid)
+        # authentication and user login
 
         return render_template("webcamJS.html", title="Camera", data=data)
 
     return render_template("logincamera.html", title="Login with Camera", form=form)
 
 
+# TODO: We don't need this!
 @blueprint_login.route("/verifypicture", methods=["GET", "POST"])
 def verifyPicture():
     if request.method == "GET":

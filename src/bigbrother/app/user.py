@@ -49,21 +49,18 @@ class BigBrotherUser(UserMixin):
 
         for pic_index, pic in enumerate(pics):
             try:
-                if (pic.shape[0] == 0) or (pic.shape[1]) == 0:
-                    pic = np.random.randint(255, size=(10, 10, 3), dtype=np.uint8)
-
                 file_object = io.BytesIO()
                 img = Image.fromarray(pic.astype('uint8'))
                 img.save(file_object, 'PNG')
                 base64img = "data:image/png;base64," + base64.b64encode(file_object.getvalue()).decode('ascii')
                 self.trainingPicturesWebsiteFormat.append((uuids[pic_index], base64img))
-                self.trainingPictures.append((uuids[pic_index], pic))
             except ValueError:
                 print("ValueError: Illegal Image Loaded!")
                 print("User: {}\n UUID: {}\npic_uuid: {}".format(self.name, self.uuid, uuids[pic_index]))
                 return
 
         self.logData = self.DB.getLoginLogOfUser(user_uuid=self.uuid)
+        print(self.logData)
         # TODO: Setting permissions for admin?
         """
         admin_collection = self.DB['admin_table']

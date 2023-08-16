@@ -70,6 +70,8 @@
                     </tr>
                 </thead>
                 <tbody>
+                <!-- TODO: This implementation is extremely inefficient. Find a way to make this more
+                     efficient. -->
                 {%for user in BigBrotherUserList%}
                     {%if user.uuid == current_user.uuid%}
                         {%for pic in user.trainingPicturesWebsiteFormat%}
