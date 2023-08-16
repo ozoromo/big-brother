@@ -165,11 +165,11 @@ class BBDB:
         print("WARNING: Database Login Failed!")
         return False, False
         
-    def update_login(self, **kwargs):
+    def update_login(self, user_uuid: uuid.UUID, time: dt.datetime, success_res_uuid: typing.Optional[uuid.UUID]):
         """
         Updates the status of the login of one user with the given user_uuid
 
-        Keyword arguments:
+        Arguments:
         user_uuid -- ID of the user of which you want to log in.
         time -- The timestamp of the login you want to update. 
         inserted_pic_uuid -- the uuid for the res in the resource table
@@ -178,48 +178,32 @@ class BBDB:
         Returns (False, False) if the access to the database hasn't been 
         successful and returns the UUID (insert_pic_uuid) if the program
         has been successful.
-        """
-        # TODO: Review this and the modules tha call this function
-        user_id = time = inserted_pic_uuid = None
-        
-        for key, value in kwargs.items():
-            if key == "user_uuid":
-                user_id = value
-            elif key == "time":
-                time = value
-            elif key == "inserted_pic_uuid":
-                inserted_pic_uuid = value
 
-            '''
-            elif key == "success_res_id":
-                success_res_id = value
-            elif key == "success_resp_type":
-                success_resp_type = value
-            elif key == "res":
-                res = value
-            '''
-        
-        if not time or not inserted_pic_uuid or not user_id:
-            print("WARNING: Database Login Failed!")
-            return False, False
-        
+        Exception:
+        ValueError -- Raised if the types of the input is not correct.
+        """
+        if    (type(user_uuid) != uuid.UUID) \
+           or (type(time) != dt.datetime) \
+           or ((type(success_res_uuid) != uuid.UUID) and (success_res_uuid is not None)):
+            raise ValueError
+
         try:
             self._login_attempt.update_one(
                 {
-                    "user_id": str(user_id),
+                    "user_id": str(user_uuid),
                     "date": time
                 },
                 { 
                     "$set" : {
                         "login_suc": True,
                         "success_resp_type": 0,
-                        "inserted_pic_uuid": str(inserted_pic_uuid),
+                        "success_res_id": str(success_res_uuid),
                     }
                 })
-            return inserted_pic_uuid
+            return success_res_uuid
         except Exception:
             print("WARNING: Database Login Update!")
-            return False, False
+            return False
 
     def getLoginLogOfUser(self, user_uuid: uuid.UUID):
         # TODO: Write tests for this method
@@ -238,7 +222,7 @@ class BBDB:
         log = []
         logins = self._login_attempt.find({"user_id": str(user_uuid)})
         for login in logins:
-            log.append([login["date"], login["success_res_id"]])
+            log.append([login["date"], uuid.UUID(login["success_res_id"])])
         return log
 
     def register_user(self, username: str, user_enc: np.ndarray):
