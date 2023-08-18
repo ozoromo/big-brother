@@ -2,13 +2,16 @@
 CMake
 
 ### Flask Dependencies ###
-Flask
+Flask==2.0.3
 flask_wtf
-werkzeug
+werkzeug==2.0.3
 wtforms==2.3.3
-Flask-SocketIO
 flask-login
 imageio
+Flask_SocketIO==4.3.1
+Flask-Session==0.3.2
+python-engineio==3.13.2
+python-socketio==4.6.0
 
 ### opencv ###
 opencv-python

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Login with Gesture{% endblock %}
+{% block title %}Log in with Camera{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
@@ -9,39 +9,18 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
-        <div class="card-body">
-            <h3 class="card-title">Log in with Gesture</h3>
-            <form  action="" method="post" role="form" enctype='multipart/form-data'>
-                {{ form.hidden_tag() }}
-                <fieldset class="form-group">
-                    <div class="form-group">
-                        {{ form.name.label(class="form-control-label") }}
-
-                        {% if form.name.errors %}
-                            {{ form.name(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.name(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-                </fieldset>
-                <div class="form-group">
-                    {{ form.submit(class="btn btn-outline-info") }}
-                </div>
-            </form>
-        </div>
+    <div id="container">
+        <video autoplay="true" id="videoElement" hidden></video>
+        <center>
+            <canvas id="originalWebcamCanvas" hidden></canvas>
+            <canvas id="gestureCanvas"></canvas>
+        </center>
     </div>
 {% endblock %}
 
 {% block js %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/gestureRecognition.js') }}"></script>
-    <script>
-        window.onload = startVideoCapture
-    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
 {% endblock %}

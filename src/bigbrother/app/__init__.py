@@ -3,8 +3,9 @@ import logging
 from sys import stdout
 
 from flask import Flask
-from flask_socketio import SocketIO
 import flask_login
+from flask_socketio import SocketIO
+from engineio.payload import Payload
 
 from app.websiteSystem import websiteSystem
 from app.utils import formatSeconds
@@ -26,6 +27,8 @@ login_manager = flask_login.LoginManager()
 login_manager.init_app(application)
 
 ws = websiteSystem()
+
+Payload.max_decode_packets = 1000
 socketio = SocketIO(application)
 
 

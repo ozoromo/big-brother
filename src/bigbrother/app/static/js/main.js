@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    let namespace = "/webcamJS";
     let video = document.querySelector("#videoElement");
     let canvas = document.querySelector("#canvasElement");
     let ctx = canvas.getContext('2d');
@@ -7,9 +6,6 @@ $(document).ready(function(){
     var localMediaStream = null;
     var ready = true;
 
-    var socket = io.connect("http://localhost:5000/" + namespace);
-
-    // Timer-Code
     var timerValue = 5;
 
     function startTimer() {
@@ -80,17 +76,6 @@ $(document).ready(function(){
         request.send(json);
     }
 
-    startTimer();
-
-    socket.on('connect', function() {
-        console.log('Connected!');
-    });
-
-    socket.on('redirect', function (data) {
-        console.log(data.url);
-        window.location = data.url;
-    });
-
     var constraints = {
         video: {
             width: { min: 640 },
@@ -102,16 +87,13 @@ $(document).ready(function(){
         video.srcObject = stream;
         localMediaStream = stream;
 
-        socket.emit('start_transfer_login')
+        setInterval(function() {
+            if (ready){
+                startTimer();
+                ready = false;
+            }
+        }, 200);
 
-        socket.on('ack_transfer', function() {
-            setInterval(function() {
-                if (ready){
-                    sendSnapshot();
-                    ready = false;
-                }
-            }, 200);
-        });
     }).catch(function(error) {
         console.log(error);
     });
