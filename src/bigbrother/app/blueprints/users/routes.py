@@ -11,7 +11,6 @@ import uuid
 # Third party
 # Flask
 from flask import render_template, request, flash, Blueprint
-from flask_socketio import emit
 from flask_login import login_required, logout_user
 
 # Math
@@ -27,7 +26,7 @@ import cv2.misc
 
 # Own libraries
 # GUI and frontend libraries
-from app import application, socketio, ws
+from app import application, ws
 from app.user import BigBrotherUser
 from app.blueprints.users.forms import CameraSignUpForm, SignUpForm
 from app.blueprints.users.utils import register_user
@@ -169,107 +168,3 @@ def create():
 def webcamJS():
     return render_template("webcamJS.html", title="Camera")
 
-
-@users.route("/webcamCreate", methods=["GET", "POST"])
-def webcamCreate():
-    return render_template("webcamCreate.html", title="Camera")
-
-
-@users.route("/createcamera", methods=["GET", "POST"])
-def createcamera():
-    form = CameraSignUpForm()
-
-    ws.createPictures = []
-    if form.validate_on_submit():
-        flash("Thanks for signing up")
-
-        global user
-        user = form.name.data
-
-        # TODO: The signup still needs to get implemented.
-
-        return render_template("webcamCreate.html", title="Camera")
-    return render_template("createcamera.html", title="Create an account", form=form)
-
-
-@socketio.on("disconnect", namespace="/createWithCamera")
-def disconnected():
-    cookie = request.cookies.get("session_uuid")
-    ws.setAuthorizedAbort(cookie, True)
-    ws.resetinvalidStreamCount(cookie)
-    application.logger.info("Websocket client disconnected")
-
-
-# TODO: Take a look at this and why it's so similar to the other routes in
-# other modules
-# TODO: Find out that this does. The emmiting line in createWithCamera.js
-# is commented out!
-# TODO: What is the input_?
-
-# Retrieving Image from Client javascript side, analyze it and send it back
-# Socket source from: https://github.com/dxue2012/python-webcam-flask
-# Used for Registration
-@socketio.on("input image", namespace="/createWithCamera")
-def create_with_image(input_):
-    cookie = request.cookies.get("session_uuid")
-    ws.setAuthorizedAbort(cookie, False)
-
-    # Figure out how many pics are needed and then close socket
-    input_ = input_.split(",")[1]
-
-    image_data = input_  # Do your magical Image processing here!!
-
-    # user is global, use it with cv2_img for authentication
-    # OpenCV part decode and encode
-    img = imread(io.BytesIO(base64.b64decode(image_data)))
-    cutImg = np.asarray(FaceDetection.cut_rectangle(copy.deepcopy(img)))
-    cv2_img = FaceDetection.make_rectangle(img)
-    cv2.imwrite("reconstructed.jpg", cv2_img)
-    retval, buffer = cv2.imencode(".jpg", cv2_img)
-    b = base64.b64encode(buffer)
-    b = b.decode()
-    image_data = "data:image/jpeg;base64," + b
-
-    # TODO: What do those magic number mean?
-    if len(ws.createPictures) < 5 and len(cutImg) < len(img) and len(cutImg) > 50:
-        ws.createPictures.append(cutImg)
-        if len(ws.createPictures) >= 5:
-            cookie = request.cookies.get("session_uuid")
-            ws.setAuthorizedAbort(cookie, True)
-            register_user(user, ws.createPictures)
-            emit("redirect", {"url": "/validationsignup"})
-        else:
-            emit("out-image-event", {"image_data": image_data}, namespace="/createWithCamera")
-    else:
-        ws.addinvalidStreamCount(cookie)
-        if ws.checkinvalidStreamCount(cookie):
-            cookie = request.cookies.get("session_uuid")
-            ws.setAuthorizedAbort(cookie, True)
-            emit("redirect", {"url": "/rejection"})
-    emit("out-image-event", {"image_data": image_data}, namespace="/createWithCamera")
-
-
-@socketio.on("input_image_create", namespace="/createWithCamera")
-def queueImage_create(input):
-    ws.WEBCAM_IMAGE_QUEUE_CREATE.put(input)
-
-
-@socketio.on("start_transfer_create", namespace="/createWithCamera")
-def webcamCommunication_create():
-    emit("ack_transfer", {"foo": "bar"}, namespace="/createWithCamera")
-    cookie = request.cookies.get("session_uuid")
-    # TODO: Check for infinite loop.
-    while (not ws.authorizedFlag) or (not ws.authorizedAbort):
-        try:
-            create_with_image(ws.WEBCAM_IMAGE_QUEUE_CREATE.get(block=True, timeout=5))
-        except queue.Empty:
-            print("Webcam Queue is Empty! Breaking!", file=sys.stdout)
-            break
-
-    ws.WEBCAM_IMAGE_QUEUE_CREATE = queue.Queue()
-    # TODO: Find out what the flags are for they don't seem to do anything.
-    # Sometimes they are commented out and sometimes commented in (in the same
-    # context)
-    ws.authorizedAbort = False
-    ws.authorizedFlag = False
-    ws.resetinvalidStreamCount(cookie)

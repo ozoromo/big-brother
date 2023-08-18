@@ -11,7 +11,6 @@ import uuid
 # Third party
 # Flask
 from flask import render_template, request, flash, Blueprint
-from flask_socketio import emit
 import flask_login
 
 import werkzeug
@@ -28,7 +27,7 @@ import cv2.misc
 
 # Own libraries
 # GUI and frontend libraries
-from app import socketio, login_manager, ws
+from app import login_manager, ws
 from app.user import BigBrotherUser
 from app.blueprints.login.forms import LoginForm, CameraLoginForm
 
@@ -47,13 +46,6 @@ def load_user(user_id):
     loaded_user = ws.get_user_by_id(user_id)
     loaded_user.sync()
     return loaded_user
-
-
-@blueprint_login.route("/loginstep")
-def loginstep():
-    # TODO: Why do we have a global user. What is this route for?
-    flask_login.login_user(user["bbUser"])
-    return render_template("validationauthenticated.html")
 
 
 def convert_picture_stream_to_numpy_array(pic: werkzeug.datastructures.FileStorage):
@@ -111,99 +103,6 @@ def login():
     return render_template("login.html", title="Login", form=form)
 
 
-@socketio.on("start_transfer_login", namespace="/webcamJS")
-def webcamCommunication():
-    cookie = request.cookies.get("session_uuid")
-    ws.emptyQueue(cookie)
-
-    emit("ack_transfer", {"foo": "bar"}, namespace="/webcamJS")
-
-    ws.resetinvalidStreamCount(cookie)
-    while not ws.getAuthorizedFlag(cookie) or not ws.getAuthorizedAbort(cookie):
-        try:
-            test_message(
-                ws.getQueue(cookie).get(block=True, timeout=15)
-            )
-        except queue.Empty:
-            print("Webcam Queue is Empty! Breaking!", file=sys.stdout)
-            break
-
-    ws.emptyQueue(cookie)
-
-    ws.setAuthorizedFlag(cookie, False)
-    ws.setAuthorizedAbort(cookie, False)
-
-
-# Retrieving Image from Client javascript side, analyze it and send it back
-# Socket source from: https://github.com/dxue2012/python-webcam-flask
-# @socketio.on("input image", namespace="/webcamJS")
-def test_message(input_):
-    # TODO: Write down what exactly the message tests
-    cookie = request.cookies.get("session_uuid")
-    ws.setAuthorizedAbort(cookie, False)
-
-    if ws.checkinvalidStreamCount(cookie):
-        ws.resetinvalidStreamCount(cookie)
-        ws.setAuthorizedAbort(cookie, True)
-        # TODO: Why is anything emmited if the socketio-decorator is turned off?
-        emit("redirect", {"url": "/rejection"})
-
-    # CAUTION: test_message is called multiple times from the client
-    # (for every image). Figure out how many pics are needed and then
-    # close socket
-    input_ = input_.split(",")[1]
-    image_data = input_  # Do your magical Image processing here!!
-
-    # OpenCV part decode and encode
-    img = None
-    try:
-        img = imread(io.BytesIO(base64.b64decode(image_data)))
-    except ValueError:
-        emit("ready", {"image_data": "bar"}, namespace="/webcamJS")
-        return
-
-    cutImg = FaceDetection.cut_rectangle(copy.deepcopy(img))
-    cv2_img = FaceDetection.make_rectangle(img)
-
-    # TODO: What does this comment mean?
-    # TODO: Authentication with cv2_img and users
-    cv2.imwrite("reconstructed.jpg", cv2_img)
-    retval, buffer = cv2.imencode(".jpg", cv2_img)
-    b = base64.b64encode(buffer)
-    b = b.decode()
-    image_data = "data:image/jpeg;base64," + b
-
-    user["isWorking"] = False
-
-    cookie = request.cookies.get("session_uuid")
-    # TODO: Eliminate magic numbers
-    if len(cutImg) < len(img) and len(cutImg) > 50:
-        res = ws.authenticatePicture(user, np.asarray(cutImg), cookie)
-        if res:
-            cookie = request.cookies.get("session_uuid")
-            ws.setAuthorizedAbort(cookie, True)
-
-            ws.DB.update_login(
-                user["uuid"],
-                user["login_attempt_time"],
-                res
-            )
-            ws.DB.commit()
-
-            emit("redirect", {"url": "/loginstep"})
-            return
-        else:
-            ws.addinvalidStreamCount(cookie)
-    else:
-        ws.addinvalidStreamCount(cookie)
-        if ws.checkinvalidStreamCount(cookie):
-            cookie = request.cookies.get("session_uuid")
-            ws.setAuthorizedAbort(cookie, True)
-            emit("redirect", {"url": "/rejection"})
-
-    emit("next_image", {"image_data": image_data}, namespace="/webcamJS")
-
-
 @blueprint_login.route("/logincamera", methods=["GET", "POST"])
 def logincamera():
     form = CameraLoginForm()
@@ -227,14 +126,13 @@ def logincamera():
             "username": form.name.data
         }
 
-        # authentication and user login
-
+        # authentication and user login is done with javascript and the 
+        # "/verifypicture" route
         return render_template("webcamJS.html", title="Camera", data=data)
 
     return render_template("logincamera.html", title="Login with Camera", form=form)
 
 
-# TODO: We don't need this!
 @blueprint_login.route("/verifypicture", methods=["GET", "POST"])
 def verifyPicture():
     if request.method == "GET":

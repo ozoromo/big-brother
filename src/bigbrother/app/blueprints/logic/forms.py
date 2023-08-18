@@ -13,8 +13,3 @@ class VideoUploadForm(FlaskForm):
             FileAllowed(["mp4"])
         ])
     submit = SubmitField("Upload")
-
-
-class CameraForm(FlaskForm):
-    name = TextField("Name:", validators=[DataRequired()])
-    submit = SubmitField("Login")

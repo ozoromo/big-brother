@@ -222,7 +222,10 @@ class BBDB:
         log = []
         logins = self._login_attempt.find({"user_id": str(user_uuid)})
         for login in logins:
-            log.append([login["date"], uuid.UUID(login["success_res_id"])])
+            if not login["success_res_id"]:
+                log.append([login["date"], login["success_res_id"]])
+            else:
+                log.append([login["date"], uuid.UUID(login["success_res_id"])])
         return log
 
     def register_user(self, username: str, user_enc: np.ndarray):
