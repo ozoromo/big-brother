@@ -6,6 +6,7 @@ import base64
 import copy
 import queue
 import uuid
+import urllib
 
 
 # Third party
@@ -80,7 +81,6 @@ def login():
 
         np_picture = convert_picture_stream_to_numpy_array(form.pic.data)
         if authenticate_picture(user_uuid, np_picture):
-            # TODO: Transform image before inserting them into the database?
             pic_uuid = picture_database.insertTrainingPicture(
                 np_picture, user_uuid
             )
@@ -114,14 +114,6 @@ def logincamera():
         bb_user = user_manager.get_user_by_id(user_uuid),
         login_attempt_time = picture_database.login_user(user_uuid)
 
-        global user
-        user = {
-            "username": form.name.data,
-            "isWorking": False,
-            "uuid": user_uuid,
-            "bbUser": bb_user,
-            "login_attempt_time": login_attempt_time
-        }
         data = {
             "username": form.name.data
         }
@@ -150,43 +142,47 @@ def verifyPicture():
             "username": username
         }
         return render_template("validationauthenticated.html", user=user_data)
-    if request.method == "POST":
+    elif request.method == "POST":
         data = request.get_json()
         if ("username" not in data) or ("image" not in data):
             return {"redirect": "/rejection"}
 
         username = data.get("username")
-        img_url = data.get("image").split(",")
-
-        # data url is split into "image type" and "actual data"
-        if len(img_url) < 2:
-            return {"redirect": "/rejection"}
 
         # decode image
-        img_data = img_url[1]
-        buffer = np.frombuffer(base64.b64decode(img_data), dtype=np.uint8)
-        camera_img = cv2.imdecode(buffer, cv2.COLOR_BGR2RGB)
+        response = urllib.request.urlopen(data.get("image"))
+        buffer = io.BytesIO()
+        buffer.write(response.file.read())
+        pil_img = Image.open(io.BytesIO(buffer.getvalue()))
+        buffer.close()
+        camera_img = np.asarray(pil_img)
 
         # Verify user
         user_uuid = picture_database.getUser(username)
         if user_uuid:
             user_enc = picture_database.get_user_enc(user_uuid)
-            print("User Enc: ", user_enc)
 
             if user_enc is None or len(user_enc) == 0:
                 return {"redirect": "/rejection"}
 
+            bb_user = user_manager.get_user_by_id(user_uuid)
+            login_attempt_time = picture_database.login_user(user_uuid)
+
             logik = LogikFaceRec.FaceReco()
             (results, dists) = logik.photo_to_photo(user_enc, camera_img)
-
             result = results[0]
-            if not result:
-                return {"redirect": "/rejection"}
-            else:
-                thisUser = BigBrotherUser(user_uuid, user["username"], picture_database)
-                flask_login.login_user(thisUser)
+            if result:
+                pic_uuid = picture_database.insertTrainingPicture(
+                    camera_img, user_uuid
+                )
+                picture_database.update_login(
+                    user_uuid, login_attempt_time, pic_uuid
+                )
+                flask_login.login_user(bb_user)
                 user_data = {"username": username}
                 return {"redirect": "/verifypicture", "data": user_data}
+            else:
+                return {"redirect": "/rejection"}
         else:
             return {"redirect": "/rejection"}
     return {"redirect": "/rejection"}
