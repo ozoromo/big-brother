@@ -26,6 +26,7 @@ from gesture_recognizer import GestureRecognizer
 
 
 logic = Blueprint("logic", __name__)
+gesture = GestureRecognizer()
 
 
 @logic.route("/gestureReco")
@@ -47,8 +48,8 @@ def recognizing_gestures(data):
     buffer.close()
     np_img = np.asarray(pil_img)
 
-    gesture = GestureRecognizer()
     frame, className = gesture.recognize(np_img)
+    frame = cv2.flip(frame, 1)
     cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
 
     pil_img = Image.fromarray(frame.astype('uint8'), 'RGB')

@@ -16,7 +16,7 @@ $(document).ready(function(){
 
         var dataURL = originalWebcamCanvas.toDataURL("image/jpeg");
         socket.emit("gesture_recognition", {image: dataURL});
-    }, 50);
+    }, 700);
 
     socket.on("ack_gesture_recognition", function(image) {
         gestureCanvas.width = video.videoWidth;

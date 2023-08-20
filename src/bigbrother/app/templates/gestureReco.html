@@ -10,10 +10,24 @@
 
 {% block content %}
     <div id="container">
-        <video autoplay="true" id="videoElement" hidden></video>
         <center>
-            <canvas id="originalWebcamCanvas" hidden></canvas>
-            <canvas id="gestureCanvas"></canvas>
+            <table cellspacing="0" cellpadding="0" class="table_report_line">
+                <tbody>
+                    <tr>
+                        <td> Your Webcam </td>
+                        <td> Gesture recognition </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <canvas id="originalWebcamCanvas" hidden></canvas>
+                            <video autoplay="true" id="videoElement"></video>
+                        </td>
+                        <td>
+                            <canvas id="gestureCanvas"></canvas>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </center>
     </div>
 {% endblock %}
