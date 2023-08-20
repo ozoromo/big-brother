@@ -35,9 +35,8 @@ from app.blueprints.login.utils import authenticate_picture
 
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "face_recog"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "Logik"))
 import FaceDetection
-import Face_Recognition.FaceReco_class as LogikFaceRec
+import face_recognition_lib.FaceReco_class as LogikFaceRec
 
 
 blueprint_login = Blueprint("blueprint_login", __name__)
