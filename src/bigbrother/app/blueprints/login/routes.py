@@ -27,12 +27,13 @@ import cv2.misc
 
 # Own libraries
 # GUI and frontend libraries
-from app import login_manager, ws
+from app import login_manager, user_manager, picture_database
 from app.user import BigBrotherUser
 from app.blueprints.login.forms import LoginForm, CameraLoginForm
+from app.blueprints.login.utils import authenticate_picture
 
 # Tells python where to search for modules
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "FaceRecognition"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "face_recog"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "Logik"))
 import FaceDetection
 import Face_Recognition.FaceReco_class as LogikFaceRec
@@ -43,7 +44,7 @@ blueprint_login = Blueprint("blueprint_login", __name__)
 
 @login_manager.user_loader
 def load_user(user_id):
-    loaded_user = ws.get_user_by_id(user_id)
+    loaded_user = user_manager.get_user_by_id(user_id)
     loaded_user.sync()
     return loaded_user
 
@@ -73,20 +74,19 @@ def login():
     if form.validate_on_submit():
         flash("Thanks for logging in")
 
-        user_uuid = ws.DB.getUser(form.name.data)
-        bb_user = ws.get_user_by_id(user_uuid)
-        login_attempt_time = ws.DB.login_user(user_uuid)
+        user_uuid = picture_database.getUser(form.name.data)
+        bb_user = user_manager.get_user_by_id(user_uuid)
+        login_attempt_time = picture_database.login_user(user_uuid)
 
-        user = {
-            "username": form.name.data,
-            "uuid": user_uuid,
-        }
-        np_image = convert_picture_stream_to_numpy_array(form.pic.data)
-        cookie = request.cookies.get("session_uuid")
-        result = ws.authenticatePicture(user, np_image, cookie)
-        if result:
-            # TODO: The inserted picture has to be somehow documented
-            ws.DB.update_login(user_uuid, login_attempt_time, result)
+        np_picture = convert_picture_stream_to_numpy_array(form.pic.data)
+        if authenticate_picture(user_uuid, np_image):
+            # TODO: Transform image before inserting them into the database?
+            pic_uuid = picture_database.insertTrainingPicture(
+                np_picture, user_uuid
+            )
+            picture_database.update_login(
+                user_uuid, login_attempt_time, pic_uuid
+            )
             flask_login.login_user(bb_user)
             return render_template("validationauthenticated.html")
         else:
@@ -110,9 +110,9 @@ def logincamera():
     if form.validate_on_submit():
         flash("Thanks for logging in")
 
-        user_uuid = ws.DB.getUser(form.name.data)
-        bb_user = ws.get_user_by_id(user_uuid),
-        login_attempt_time = ws.DB.login_user(user_uuid)
+        user_uuid = picture_database.getUser(form.name.data)
+        bb_user = user_manager.get_user_by_id(user_uuid),
+        login_attempt_time = picture_database.login_user(user_uuid)
 
         global user
         user = {
@@ -168,9 +168,9 @@ def verifyPicture():
         camera_img = cv2.imdecode(buffer, cv2.COLOR_BGR2RGB)
 
         # Verify user
-        user_uuid = ws.DB.getUser(username)
+        user_uuid = picture_database.getUser(username)
         if user_uuid:
-            user_enc = ws.DB.get_user_enc(user_uuid)
+            user_enc = picture_database.get_user_enc(user_uuid)
             print("User Enc: ", user_enc)
 
             if user_enc is None or len(user_enc) == 0:
@@ -183,7 +183,7 @@ def verifyPicture():
             if not result:
                 return {"redirect": "/rejection"}
             else:
-                thisUser = BigBrotherUser(user_uuid, user["username"], ws.DB)
+                thisUser = BigBrotherUser(user_uuid, user["username"], picture_database)
                 flask_login.login_user(thisUser)
                 user_data = {"username": username}
                 return {"redirect": "/verifypicture", "data": user_data}

@@ -2,7 +2,7 @@ import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src', 'DBM'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src', 'FaceRecognition', 'WireFaceRecognition'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src', 'face_recognition', 'wire_face_recognition'))
 
 import numpy as np
 import lib

@@ -10,9 +10,9 @@ from inspect import currentframe, getframeinfo
 sys.path.append(os.path.join(os.path.dirname(__file__), '..','..', 'src', 'DBM'))
 
 #Facerecog Libraries
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition', 'haar_and_lbph'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'FaceRecognition', 'WireFaceRecognition'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'face_recog'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'face_recog', 'haar_and_lbph'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'face_recog', 'wire_face_recognition'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'Logik', 'Face_Recognition'))
 import wireUtils
 import uuid

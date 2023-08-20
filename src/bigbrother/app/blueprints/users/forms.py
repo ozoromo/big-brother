@@ -3,7 +3,7 @@ from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import TextField, SubmitField
 from wtforms.validators import DataRequired, StopValidation
 
-from app import ws
+from app import picture_database
 
 _picture_validators = [
     FileRequired(),
@@ -20,7 +20,7 @@ class UsernameDoesNotExistsInDatabase(object):
     (such as processing errors) from the field.
     """
     def __call__(self, form, field):
-        if ws.DB.getUser(field.data):
+        if picture_database.getUser(field.data):
             message = field.gettext(f"The username '{field.data}' already exists!")
             field.errors[:] = []
             raise StopValidation(message)
