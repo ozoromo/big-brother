@@ -1,16 +1,19 @@
 import os
-import logging
+import sys
 from sys import stdout
+import logging
 
 from flask import Flask
 import flask_login
 from flask_socketio import SocketIO
 from engineio.payload import Payload
 
-from app.websiteSystem import websiteSystem
+from app.user_manager import UserManager
 from app.utils import formatSeconds
 from config import Config
 
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "DBM"))
+import DatabaseManagement
 
 application = Flask(__name__)
 application.config.from_object(Config)
@@ -26,7 +29,8 @@ application.jinja_env.globals.update(formatSeconds=formatSeconds)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(application)
 
-ws = websiteSystem()
+user_manager = UserManager()
+picture_database = DatabaseManagement.wire_DB()
 
 Payload.max_decode_packets = 1000
 socketio = SocketIO(application)

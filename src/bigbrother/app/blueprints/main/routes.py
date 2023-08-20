@@ -5,7 +5,7 @@ import uuid
 from flask import render_template, make_response, request, Blueprint
 
 # Own libraries
-from app import ws
+from app import user_manager
 from app.blueprints.login.routes import logincamera
 
 
@@ -40,7 +40,7 @@ def index():
     form = None
     template = render_template(
         "index.html",
-        BigBrotherUserList=ws.BigBrotherUserList,
+        BigBrotherUserList=user_manager.BigBrotherUserList,
         form=form
     )
 

@@ -26,14 +26,10 @@ import cv2.misc
 
 # Own libraries
 # GUI and frontend libraries
-from app import application, ws
+from app import application, picture_database, user_manager
 from app.user import BigBrotherUser
 from app.blueprints.users.forms import CameraSignUpForm, SignUpForm
 from app.blueprints.users.utils import register_user
-
-# ML libraries
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "FaceRecognition"))
-import FaceDetection
 
 
 users = Blueprint("users", __name__)
@@ -51,7 +47,7 @@ def logout():
 def deleteuser():
     logout_user()
     user_uuid = uuid.UUID(request.args.get("usr", default=1, type=str))
-    ws.DB.deleteUserWithId(user_uuid)
+    picture_database.deleteUserWithId(user_uuid)
     return render_template("index.html", title="Home")
 
 
@@ -69,13 +65,15 @@ def rejection():
 # TODO: What is this used for?
 @users.route("/validationsignup")
 def validationsignup():
-    user_uuid = ws.DB.getUser(user)
+    user_uuid = picture_database.getUser(user)
     if user_uuid:
-        ws.BigBrotherUserList.append(BigBrotherUser(user_uuid, user, ws.DB))
+        picture_database.BigBrotherUserList.append(
+            BigBrotherUser(user_uuid, user, picture_database)
+       )
         return render_template("validationsignup.html", name=user)
 
     return render_template("index.html",
-                           BigBrotherUserList=ws.BigBrotherUserList)
+                           BigBrotherUserList=user_manager.BigBrotherUserList)
 
 
 @users.route("/userpage")
@@ -83,9 +81,9 @@ def userpage():
     display_uuid = request.args.get("usr", default=None, type=str)
     display_user = None
     if display_uuid:
-        display_user = ws.get_user_by_id(display_uuid)
+        display_user = user_manager.get_user_by_id(display_uuid)
     return render_template("userpage.html",
-                           BigBrotherUserList=ws.BigBrotherUserList,
+                           BigBrotherUserList=user_manager.BigBrotherUserList,
                            displayUser=display_user)
 
 
@@ -113,7 +111,7 @@ def create():
             user["pic3"],
         ]
 
-        user_uuid = ws.DB.register_user(user["username"], None)
+        user_uuid = picture_database.register_user(user["username"], None)
         image_index = 0
         encodings_saved = False
         for storage in pictures:
@@ -121,7 +119,7 @@ def create():
             # TODO: This should be removable. Ask egain!
             if (storage is None) or (not storage.content_type.startswith("image/")):
                 rejectionDict["reason"] = f"Image {image_index} not provided"
-                ws.DB.deleteUserWithId(user_uuid)
+                picture_database.deleteUserWithId(user_uuid)
                 return render_template("rejection.html",
                                        rejectionDict=rejectionDict,
                                        title="Reject", form=form)
@@ -135,7 +133,7 @@ def create():
                     img = cv2.cvtColor(array, cv2.COLOR_BGR2RGB)
                     encodings = face_recognition.face_encodings(img)
 
-                    ws.DB.update_user_enc(user_uuid, encodings[0])
+                    picture_database.update_user_enc(user_uuid, encodings[0])
                     encodings_saved = True
                 except:
                     # TODO: What exception does this cover? Specify the
@@ -150,13 +148,13 @@ def create():
                 dsize=(98, 116),
                 interpolation=cv2.INTER_CUBIC
             )
-            ws.DB.insertTrainingPicture(
+            picture_database.insertTrainingPicture(
                 np.asarray(pic_resized, dtype=np.float64),
                 user_uuid
             )
 
-        ws.BigBrotherUserList.append(
-            BigBrotherUser(user_uuid, user["username"], ws.DB)
+        user_manager.BigBrotherUserList.append(
+            BigBrotherUser(user_uuid, user["username"], picture_database)
         )
 
         return render_template("validationsignup.html", name=user["username"])
@@ -167,4 +165,3 @@ def create():
 @users.route("/webcamJS", methods=["GET", "POST"])
 def webcamJS():
     return render_template("webcamJS.html", title="Camera")
-
