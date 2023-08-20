@@ -79,7 +79,7 @@ def login():
         login_attempt_time = picture_database.login_user(user_uuid)
 
         np_picture = convert_picture_stream_to_numpy_array(form.pic.data)
-        if authenticate_picture(user_uuid, np_image):
+        if authenticate_picture(user_uuid, np_picture):
             # TODO: Transform image before inserting them into the database?
             pic_uuid = picture_database.insertTrainingPicture(
                 np_picture, user_uuid
