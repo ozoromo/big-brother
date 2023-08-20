@@ -16,7 +16,6 @@ class BigBrotherUser(UserMixin):
     This class keeps the information about the user.
     """
 
-    # TODO: Verify whether the uuids are really all from type uuid.UUID.
     def __init__(self, user_uuid: uuid.UUID, name: str, DB):
         """
         Exceptions:
@@ -56,11 +55,9 @@ class BigBrotherUser(UserMixin):
                 self.trainingPicturesWebsiteFormat.append((uuids[pic_index], base64img))
             except ValueError:
                 print("ValueError: Illegal Image Loaded!")
-                print("User: {}\n UUID: {}\npic_uuid: {}".format(self.name, self.uuid, uuids[pic_index]))
                 return
 
         self.logData = self.DB.getLoginLogOfUser(user_uuid=self.uuid)
-        print(self.logData)
         # TODO: Setting permissions for admin?
         """
         admin_collection = self.DB['admin_table']
