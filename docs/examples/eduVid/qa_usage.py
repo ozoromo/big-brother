@@ -1,7 +1,13 @@
+###############################################
+#         Make THIS script executable         #
+###############################################
 import sys
 import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "src", "eduVid", "question_answering"))
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+###############################################
+#       The actual program starts here        #
+###############################################
 from qa_algo_core import HelperFN, SpeechRecog, QAAlgo
 
 # set up hugging face model name

@@ -4,6 +4,18 @@ from pytesseract import pytesseract
 import os
 
 class SlideOCR:
+    """
+    This class performs Optical Character Recognition (OCR) on 
+    each extracted slide using Tesseract OCR. Tesseract is a popular OCR 
+    engine. The recognized text from each slide is saved in an output text file.
+
+    Usage:
+    ```python
+    # execute OCR
+    slide_ocr_ = SlideOCR(tesseract_path, slides_folder, ocr_file)
+    slide_ocr_.ocr_text_from_slides()
+    ```
+    """
     def __init__(self, tesseract_path, images_folder, output_file, slide_separator='=== SLIDE ===', language='deu'):
         self.tesseract_path = tesseract_path
         self.images_folder = images_folder
@@ -45,5 +57,3 @@ class SlideOCR:
         # Save the merged output as a single text file
         with open(self.output_file, 'w', encoding='utf-8') as file:
             file.write(merged_text)
-
-        print("Step 2 --> OCR : done")

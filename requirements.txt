@@ -36,10 +36,15 @@ matplotlib
 Pillow
 scipy
 
-### Logic group ###
+### eduVid ###
 nose
 nolearn
 mediapipe
+transformers
+torch
+faster-whisper
+moviepy
+
 
 ### Data ###
 scikit-learn
@@ -51,8 +56,3 @@ dnspython
 
 ### aditional ###
 protobuf==3.20.*
-
-### EduVid (funktioniert nicht)###
-###openai-whisper==20230314###
-###moviepy==1.0.3###
-

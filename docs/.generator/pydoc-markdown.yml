@@ -1,15 +1,20 @@
 loaders:
   - type: python
     search_path: [
-      ../../src/DBM/,
-      ../../src/FaceRecognition/haar_and_lbph/,
-      ../../src/FaceRecognition/openface/,
-      ../../src/FaceRecognition/,
-      ../../src/bigbrother/
-      ../../src/bigbrother/app/
+      ../../src/database_management/,
+      ../../src/face_recog/haar_and_lbph/,
+      ../../src/face_recog/openface/,
+      ../../src/face_recog/,
+      ../../src/bigbrother/,
+      ../../src/bigbrother/app/,
+      ../../src/eduVid/question_answering,
+      ../../src/eduVid/handle_presentation(unused)
     ]
     modules:
-      - DatabaseManagement
+      - base_database
+      - picture_database
+      - video_database
+      - qa_algo_core
 processors:
   - type: filter
     exclude_private: true
@@ -27,12 +32,14 @@ renderer:
       source: README.md
     - title: 'DatabaseManagement'
       contents:
-        - 'DatabaseManagement.BBDB.*'
-        - 'DatabaseManagement.wire_DB.*'
-        - 'DatabaseManagement.vid_DB.*'
-        - 'DatabaseManagement.opencv_DB.*'
-        - 'DatabaseManagement.frontend_DB.*'
-        - 'DatabaseManagement.UsernameExists'
+        - 'base_database.BaseDatabase.*'
+        - 'picture_database.PictureDatabase.*'
+        - 'video_database.VideoDatabase.*'
+    - title: 'eduVid'
+      contents:
+        - 'qa_algo_core.HelperFN.*'
+        - 'qa_algo_core.SpeechRecog.*'
+        - 'qa_algo_core.QAAlgo.*'
   mkdocs_config:
     site_name: big-brother
     theme: readthedocs

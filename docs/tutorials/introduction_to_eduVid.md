@@ -18,7 +18,7 @@ The concept of the project is to greatly facilitate the learning process by effe
 # Workflow
 **Description:** the user uploads a video (e.g. with a presentation) in .mp4 format. The program converts the file to a .wav format. Next, speech recognition is performed to obtain a transcription from the uploaded video. Then, the transcription is properly prepared (the processes have been described) to obtain the context, on the basis of which answers to the questions asked by the user are found. Additionally for the given answer, timestamps are returned. They indicate to a moment in video where displayed aswer is included.
 
-![workflow](images/diagram.png)
+![workflow](../images/diagram.png)
 
 ### Subteam members
 

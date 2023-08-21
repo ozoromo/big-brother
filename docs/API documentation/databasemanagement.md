@@ -1,30 +1,18 @@
-<a id="DatabaseManagement"></a>
+<a id="base_database"></a>
 
-# DatabaseManagement
+# base\_database
 
-Big Brother Database Mangement Class
+<a id="base_database.BaseDatabase"></a>
 
-Manages Database Requests
-can Import and Export Pictures from Database
-
-@Author: Julian Flieller <@Dr.Hype#0001>
-@Date:   2023-05-13
-@Project: ODS-Praktikum-Big-Brother
-@Filename: new_database_management.py
-@Last modified by:   Julian Flieller
-@Last modified time: 2023-06-16
-
-<a id="DatabaseManagement.BBDB"></a>
-
-## BBDB Objects
+## BaseDatabase Objects
 
 ```python
-class BBDB()
+class BaseDatabase()
 ```
 
 Database Baseclass
 
-<a id="DatabaseManagement.BBDB.__init__"></a>
+<a id="base_database.BaseDatabase.__init__"></a>
 
 #### \_\_init\_\_
 
@@ -40,7 +28,7 @@ We also offer a default mongo cluster that you can use. In case you
 use a different cluster with pre-existing information it has to have
 the same structure as specified in the documentation.
 
-<a id="DatabaseManagement.BBDB.close"></a>
+<a id="base_database.BaseDatabase.close"></a>
 
 #### close
 
@@ -50,32 +38,12 @@ def close()
 
 Close the connection with the database
 
-<a id="DatabaseManagement.BBDB.closeGraceful"></a>
+<a id="base_database.BaseDatabase.delete_user"></a>
 
-#### closeGraceful
-
-```python
-def closeGraceful()
-```
-
-not needed for mongodb
-
-<a id="DatabaseManagement.BBDB.commit"></a>
-
-#### commit
+#### delete\_user
 
 ```python
-def commit()
-```
-
-not needed for mongodb
-
-<a id="DatabaseManagement.BBDB.delUser"></a>
-
-#### delUser
-
-```python
-def delUser(user_id: uuid.UUID) -> bool
+def delete_user(user_id: uuid.UUID) -> bool
 ```
 
 Delete a user from the database.
@@ -89,12 +57,12 @@ Delete a user from the database.
 
   Returns True if the user has been deleted and False otherwise.
 
-<a id="DatabaseManagement.BBDB.addAdminRelation"></a>
+<a id="base_database.BaseDatabase.add_admin_relation"></a>
 
-#### addAdminRelation
+#### add\_admin\_relation
 
 ```python
-def addAdminRelation(user_id: uuid.UUID)
+def add_admin_relation(user_id: uuid.UUID)
 ```
 
 Add a user as an admin.
@@ -108,12 +76,12 @@ Add a user as an admin.
 
   Returns True if the user has been added and False otherwise.
 
-<a id="DatabaseManagement.BBDB.checkUserIDExists"></a>
+<a id="base_database.BaseDatabase.check_user_id_exists"></a>
 
-#### checkUserIDExists
+#### check\_user\_id\_exists
 
 ```python
-def checkUserIDExists(uuid: typing.Optional[uuid.UUID])
+def check_user_id_exists(uuid: typing.Optional[uuid.UUID])
 ```
 
 Checks whether a certain uuid already exists.
@@ -128,12 +96,12 @@ Checks whether a certain uuid already exists.
   Returns True if the user id exists already and false if it doesn't
   exist.
 
-<a id="DatabaseManagement.BBDB.getUsername"></a>
+<a id="base_database.BaseDatabase.get_username"></a>
 
-#### getUsername
+#### get\_username
 
 ```python
-def getUsername(uuids: list)
+def get_username(uuids: list)
 ```
 
 Fetches usernames from database belonging to the given uuids
@@ -150,7 +118,7 @@ Fetches usernames from database belonging to the given uuids
   to uuids[i] in the input. It a uuid doesn't belong to any user then None
   is returned for the entry.
 
-<a id="DatabaseManagement.BBDB.login_user"></a>
+<a id="base_database.BaseDatabase.login_user"></a>
 
 #### login\_user
 
@@ -170,33 +138,39 @@ Creates a new entry in the login_table for the user with the given uuid or usern
   Returns (False, False) if the login fails and the timestamp of the
   login if it succeeds.
 
-<a id="DatabaseManagement.BBDB.update_login"></a>
+<a id="base_database.BaseDatabase.update_login"></a>
 
 #### update\_login
 
 ```python
-def update_login(**kwargs)
+def update_login(user_uuid: uuid.UUID, time: dt.datetime,
+                 success_res_uuid: typing.Optional[uuid.UUID])
 ```
 
 Updates the status of the login of one user with the given user_uuid
 
-Keyword arguments:
-user_uuid -- ID of the user of which you want to log in.
-time -- The timestamp of the login you want to update.
-inserted_pic_uuid -- the uuid for the res in the resource table
+**Arguments**:
+
+- `user_uuid` - ID of the user of which you want to log in.
+- `time` - The timestamp of the login you want to update.
+- `success_red_uuid` - the uuid for the res in the resource table.
+  
 
 **Returns**:
 
-  Returns (False, False) if the access to the database hasn't been
+  Returns False if the access to the database hasn't been
   successful and returns the UUID (insert_pic_uuid) if the program
   has been successful.
+  
+  Exception:
+- `ValueError` - Raised if the types of the input is not correct.
 
-<a id="DatabaseManagement.BBDB.getLoginLogOfUser"></a>
+<a id="base_database.BaseDatabase.get_login_log_of_user"></a>
 
-#### getLoginLogOfUser
+#### get\_login\_log\_of\_user
 
 ```python
-def getLoginLogOfUser(user_uuid: uuid.UUID)
+def get_login_log_of_user(user_uuid: uuid.UUID)
 ```
 
 Outputs log data of the user.
@@ -213,7 +187,7 @@ Outputs log data of the user.
   [<login_date>, <res_id of success resource>]. If the a login at
   a certain date wasn't successful then the res_id will be None.
 
-<a id="DatabaseManagement.BBDB.register_user"></a>
+<a id="base_database.BaseDatabase.register_user"></a>
 
 #### register\_user
 
@@ -237,7 +211,7 @@ Creates a new user in the database with the given username.
   Exception:
   Raises an exception if the username already exists.
 
-<a id="DatabaseManagement.BBDB.update_user_enc"></a>
+<a id="base_database.BaseDatabase.update_user_enc"></a>
 
 #### update\_user\_enc
 
@@ -259,10 +233,10 @@ Updates the user encoding of a user.
   
   Exception:
   Raises a TypeError if the inputted encoding isn't a numpy array and
-  raises a UserDoesntExist exception if the uuid doesn't belong to an
+  raises a UserDoesntExistException exception if the uuid doesn't belong to an
   existing user.
 
-<a id="DatabaseManagement.BBDB.get_user_enc"></a>
+<a id="base_database.BaseDatabase.get_user_enc"></a>
 
 #### get\_user\_enc
 
@@ -282,14 +256,14 @@ Get the user encoding from a certain user.
   Returns user encoding.
   
   Exception:
-  Raises UserDoesntExist exception if the user doesn't exist.
+  Raises UserDoesntExistException exception if the user doesn't exist.
 
-<a id="DatabaseManagement.BBDB.getUsers"></a>
+<a id="base_database.BaseDatabase.get_users"></a>
 
-#### getUsers
+#### get\_users
 
 ```python
-def getUsers(limit=-1)
+def get_users(limit=-1)
 ```
 
 Fetches all Users with their uuids and usernames from the database
@@ -306,12 +280,12 @@ then the search isn't limited.
   list with `limit` amount of entries. The dictionary key are the user_uuid
   (with type uuid.UUID) and the value is the username (with type str).
 
-<a id="DatabaseManagement.BBDB.getUserWithId"></a>
+<a id="base_database.BaseDatabase.get_user_with_id"></a>
 
-#### getUserWithId
+#### get\_user\_with\_id
 
 ```python
-def getUserWithId(user_id: uuid.UUID) -> typing.Optional[str]
+def get_user_with_id(user_id: uuid.UUID) -> typing.Optional[str]
 ```
 
 Returns the username corresponding to the user_id.
@@ -326,12 +300,12 @@ Returns the username corresponding to the user_id.
   Returns the username corresponding to the user_id. If the user with the
   given ID doesn't exist then None gets returned.
 
-<a id="DatabaseManagement.BBDB.deleteUserWithId"></a>
+<a id="base_database.BaseDatabase.delete_user_with_id"></a>
 
-#### deleteUserWithId
+#### delete\_user\_with\_id
 
 ```python
-def deleteUserWithId(user_id: uuid.UUID) -> bool
+def delete_user_with_id(user_id: uuid.UUID) -> bool
 ```
 
 Deletes the user with the given user_uuid from the database and all data cooresponding to it.
@@ -346,12 +320,12 @@ Deletes the user with the given user_uuid from the database and all data cooresp
   Returns True if the user has been successfully deleted. And
   False otherwise (e.g. user didn't exist in the database).
 
-<a id="DatabaseManagement.BBDB.getUser"></a>
+<a id="base_database.BaseDatabase.get_user"></a>
 
-#### getUser
+#### get\_user
 
 ```python
-def getUser(username: str) -> typing.Optional[uuid.UUID]
+def get_user(username: str) -> typing.Optional[uuid.UUID]
 ```
 
 Returns the uuid corresponding to the username.
@@ -366,48 +340,22 @@ Returns the uuid corresponding to the username.
   Returns the uuid corresponding to the username. If the username
   doesn't exist then it returns None.
 
-<a id="DatabaseManagement.BBDB.getAllTrainingsImages"></a>
+<a id="picture_database"></a>
 
-#### getAllTrainingsImages
+# picture\_database
 
-```python
-def getAllTrainingsImages()
-```
+<a id="picture_database.PictureDatabase"></a>
 
-This function has not been implemented.
-
-Returns all training images from the database in three lists: 
-pics, uuids, user_uuids
-
-<a id="DatabaseManagement.BBDB.insertPicture"></a>
-
-#### insertPicture
+## PictureDatabase Objects
 
 ```python
-def insertPicture(pic: np.ndarray, user_uuid: uuid.UUID)
+class PictureDatabase(BaseDatabase)
 ```
 
-This function has not been implemented.
+This database stores pictures. This is specifically made in order to manage
+storing and getting pictures from the database.
 
-<a id="DatabaseManagement.BBDB.getPicture"></a>
-
-#### getPicture
-
-```python
-def getPicture(query: str)
-```
-
-This function has not been implemented.
-
-<a id="DatabaseManagement.wire_DB"></a>
-
-## wire\_DB Objects
-
-```python
-class wire_DB(BBDB)
-```
-
-<a id="DatabaseManagement.wire_DB.__init__"></a>
+<a id="picture_database.PictureDatabase.__init__"></a>
 
 #### \_\_init\_\_
 
@@ -415,22 +363,22 @@ class wire_DB(BBDB)
 def __init__(mongo_client=None)
 ```
 
-<a id="DatabaseManagement.wire_DB.getTrainingPictures"></a>
+<a id="picture_database.PictureDatabase.get_pictures"></a>
 
-#### getTrainingPictures
+#### get\_pictures
 
 ```python
-def getTrainingPictures(user_uuid: typing.Optional[uuid.UUID] = None)
+def get_pictures(user_uuid: typing.Optional[uuid.UUID] = None)
 ```
 
 Returns training pictures from the database from the wire resource context
 
-<a id="DatabaseManagement.wire_DB.insertTrainingPicture"></a>
+<a id="picture_database.PictureDatabase.insert_picture"></a>
 
-#### insertTrainingPicture
+#### insert\_picture
 
 ```python
-def insertTrainingPicture(pic: np.ndarray, user_uuid: uuid.UUID)
+def insert_picture(pic: np.ndarray, user_uuid: uuid.UUID)
 ```
 
 Inserts a new training picture into the database and returns the
@@ -449,38 +397,22 @@ uuid of the inserted picture.
   Exception:
 - `TypeError` - Gets risen if the type of the input isn't the expected type.
 
-<a id="DatabaseManagement.wire_DB.insertPicture"></a>
+<a id="video_database"></a>
 
-#### insertPicture
+# video\_database
 
-```python
-def insertPicture(pic: np.ndarray, user_uuid: uuid.UUID)
-```
+<a id="video_database.VideoDatabase"></a>
 
-This function has not been implemented.
-
-<a id="DatabaseManagement.wire_DB.getPicture"></a>
-
-#### getPicture
+## VideoDatabase Objects
 
 ```python
-def getPicture(query: str)
+class VideoDatabase(BaseDatabase)
 ```
 
-This function has not been implemented.
+This database stores videos. This is specifically made in order to manage
+storing and getting videos from the database.
 
-<a id="DatabaseManagement.vid_DB"></a>
-
-## vid\_DB Objects
-
-```python
-class vid_DB(BBDB)
-```
-
-Subclass from BBDB
-Inherits Methods and Variables
-
-<a id="DatabaseManagement.vid_DB.__init__"></a>
+<a id="video_database.VideoDatabase.__init__"></a>
 
 #### \_\_init\_\_
 
@@ -488,13 +420,13 @@ Inherits Methods and Variables
 def __init__(dbhost=None)
 ```
 
-<a id="DatabaseManagement.vid_DB.insertVideo"></a>
+<a id="video_database.VideoDatabase.insert_video"></a>
 
-#### insertVideo
+#### insert\_video
 
 ```python
-def insertVideo(vid, user_uuid: uuid.UUID, filename: str,
-                video_transcript: str)
+def insert_video(vid, user_uuid: uuid.UUID, filename: str,
+                 video_transcript: str)
 ```
 
 Inserts a new video into the database and returns the
@@ -516,13 +448,14 @@ uuid of the inserted video.
   
   Exception:
 - `TypeError` - Gets risen if the type of the input isn't the expected type.
+- `UserDoesntExistException` - Gets risen if the user doesn't exist.
 
-<a id="DatabaseManagement.vid_DB.getVideoStream"></a>
+<a id="video_database.VideoDatabase.get_video_stream"></a>
 
-#### getVideoStream
+#### get\_video\_stream
 
 ```python
-def getVideoStream(vid_uuid: uuid.UUID, stream)
+def get_video_stream(vid_uuid: uuid.UUID, stream)
 ```
 
 Writes video with certain id into the stream.
@@ -542,12 +475,12 @@ Writes video with certain id into the stream.
 - `TypeError` - Gets risen if the type of the input isn't the expected type.
 - `FileNotFoundError` - If the video with the id doesn't exist.
 
-<a id="DatabaseManagement.vid_DB.getVideoIDOfUser"></a>
+<a id="video_database.VideoDatabase.get_video_id_of_user"></a>
 
-#### getVideoIDOfUser
+#### get\_video\_id\_of\_user
 
 ```python
-def getVideoIDOfUser(user_uuid: uuid.UUID) -> typing.List[uuid.UUID]
+def get_video_id_of_user(user_uuid: uuid.UUID) -> typing.List[uuid.UUID]
 ```
 
 Outputs list of video ids from videos that belong to a certain user.
@@ -565,12 +498,12 @@ Outputs list of video ids from videos that belong to a certain user.
   Exception:
 - `TypeError` - Gets risen if the type of the input isn't the expected type.
 
-<a id="DatabaseManagement.vid_DB.deleteVideo"></a>
+<a id="video_database.VideoDatabase.delete_video"></a>
 
-#### deleteVideo
+#### delete\_video
 
 ```python
-def deleteVideo(vid_uuid: uuid.UUID) -> bool
+def delete_video(vid_uuid: uuid.UUID) -> bool
 ```
 
 Deletes a video.
@@ -587,44 +520,4 @@ Deletes a video.
   Exception:
 - `TypeError` - Gets risen if the type of the input isn't the expected type.
 - `gridfs.errors.NoFile` - Gets risen if the video doesn't exist.
-
-<a id="DatabaseManagement.opencv_DB"></a>
-
-## opencv\_DB Objects
-
-```python
-class opencv_DB(BBDB)
-```
-
-<a id="DatabaseManagement.opencv_DB.__init__"></a>
-
-#### \_\_init\_\_
-
-```python
-def __init__()
-```
-
-<a id="DatabaseManagement.frontend_DB"></a>
-
-## frontend\_DB Objects
-
-```python
-class frontend_DB(BBDB)
-```
-
-<a id="DatabaseManagement.frontend_DB.__init__"></a>
-
-#### \_\_init\_\_
-
-```python
-def __init__()
-```
-
-<a id="DatabaseManagement.UsernameExists"></a>
-
-## UsernameExists Objects
-
-```python
-class UsernameExists(Exception)
-```
 
