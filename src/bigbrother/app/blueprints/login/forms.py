@@ -21,7 +21,7 @@ class UsernameExistsInDatabase(object):
     (such as processing errors) from the field.
     """
     def __call__(self, form, field):
-        if not picture_database.getUser(field.data):
+        if not picture_database.get_user(field.data):
             message = field.gettext(f"The username '{field.data}' doesn't exist!")
             field.errors[:] = []
             raise StopValidation(message)

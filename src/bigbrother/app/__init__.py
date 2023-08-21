@@ -8,12 +8,11 @@ import flask_login
 from flask_socketio import SocketIO
 from engineio.payload import Payload
 
-from app.user_manager import UserManager
 from app.utils import formatSeconds
 from config import Config
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "DBM"))
-import DatabaseManagement
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+from database_management.picture_database import PictureDatabase
 
 application = Flask(__name__)
 application.config.from_object(Config)
@@ -29,14 +28,17 @@ application.jinja_env.globals.update(formatSeconds=formatSeconds)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(application)
 
-user_manager = UserManager()
-picture_database = DatabaseManagement.wire_DB()
+picture_database = PictureDatabase()
 
 Payload.max_decode_packets = 1000
 socketio = SocketIO(application)
 
 
-# This has to be at the bottom in order to avoid cyclic dependencies
+# NOTE: The following code is meant to be at the bottom in order to avoid cyclic dependencies
+from app.user_manager import UserManager
+user_manager = UserManager()
+
+
 from app.blueprints.main.routes import main
 from app.blueprints.logic.routes import logic
 from app.blueprints.users.routes import users

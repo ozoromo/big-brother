@@ -3,11 +3,12 @@ import lib
 import matplotlib as mpl
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__),'..', '..','DBM'))
-import DatabaseManagement
 import uuid
 import cv2
 from typing import Tuple
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+from database_management.picture_database import PictureDatabase
 
 def power_iteration(M: np.ndarray, epsilon: float = -1.0) -> Tuple[np.ndarray, list]:
     """
@@ -58,9 +59,8 @@ def power_iteration(M: np.ndarray, epsilon: float = -1.0) -> Tuple[np.ndarray, l
     return vector, residuals
 
 def insertTrainImages(path: str):
-
     print("start")
-    DB = DatabaseManagement.wire_DB()
+    DB = PictureDatabase()
     images = []
 
     # TODO read each image in path as numpy.ndarray and append to images
@@ -89,16 +89,12 @@ def insertTrainImages(path: str):
         user_uuid = None
 
         try:
-
             user_uuid = DB.register_user(img_str[0:2])
             print("Created User : {} with uuid : {} ".format(img_str[0:2],user_uuid))
 
         except DatabaseManagement.UsernameExists:
-
-            users = DB.getUsers()
-
+            users = DB.get_users()
             for u_uuid in users:
-
                 if users[u_uuid] == img_str[0:2]:
                     user_uuid = u_uuid
 
@@ -108,9 +104,8 @@ def insertTrainImages(path: str):
         if type(user_uuid) == str:
             user_uuid = uuid.UUID(user_uuid)
 
-        pic_uuid = DB.insertTrainingPicture(image,user_uuid)
+        pic_uuid = DB.insert_picture(image,user_uuid)
         print("inserted : {}\nwith uuid : {}\nand user uuid : {}\n\n\n".format(img_str,pic_uuid,user_uuid))
-    DB.closeGraceful()
 
 
 def load_images(path: str, user_uuid: uuid.UUID, file_ending: str = ".png") -> Tuple[list, int, int]:
@@ -130,11 +125,11 @@ def load_images(path: str, user_uuid: uuid.UUID, file_ending: str = ".png") -> T
 
     curDir = os.path.dirname(os.path.abspath(__file__))
     img_str_list = lib.list_directory(path)
-    DB = DatabaseManagement.wire_DB()
+    DB = PictureDatabase()
     uuids = []
 
     if path == f"{curDir}/../../../res/data/train/":
-        images,uuids = DB.getTrainingPictures(user_uuid=user_uuid)
+        images,uuids = DB.get_pictures(user_uuid=user_uuid)
 
         for image_index, image in enumerate(images):
             # images[image_index] = cv2.cvtColor(np.float32(cv2.resize(image, dsize=(98,116), interpolation=cv2.INTER_CUBIC)),cv2.COLOR_BGR2GRAY)
@@ -146,7 +141,6 @@ def load_images(path: str, user_uuid: uuid.UUID, file_ending: str = ".png") -> T
             im_path = path + img_str
             images.append(np.asarray(mpl.image.imread(im_path), dtype=np.float64))
             images.append(mpl.image.imread(im_path))
-        DB.closeGraceful()
     else:
         img_str_list = lib.list_directory(path)
 

@@ -6,17 +6,17 @@ import numpy as np
 import cv2
 
 from face_recognition_strategies.strategies.base_strategy import BaseStrategy
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "face_recog", "wire_face_recognition"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "face_recog", "wire_face_recognition"))
 from wireUtils import load_images as load_test_imgs
 from modifiedFaceRecog import recogFace
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "DBM"))
-import DatabaseManagement as DBM
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+from database_management.picture_database import PictureDatabase
 
 class PCAStrategy(BaseStrategy):
     def __init__(self, user_uuid):
-        self.DB = DBM.wire_DB()
+        self.DB = PictureDatabase()
         self.set_user_uuid(user_uuid)
-        self.username = self.DB.getUserWithId(user_uuid)
+        self.username = self.DB.get_user_with_id(user_uuid)
 
     def set_user_uuid(self, user_uuid):
         if type(user_uuid) == uuid.UUID:

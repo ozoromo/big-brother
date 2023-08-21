@@ -5,11 +5,10 @@ import numpy as np
 import matplotlib as mpl
 import cv2
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'DBM'))
-import DatabaseManagement
 import wireUtils
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+from database_management.picture_database import PictureDatabase
 
-# def recogFace(returnQueue,im_data):
 def recogFace(im_data):
 
     imgs_test_raw = [im_data[0]]
@@ -56,6 +55,6 @@ def recogFace(im_data):
 
             print("Score needs to be under 0.4!")
             return []
-        DB = DatabaseManagement.wire_DB()
-        usernames.append(DB.getUserWithId(user_uuid))
+        DB = PictureDatabase()
+        usernames.append(DB.get_user_with_id(user_uuid))
     return usernames

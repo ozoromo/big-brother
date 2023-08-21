@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 
 from face_recognition_strategies.strategies.base_strategy import BaseStrategy
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "face_recog", "ultra_light_and_openface"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "face_recog", "ultra_light_and_openface"))
 import FaceDetection
 
 class OpenfaceStrategy(BaseStrategy):
