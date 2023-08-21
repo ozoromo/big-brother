@@ -15,17 +15,10 @@ The concept of the project is to greatly facilitate the learning process by effe
 - *Video to text but from text to video: if we could get to relevant sections using natural language (or diagrams).*
 - *Remember topic changes from sound and image.*
 
-## TODO:
-- Hyperlink to the video at each slide change. Train the **visual** model to notice that there was a slide change (later more advanced topic changes).
-- Indexing - create a list of key time points each with a title and people can click on them to get to the segments.
+# Workflow
+**Description:** the user uploads a video (e.g. with a presentation) in .mp4 format. The program converts the file to a .wav format. Next, speech recognition is performed to obtain a transcription from the uploaded video. Then, the transcription is properly prepared (the processes have been described) to obtain the context, on the basis of which answers to the questions asked by the user are found. Additionally for the given answer, timestamps are returned. They indicate to a moment in video where displayed aswer is included.
 
-# Planned development
-- Script extraction from video (using the s2t algorithm)
-- Script summarization using AI
-- Extraction of keywords from the received notes, which will point to particular topics
-- Recognizing the change of presentation slides and recognizing the content on them using OCR
-- If the keywords from the OCR and the script overlap, it can be assumed that the topic has changed
-- Sections between topic changes will be indexed and described by keywords
+![workflow](images/diagram.png)
 
 ### Subteam members
 
