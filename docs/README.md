@@ -152,6 +152,10 @@ It also removes the original image files after encoding.
 - Packages
     - such as for faceReco_class
 
+- What exactly is face encoding?
+    - A face encoding is basically a way to represent the face using a set of 128 computer-generated measurements. Two different                 pictures of the same person would have similar encoding and two different people would have totally different encoding.
+    - For face encoding we use in our code variable encode, which is a numerical representation of the features and characteristics of a         person's face that is extracted and computed by the face_recognition library. The specific type of encode in terms of Python data          types is a 1-dimensional NumPy array. These values from NumPy-array represent the facial features in a way that allows for efficient       comparison and matching. 
+
 - Explanation of code
     - Code retrieves a list of filenames(images) from the "toBeEncoded" folder using the os.listdir() function.
     - A loop iterates through each image file in the "toBeEncoded" folder:
