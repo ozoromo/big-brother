@@ -32,8 +32,8 @@ import time as t
 #Database
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..','..', 'src', 'DBM'))
-import DatabaseManagement as DBM
+sys.path.append(os.path.join(os.path.dirname(__file__), '..','..', 'src'))
+from database_management.picture_database import PictureDatabase
 from threading import Thread
 
 #Face Detection
@@ -62,7 +62,7 @@ class BVGUI (tk.Frame):
         tk.Frame.__init__(self, self.master)
 
         self.updateFunctions = []
-        self.DB = DBM.wire_DB()
+        self.DB = PictureDatabase()
         self.exitFlag = False
 
         # Set Window Dimensions
@@ -307,7 +307,7 @@ class BVGUI (tk.Frame):
         self.pW.createProgressbar("bbInit")
         self.pW.update("bbInit","Fetching Big Brother Users...",0)
 
-        userDict = self.DB.getUsers(limit = 10)
+        userDict = self.DB.get_users(limit = 10)
         userList = []
         counter = 0
         maxPicSize = 0
@@ -318,7 +318,7 @@ class BVGUI (tk.Frame):
         counter = 0
         for key, value in userDict.items():
             counter += 1
-            u_pics , u_pic_uuids = self.DB.getTrainingPictures(user_uuid=key)
+            u_pics , u_pic_uuids = self.DB.get_pictures(user_uuid=key)
             pics += u_pics
             pic_uuids += u_pic_uuids
             for x in u_pics:
@@ -354,7 +354,7 @@ class BVGUI (tk.Frame):
             DBUser.imgShape = maxShape
 
             #imgs_test.append(cv2.cvtColor(cv2.resize(img, dsize=(98,116), interpolation=cv2.INTER_CUBIC),cv2.COLOR_BGR2GRAY))
-            #pics , pic_uuids = self.DB.getTrainingPictures(user_uuid=key)
+            #pics , pic_uuids = self.DB.get_pictures(user_uuid=key)
 
             recogPictureNum = 0
             trainPictureNum = 0
