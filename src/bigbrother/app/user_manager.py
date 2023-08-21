@@ -18,7 +18,7 @@ class UserManager:
 
     It manages the user and keeps information about them that needs to get
     accessed in other conponents of the frontend. This is used with the
-    login maanger of flask in order to keep track of sessions.
+    login manager of flask in order to keep track of sessions.
     """
     def __init__(self):
         # Keeps track of the users and their session keys
