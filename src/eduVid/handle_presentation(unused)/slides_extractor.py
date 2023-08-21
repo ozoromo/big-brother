@@ -3,11 +3,27 @@ import os
 import shutil
 
 class SlideExtractor:
-    def __init__(self, video_path, output_folder):
+    def __init__(self, video_path: str, output_folder: str):
+        """
+        Arguments:
+        video_path --  The path to the input video file (in mp4 format).
+        slides_folder -- The path to directory where extracted slides will be saved.
+        """
         self.video_path = video_path
         self.output_folder = output_folder
 
     def extract_slides_from_video(self):
+        """
+        This method extracts individual slides from the input video.
+        It utilizes the `slides_extractor` module to perform the extraction and
+        saves each slide as an image file in the specified `slides_folder`.
+
+        Usage:
+        ```
+        slide_extractor_ = SlideExtractor(video_path, slides_folder)
+        slide_extractor_.extract_slides_from_video()
+        ```
+        """
         # Create the output folder if it doesn't exist
         os.makedirs(self.output_folder, exist_ok=True)
 
@@ -66,6 +82,5 @@ class SlideExtractor:
         slide_filename = os.path.join(self.output_folder, f"slide{slide_counter}.jpg")
         cv2.imwrite(slide_filename, previous_frame)
 
-        # Release the video capture and print the summary
+        # Release the video capture
         video.release()
-        print(f"Step 1 --> Processed {frame_counter} frames. Extracted {slide_counter} slides")

@@ -135,8 +135,6 @@ class HelperFN:
             print(f"An error occurred: {str(e)}")
 
 
-# TODO
-# add progress bar
 class SpeechRecog:
     """
     This class performs speech recognition (s2t algorithm)
