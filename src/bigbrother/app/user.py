@@ -43,7 +43,7 @@ class BigBrotherUser(UserMixin):
         self.recogFlag = False
 
     def sync(self):
-        pics, uuids = self.DB.getTrainingPictures(user_uuid=self.uuid)
+        pics, uuids = self.DB.get_pictures(user_uuid=self.uuid)
         self.trainingPicturesWebsiteFormat = []
 
         for pic_index, pic in enumerate(pics):
@@ -57,7 +57,7 @@ class BigBrotherUser(UserMixin):
                 print("ValueError: Illegal Image Loaded!")
                 return
 
-        self.logData = self.DB.getLoginLogOfUser(user_uuid=self.uuid)
+        self.logData = self.DB.get_login_log_of_user(user_uuid=self.uuid)
         # TODO: Setting permissions for admin?
         """
         admin_collection = self.DB['admin_table']

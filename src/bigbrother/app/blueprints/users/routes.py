@@ -47,7 +47,7 @@ def logout():
 def deleteuser():
     logout_user()
     user_uuid = uuid.UUID(request.args.get("usr", default=1, type=str))
-    picture_database.deleteUserWithId(user_uuid)
+    picture_database.delete_user_with_id(user_uuid)
     return render_template("index.html", title="Home")
 
 
@@ -65,9 +65,9 @@ def rejection():
 # TODO: What is this used for?
 @users.route("/validationsignup")
 def validationsignup():
-    user_uuid = picture_database.getUser(user)
+    user_uuid = picture_database.get_user(user)
     if user_uuid:
-        picture_database.BigBrotherUserList.append(
+        user_manager.BigBrotherUserList.append(
             BigBrotherUser(user_uuid, user, picture_database)
        )
         return render_template("validationsignup.html", name=user)
@@ -119,7 +119,7 @@ def create():
             # TODO: This should be removable. Ask egain!
             if (storage is None) or (not storage.content_type.startswith("image/")):
                 rejectionDict["reason"] = f"Image {image_index} not provided"
-                picture_database.deleteUserWithId(user_uuid)
+                picture_database.delete_user_with_id(user_uuid)
                 return render_template("rejection.html",
                                        rejectionDict=rejectionDict,
                                        title="Reject", form=form)
@@ -129,15 +129,12 @@ def create():
             array = np.array(image)
             if not encodings_saved:
                 try:
-                    # TODO: Check for errors later
                     img = cv2.cvtColor(array, cv2.COLOR_BGR2RGB)
                     encodings = face_recognition.face_encodings(img)
 
                     picture_database.update_user_enc(user_uuid, encodings[0])
                     encodings_saved = True
                 except:
-                    # TODO: What exception does this cover? Specify the
-                    # exception and handle it properly!
                     print("Error while calculating encodings")
             image.close()
             storage.close()
@@ -148,7 +145,7 @@ def create():
                 dsize=(98, 116),
                 interpolation=cv2.INTER_CUBIC
             )
-            picture_database.insertTrainingPicture(
+            picture_database.insert_picture(
                 np.asarray(pic_resized, dtype=np.float64),
                 user_uuid
             )

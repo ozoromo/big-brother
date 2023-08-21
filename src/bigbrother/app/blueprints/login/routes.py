@@ -74,13 +74,13 @@ def login():
     if form.validate_on_submit():
         flash("Thanks for logging in")
 
-        user_uuid = picture_database.getUser(form.name.data)
+        user_uuid = picture_database.get_user(form.name.data)
         bb_user = user_manager.get_user_by_id(user_uuid)
         login_attempt_time = picture_database.login_user(user_uuid)
 
         np_picture = convert_picture_stream_to_numpy_array(form.pic.data)
         if authenticate_picture(user_uuid, np_picture):
-            pic_uuid = picture_database.insertTrainingPicture(
+            pic_uuid = picture_database.insert_picture(
                 np_picture, user_uuid
             )
             picture_database.update_login(
@@ -109,7 +109,7 @@ def logincamera():
     if form.validate_on_submit():
         flash("Thanks for logging in")
 
-        user_uuid = picture_database.getUser(form.name.data)
+        user_uuid = picture_database.get_user(form.name.data)
         bb_user = user_manager.get_user_by_id(user_uuid),
         login_attempt_time = picture_database.login_user(user_uuid)
 
@@ -157,7 +157,7 @@ def verifyPicture():
         camera_img = np.asarray(pil_img)
 
         # Verify user
-        user_uuid = picture_database.getUser(username)
+        user_uuid = picture_database.get_user(username)
         if user_uuid:
             user_enc = picture_database.get_user_enc(user_uuid)
 
@@ -171,7 +171,7 @@ def verifyPicture():
             (results, dists) = logik.photo_to_photo(user_enc, camera_img)
             result = results[0]
             if result:
-                pic_uuid = picture_database.insertTrainingPicture(
+                pic_uuid = picture_database.insert_picture(
                     camera_img, user_uuid
                 )
                 picture_database.update_login(

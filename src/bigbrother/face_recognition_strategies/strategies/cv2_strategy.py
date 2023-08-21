@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 
 from face_recognition_strategies.strategies.base_strategy import BaseStrategy
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "face_recog", "haar_and_lbph"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..","face_recog", "haar_and_lbph"))
 from cv2RecogClass import cv2Recog
 
 class Cv2Strategy(BaseStrategy):

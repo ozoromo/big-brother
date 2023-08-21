@@ -9,8 +9,8 @@ from face_recognition_strategies.strategies.cv2_strategy import Cv2Strategy
 from face_recognition_strategies.strategies.openface_strategy import OpenfaceStrategy
 from face_recognition_strategies.strategies.principle_component_analysis_strategy import PCAStrategy
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "DBM"))
-import DatabaseManagement as DBM
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
+from database_management.picture_database import PictureDatabase
 
 def authenticate_picture(user_uuid: uuid.UUID, picture: np.ndarray):
     """
@@ -23,9 +23,9 @@ def authenticate_picture(user_uuid: uuid.UUID, picture: np.ndarray):
     Return:
     Returns True if the user has been authenticated and False otherwise.
     """
-    DB = DBM.wire_DB()
-    username = DB.getUserWithId(user_uuid)
-    training_data, _ = DB.getTrainingPictures(user_uuid=user_uuid)
+    DB = PictureDatabase()
+    username = DB.get_user_with_id(user_uuid)
+    training_data, _ = DB.get_pictures(user_uuid=user_uuid)
 
     face_recognition_context = FaceRecognitionContext(Cv2Strategy())
 
