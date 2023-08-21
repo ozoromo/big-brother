@@ -61,12 +61,11 @@ has a structure that is more readable.
       -> 
     - create.html:
       -> registration with 3 photos + username
-    - createcamera.html:
     - eduVid.html:
       -> only uploading a video at the moment + name of the video
+    - eduVidPlayer.html:
     - gestureReco.html:
       -> login with gesture
-    - gestureRecoJS.html:
       -> needed for photo of certain gesture
       -> connecting to gestureRecognition.js
     - index.html:
@@ -74,9 +73,9 @@ has a structure that is more readable.
     - logincamera.html:
     - rejection.html:
       -> if certain process fails error message appears
-    - team_23.html:
+    - team23.html:
       -> the internship team of SS23
-    - team.html: 
+    - team21.html: 
       -> the internship team of 2021
     - test.html:
     - userpage.html:
@@ -85,9 +84,7 @@ has a structure that is more readable.
     - validationsignup.html:
       -> appears when sign up was successful
     - webcam.html:
-
-    - webcamCreate.html:
-      -> connection to createWithCamera.js
+      ->
     - webcamJS.html:
       -> connection to main.js
 
@@ -103,15 +100,12 @@ has a structure that is more readable.
     - __init__.py:
       -> is used to execute the code
       -> contains all routes & their functionalities
-    - camera.py:
-      -> access to camera
-    - forms.py:
-      -> submit end user data
-    - routes.py:
-      -> routes of the html files, not used, already in __init__py implemented
+    - user_manager.py:
+      -> manages the users of the websites
     - user.py:
       -> keeps the information about user
     - utils.py:
+
 
 ## Logik-Group
 ## Face-recognition
