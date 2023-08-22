@@ -51,17 +51,16 @@
 	     different faces.
 
 ## 7. face-recognition python package
-	Das Python-Paket "face-recognition" ist eine Open-Source-Bibliothek, die auf der Grundlage von OpenCV entwickelt wurde und auf der Gesichtserkennungstechnologie von dlib basiert. Sie ermöglicht die Erkennung und Analyse von Gesichtern in Bildern und Videos.
+	Das Python-Paket "face-recognition" ist eine Open-Source-Bibliothek, die auf der Grundlage von OpenCV entwickelt wurde und auf der Gesichtserkennungstechnologie von dlib basiert. 
+ 	Sie ermöglicht die Erkennung und Analyse von Gesichtern in Bildern und Videos.
 
+	Die Gesichtserkennungstechnologie von dlib basiert auf dem 2017 veröffentlichten "Histogram of Oriented Gradients for Human Detection" (HOG)-Feature-Extractor und dem "Linear Support Vector Machines" 	(SVM)-Klassifikator. Diese Methode wurde von Navneet Dalal und Bill Triggs in ihrer Veröffentlichung "Histograms of Oriented Gradients for Human Detection" vorgestellt.
 
+	Die dlib-Bibliothek verwendet eine Kombination aus HOG-Features und SVM-Klassifikation, um Gesichter in Bildern zu erkennen. Der HOG-Algorithmus basiert auf der Idee, dass das Erscheinungsbild eines 		Objekts durch die Verteilung von Gradienten oder Kanteninformationen beschrieben werden kann. Es werden Histogramme der Gradientenrichtungen erstellt und diese Histogramme dienen als Features für den 	Klassifikator.
 
-	Die Gesichtserkennungstechnologie von dlib basiert auf dem 2017 veröffentlichten "Histogram of Oriented Gradients for Human Detection" (HOG)-Feature-Extractor und dem "Linear Support Vector Machines" (SVM)-Klassifikator. Diese Methode wurde von Navneet Dalal und Bill Triggs in ihrer Veröffentlichung "Histograms of Oriented Gradients for Human Detection" vorgestellt.
+	Der SVM-Klassifikator wird trainiert, um zwischen Gesichts- und Nicht-Gesichtsregionen zu unterscheiden. Dafür werden positive Beispiele von Gesichtern und negative Beispiele von Nicht-Gesichtern 		verwendet. Der SVM-Klassifikator lernt dann, diese beiden Klassen zu unterscheiden und kann anschließend auf neue Bilder angewendet werden, um Gesichter zu erkennen.
 
-	Die dlib-Bibliothek verwendet eine Kombination aus HOG-Features und SVM-Klassifikation, um Gesichter in Bildern zu erkennen. Der HOG-Algorithmus basiert auf der Idee, dass das Erscheinungsbild eines Objekts durch die Verteilung von Gradienten oder Kanteninformationen beschrieben werden kann. Es werden Histogramme der Gradientenrichtungen erstellt und diese Histogramme dienen als Features für den Klassifikator.
-
-	Der SVM-Klassifikator wird trainiert, um zwischen Gesichts- und Nicht-Gesichtsregionen zu unterscheiden. Dafür werden positive Beispiele von Gesichtern und negative Beispiele von Nicht-Gesichtern verwendet. Der SVM-Klassifikator lernt dann, diese beiden Klassen zu unterscheiden und kann anschließend auf neue Bilder angewendet werden, um Gesichter zu erkennen.
-
-	Die dlib-Bibliothek stellt auch eine vortrainierte Gesichtserkennungsmodell-Datei bereit, die mit dem HOG-Feature-Extractor und dem SVM-Klassifikator trainiert wurde. Dieses Modell wird verwendet, um Gesichter zu erkennen und kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
+	Die dlib-Bibliothek stellt auch eine vortrainierte Gesichtserkennungsmodell-Datei bereit, die mit dem HOG-Feature-Extractor und dem SVM-Klassifikator trainiert wurde. Dieses Modell wird verwendet, um 	Gesichter zu erkennen und kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
 
 	Quellen:
 
