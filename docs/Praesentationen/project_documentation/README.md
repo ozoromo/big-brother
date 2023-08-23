@@ -125,6 +125,9 @@ Mechanismus genutzt als beim abspeichern der Bilder, da Bilder generell
 deutlich weniger Speicherplatz benötigen als Videos.
 
 ## Logik
+Für die Umsetzung der Gesichtserkennung wurde das python package "face-recognition"
+benutzt.
+
 Das Python-Paket "face-recognition" ist eine Open-Source-Bibliothek, 
 die auf der Grundlage von OpenCV entwickelt wurde 
 und auf der Gesichtserkennungstechnologie von dlib basiert. 
