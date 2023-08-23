@@ -155,3 +155,34 @@ Die dlib-Bibliothek stellt auch eine vortrainierte Gesichtserkennungsmodell-Date
 die mit dem HOG-Feature-Extractor und dem SVM-Klassifikator trainiert wurde. 
 Dieses Modell wird verwendet, um Gesichter zu erkennen 
 und kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
+
+## eduVid (engl. educational videos):
+
+**Projektziele und ihre Erreichung**
+
+The concept of the task for our subgroup is to greatly facilitate the learning process by effectively extracting information to be later presented in an optimal and accessible form to the student. The solution will make learning new material less overwhelming and more effective - students will be able to benefit more.
+
+Step 1.: Students will know in advance what content the selected recording contains - they will be able to prepare better and it will not be a surprise to them.
+
+Step 2.: Then they can watch the videos attentively, purposefully.
+
+Step 3.: After the studies have had a look at the relevant section, they can try to get a few steps further in the task. Back-and-forth between theory and practice, so learning is efficient and stress-free.
+
+Description of the effects achieved: the user uploads a video (e.g. with a presentation) in .mp4 format. The program converts the file to a .wav format. Next, speech recognition is performed to obtain a transcription from the uploaded video. Then, the transcription is properly prepared (the processes have been described) to obtain the context, on the basis of which answers to the questions asked by the user are found. Additionally for the given answer, timestamps are returned. They indicate to a moment in video where displayed aswer is included.
+
+![UML database management](./images/diagram.png)
+
+
+**Auftretene Schwierigkeiten**
+- Speech recognition: Answers to the asked questions are searched in the so-called context, which is generated using a speech recognition algorithm. This is, so to speak, the first stage, on the basis of which later activities are carried out. Unfortunately, every algorithm has its weaknesses (such as recognizing words incorrectly) which in this case affect the correct operation of the program. During the work we came up with a couple of solutions that we did not manage to implement, but which may be useful (description in the next section)
+	- in addition, of all the program's operation, the longest process is text transcription, 	any form of optimization of execution time (while maintaining the accuracy of 	speech recognition) would be useful.
+- Answers are rarely well formulated sentences which could make asking for definitions of words difficult: The current algorithm gives the answer in a very concise way - these are actually snippets from the generated context. This form of answer is not always fully comprehensive and clear. It would be useful to present the answers in the form of well-structured sentences that go a little beyond the information given in context.
+- Algorithm has difficulties with recognizing grammar of given question. In some cases, it could be important to recognize the grammar in the question being asked. For instance the tenses, since the answers given to them without taking them into consideration may be wrong/not entirely true.
+
+
+**Empfehlungen fuer weiteres Vorgehen (also Ideas)**
+- Speech rocognition: A nice touch would be adding some benchmarks. In addition to this, it would be important to replace misrecognized words with those that are most likely. Also a base of words specified for specific subjects (for example, a user can choose the type of category his video belongs to, and a predefined word base is used based on that), would come in handy.
+- Identify segments in audio and group them together or index them with keywords so that you can access relevant segments by demand: In our case, if the question asked is a keyword the algorithm will not be able to answer correctly. The expected answer would be well-formed sentences related to the given keyword. (This kind of solution is an idea for further work)
+- Slide extraction: We worked also on considering the content of the presentation (from the uploaded video) for context but did not complete it. The main idea was to recognize the change/transition of slides so that we could extract images with individual slides. OCR of the content contained in the photos was then performed. Interacting the audio track with the image for this task is taking it a step further and continuing with this idea seems to be the right thing to do. The codes we were able to write that we ultimately did not use can be found in "big-brother/src/eduVid /handle_presentation(unused)"
+- Take recordings autoregressively guess what is said afterwards.
+- Remember topic changes from sound and image. Also, we wanted the interactive video produced by the program to show changes in the topics discussed. The process of recognizing topics and changing them was evpected to happen automatically (insted of predefining it by user).
