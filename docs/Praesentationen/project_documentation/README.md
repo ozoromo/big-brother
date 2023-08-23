@@ -160,15 +160,10 @@ und kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
 
 **Projektziele und ihre Erreichung**
 
-The concept of the task for our subgroup is to greatly facilitate the learning process by effectively extracting information to be later presented in an optimal and accessible form to the student. The solution will make learning new material less overwhelming and more effective - students will be able to benefit more.
+We achieved the goal using the s2t library - `faster-whisper`. As for extractive question answering, we used the pretrained model from hugging face `mdeberta-v3-base-squad2`. For video editing we used `MoviePy` library.
 
-Step 1.: Students will know in advance what content the selected recording contains - they will be able to prepare better and it will not be a surprise to them.
-
-Step 2.: Then they can watch the videos attentively, purposefully.
-
-Step 3.: After the studies have had a look at the relevant section, they can try to get a few steps further in the task. Back-and-forth between theory and practice, so learning is efficient and stress-free.
-
-Description of the effects achieved: the user uploads a video (e.g. with a presentation) in .mp4 format. The program converts the file to a .wav format. Next, speech recognition is performed to obtain a transcription from the uploaded video. Then, the transcription is properly prepared (the processes have been described) to obtain the context, on the basis of which answers to the questions asked by the user are found. Additionally for the given answer, timestamps are returned. They indicate to a moment in video where displayed aswer is included.
+**Description of the effects achieved**
+:the user uploads a video (e.g. with a presentation) in .mp4 format. The program converts the file to a .wav format. Next, speech recognition is performed to obtain a transcription from the uploaded video. Then, the transcription is properly prepared (the processes have been described) to obtain the context, on the basis of which answers to the questions asked by the user are found. Additionally for the given answer, timestamps are returned. They indicate to a moment in video where displayed aswer is included.
 
 ![UML database management](./images/diagram.png)
 
