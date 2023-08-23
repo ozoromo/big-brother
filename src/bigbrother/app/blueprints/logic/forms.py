@@ -12,4 +12,11 @@ class VideoUploadForm(FlaskForm):
             FileRequired(),
             FileAllowed(["mp4"])
         ])
+    segments = FileField(
+        "Time-Stamps:",
+        validators=[
+            DataRequired(),
+            FileAllowed(["json"])
+        ])
+    question = TextField("Question:", validators=[DataRequired()])
     submit = SubmitField("Upload")

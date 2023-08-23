@@ -194,4 +194,25 @@ Als ersten Meilenstein haben wir uns gesetzt den Code vom Team21 zu analysieren 
 Daraus resultierten unsere nächsten Herausforderungen für den 2. Milestone. Die Aufgaben wurden innerhalb der Gruppe aufgeteilt. So wurden fehlende Routes, wie „sign up with photo“ und „sign in with photo“, hinzugefügt und zusammen mit dem Backend und Logik Team wurden die Bugs gefixt. Wir haben bewusst mit den anderen Teams die Bugs gefixt, da die zu implementierenden Inhalte in ihren Themenfeldern waren, und sie dementsprechend schnell die gefundenen Fehler beheben konnten. Des Weiteren haben wir uns für ein neues Design der Website entschieden, um die Seite visuell attraktiver für den User zu gestalten. Während dieser Phase gab es Schnittstellen Probleme zur Registrierung und Anmeldung mit der Gesichtserkennung („FaceRecognition“).
 
 **Milestone 3**
-So haben wir beschlossen in der Dritten Phase die Probleme bezüglich der Gesichtserkennung zu beheben. Hinzu musste ebenfalls der GPU-Server auf Coolify konfiguriert werden, weswegen die Implementierung der „EduVid“ Logik in den Hintergrund rückte. Das Team hatte anfangs Probleme mit dem Konfigurieren des Servers, weswegen wir uns gemeinsam der Aufgabe gewidmet haben. Währenddessen hatten wir die Idee unser gesamtes Team SoSe2023 zu verewigen, wie es das SoSe2021 vor uns gemacht hat.
+So haben wir beschlossen in der Dritten Phase die Probleme bezüglich der Gesichtserkennung zu beheben. Hinzu musste ebenfalls der GPU-Server auf Coolify konfiguriert werden, weswegen die Implementierung der „EduVid“ Logik in den Hintergrund rückte. 
+Somit wurde für EduVid vorerst eine triviale Version implementiert, in der man lediglich ein Video mit einem Titel hochladen kann. Zusätzlich wurden Videounabhängige Time-Stamp Buttons erstellt, mit welchen man an bestimmte Stellen im Video springen kann. 
+Das Team hatte anfangs Probleme mit dem Konfigurieren des Servers, weswegen wir uns gemeinsam der Aufgabe gewidmet haben. Währenddessen hatten wir die Idee unser gesamtes Team SoSe2023 zu verewigen, wie es das SoSe2021 vor uns gemacht hat.
+Nach dem die EduVid Logik fertig war wurde die 2. Ausbaustufe von EduVid implementiert. Zusätzlich zum Video upload muss nun eine json Datei, welche passende Time-Stamps für das Video enthält, und ein Frage zu dem Video angegeben werden.
+Nach Upload werden passende Antworten gefunden und 1 oder mehere Time-Stamps zu diesen erstellt. Auf der neuen Seite stehen die Time-Stamps aus der json Datei so wie die aus der Logik Funktion erstellten Time-stamps zur verfügung, wie auch eine Antwort auf die gestellte Frage.
+Die json Datei muss einen Eintrag "time-stamps" enthalten, welcher Objekte der Form `{ "label": <time in seconds> }` enthalten muss.
+#### Beispiel einer Time-Stamps JSON Datei:
+```
+{
+	"time-stamps": [
+		{"Intro": 0.0},
+		{"Core Idea": 10.0},
+		{"Next Steps": 30.0},
+		{"Advanced": 300.0},
+		{"Conclusion": 500.0},
+		{"Outro": 700.0}
+	]
+}
+```
+#### Anmerkung zu EduVid:
+Beim verlassen der Seite läuft im Backend die logik zur Video verarbeitung weiter, hier könnte man in einer weiteren Ausbaustufe mittels einer socket connection überprüfen, ob man sich noch auf der Seite befindet (auf das Video ergebnis wartet) und ggf. die Verarbeitung frühzeitig abbrechen.
+Ähnlich wird dies bereits bei der Gestenerkennung umgesetzt.

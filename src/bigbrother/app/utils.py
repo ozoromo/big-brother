@@ -14,7 +14,7 @@ def formatSeconds(seconds):
     if minutes > 0:
         formatted_time_parts.append(f"{minutes}m")
 
-    if remaining_seconds > 0:
+    if remaining_seconds > 0 or (hours == 0 and minutes == 0):
         formatted_time_parts.append(f"{remaining_seconds}s")
 
     return "".join(formatted_time_parts)
