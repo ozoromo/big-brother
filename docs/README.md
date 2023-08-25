@@ -1,5 +1,5 @@
 # Documentation
-In this documentation you can find [tutorials](##tutorials) and [examples](#examples)
+In this documentation you can find [tutorials](#tutorials) and [examples](#examples)
 of the code that has been implemented in this project. The tutorials section
 details some of the thought process and design decisions when implementing this
 project and the examples give concrete code examples on how you might want to use
@@ -26,11 +26,11 @@ clarify it in the following:
     - `face_recog`: This folder contains all face recognition strategies that
     have been implemented. Various face recognition strategies have been
     implemented during the life-time of this project. You can find more
-    detailed information on those algorithms in the [tutorials](##tutorials)
+    detailed information on those algorithms in the [tutorials](#tutorials)
     section.
     - `gesture_recognition`: The gesture recognition algorithm is implemented
     in here. Feel free to implement more gesture recognition algorithms. More
-    detailed information in the [tutorials](##tutorials) section.
+    detailed information in the [tutorials](#tutorials) section.
     - `web_application`: This is the flask abpplication. The other projects in
     this projects are implemented in here in order to make those 
     implementations accessible to a user.
