@@ -1,4 +1,13 @@
 # Introduction to our database
+**Important**: We use a link inside of our `base_database.py` file for access
+to our monboDB server. You should create another database and paste the
+corresponding links to your database inside of them. This way you can ensure
+that your database team has admin rights to the database. You might need them
+if you want to debug the database or add new features. This should be the only
+place at which you need to change anything when starting the project. In
+[Resources](##Resources) you can find a few resources that show you how to get
+that link and how to use mongoDB with python.
+
 We used the python language to implement our database. We primarily use 
 mongodb to implement a database without the classical relational model. We
 decided to do this, because of its flexibility. This means that we can design
@@ -23,7 +32,6 @@ to also load the resources.
 `login_attempt` to destinguish between video or picture login.
 
 ## Resources
-<a id="mongodb_resources"></a>
 ### MongoDB Resources
 - Getting Started:
     - Introduction into how it works: 
