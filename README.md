@@ -3,80 +3,54 @@ Repository for the Group Project "Big Brother" at TU Berlin
 The comments, code and documentation is written in english. We only use german
 if there isn't any other way.
 
-# Get Started
-## Get project
+# Getting Started
+
+## Understanding the project
 1. Setup ssh-key.
 2. Clone repository into your local folder (`git clone <ssh-url>`)
-3. Read our contribution guidelines [here](#contribution-guidelines)
+3. **Read our contribution guidelines [here](./CONTRIBUTING.md)!**
+4. Browse through our [documentation](#documentation)
 
-## Check for changes in your cloned or existing Project 
-1. check for any changes (`git status`)
-2. pull changes to your local repository (`git pull`)
+## Project setup
+You have a few options when executing the project locally. You can run it in
+the docker container or install the packages locally (in an environmen for 
+instance) to run the flask server. Be aware that the docker container takes
+quite some time to build. Most of the time it would be more practical to have
+a python environment setup.
 
-## Making changes
-1. add all files (`git add .`) add specific file (`git add <filename.xy>`)
-2. commit changes and add a comment (`git commit -m "I changed xyz"`)
-3. push it to github (`git push`) If its the first push try: 
-(`git push -u origin master`)
+### Docker
+In this case you only need to setup docker. You may either use a docker GUI
+or the CLI. In case you use the CLI:
+1. To into the root of the git repository.
+2. Execute `docker build -t bigbrother .`. This takes quite a long time and 
+requires an internet connection.
+3. Execute `docker run -p 5000:5000 bigbrother:latest`. The `5000` refers to
+the port exposed in the docker container and the second `5000` is the port
+that you expose locally.
+4. After waiting for a few seconds you should be able to go to `127.0.0.1:5000`
+in your browser and use the website.
+
+### Local packages
+You can also do the following steps in an environment. It's important to mention
+again that we use **Python 3.10**. Other versions are not guaranteed to work,
+although you are welcome to try in future iterations of the project. All steps 
+where you use the commandline are executed inside of the root directory of the
+git repository:
+1. Install **Python 3.10**. Make sure that you also have the package manager
+pip installed. This should be the case if you installed python with the 
+installer from the official website.
+2. You might need to install the visual c++ redistributables if you are working
+on windows: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
+3. Install dlib. You can execute either of those:
+    - `pip install make cmake` and then `pip install dlib`
+    - `pip install make cmake` and then `pip install dlib-binary`
+    - Build it directly from the source
+4. Install the rest of the requirements with `pip install -r requirements.txt`.
+5. Execute `python ./src/bigbrother/run.py` to start the flask app. You can 
+then go to `127.0.0.1:5000` in your webbrowser.
 
 # Documentation
-We have a documentation in the [docs](docs/)-folder. You can find some
-information that help you understand the code better in the documentation.
-
-# Organizational structure
-We divided our group into teams that have various tasks. Each team has exactly
-one supervisor who is responsible for 
-- organizing/assign tasks,
-- checking the validity of the API,
-- document API for other teams to better understand,
-- merge branches
-- hold milestone talks.
-- (might implement some small features or bug fixes)
-If needed the supervisor is also in charge of dividing the team into sub teams.
-
-Important issues are only discussed with the least amount of people who are 
-required for the meeting (e.g. one representative of each team, subgroup, ...). 
-This makes sure that meetings that are synchronous meetings are 
-- more easily scheduable, 
-- short (not too many people not understanding an issue) and 
-- clear.
-
-# Contribution guidelines
-## Coding conventions
-We use the standard conventions for python. So before you start you should
-read:
-1. [pep20](https://peps.python.org/pep-0020/): Short general principles of
-the coding style.
-2. [pep8](https://peps.python.org/pep-0008/): This is a style guide for 
-python. That puts more specific rules and suggestions in place for python
-coding. I heavily suggest you to program after those recommendations.
-3. [pep257](https://peps.python.org/pep-0257/): Those are docstring 
-conventions. This is required for those who will write the documentation
-for the interface (so essentially the team/subgroup supervisors), but 
-optional for everyone else.
-4. [pep3107](https://peps.python.org/pep-3107/): This talks about adding
-meta information for the functions. This is required for those who will write 
-the documentation for the interface (so essentially the team/subgroup 
-supervisors), but optional for everyone else.
-
-## Branching
-Troughout the project the main branch should always be deployable. Therefore
-it's not allowed to push to the main branch. Supervisors should make sure 
-that code that gets modified for an issue (at the same time) has a minimal 
-amount of collision. This makes merging less painful. If a supervisor 
-assigns a task to you then it should be somehow indicated either which 
-branch should be used or the branch is already created. 
-
-__Note__: Unfortunately I couldn't setup the protection of the main branch 
-or rather it's enforcement. Otherwise we would need to go public or upgrade our 
-organization subscription. Since we might store sensitive information in our
-repository or database (and might not be aware of some security threads) 
-we wouldn't others to access the code.
-
-## Pull requests
-If you want a branch to be merged, tell your supervisor. They will make 
-sure that the changes are properly reviewed and then merge the branch 
-into main (or another branch). In order to do it assign pull request to
-your supervisor and set the other parameters of the pull request accordingly.
-After the branch has been pulled the supervisor might decide to delete the
-branch that has been pulled.
+We have a documentation in the [docs](docs/)-folder. We highly recommend you to
+at least skim through the documetnation in order to get a grasp of the project.
+And the folder structure that we decided upon if you want to contribute to/extend
+the codebase.
