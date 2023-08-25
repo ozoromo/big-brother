@@ -58,4 +58,4 @@ COPY . /usr/big-brother
 ENV LOCALDEBUG=0
 ENV FLASK_DEBUG=0
 EXPOSE 5000
-CMD ["python", "/usr/big-brother/src/bigbrother/run.py"]
+CMD ["python", "/usr/big-brother/src/web_application/run.py"]
