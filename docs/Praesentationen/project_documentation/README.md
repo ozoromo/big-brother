@@ -199,9 +199,9 @@ Somit wurde für EduVid vorerst eine triviale Version implementiert, in der man 
 Das Team hatte anfangs Probleme mit dem Konfigurieren des Servers, weswegen wir uns gemeinsam der Aufgabe gewidmet haben. Um den Server zu deployen haben wir angefangen einen Dockerfile zu erstellen. Dieser wurde nicht ganz fertig bis zum präsentieren des 3. Milestones. Währenddessen hatten wir die Idee unser gesamtes Team SoSe2023 zu verewigen, wie es das SoSe2021 vor uns gemacht hat.
 
 **Probleme und Problembehandlung**
-Nach dem 3. Milestone und nach dem die EduVid Logik fertig war, wurde die 2. Ausbaustufe von EduVid implementiert.
 Der Docker Container der angefangen wurde im 3. Milestone wurde fertig gestellt und die FaceRecognition ebenfalls. Das Vergleichen des live Images mit den Bildern aus der Registrierung, welche im Backend gespeichert wird, war ein Erfolg. Die Idee in diesem Vorgang das Bild sichtbar für den User zu downloaden, wurde nicht übernommen.
-Zusätzlich zum Video upload muss nun eine json Datei, welche passende Time-Stamps für das Video enthält, und ein Frage zu dem Video angegeben werden.
+Nach dem 3. Milestone und nach dem die EduVid Logik fertig war, wurde die 2. Ausbaustufe von EduVid implementiert.
+Zusätzlich zum Video Upload muss nun eine json Datei, welche passende Time-Stamps für das Video enthält, und ein Frage zu dem Video angegeben werden.
 Nach Upload werden passende Antworten gefunden und 1 oder mehere Time-Stamps zu diesen erstellt. Auf der neuen Seite stehen die Time-Stamps aus der json Datei so wie die aus der Logik Funktion erstellten Time-stamps zur verfügung, wie auch eine Antwort auf die gestellte Frage.
 Die json Datei muss einen Eintrag "time-stamps" enthalten, welcher Objekte der Form `{ "label": <time in seconds> }` enthalten muss.
 #### Beispiel einer Time-Stamps JSON Datei:
