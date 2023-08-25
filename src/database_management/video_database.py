@@ -1,3 +1,5 @@
+import os
+import sys
 import uuid
 import datetime as dt
 import typing
@@ -8,6 +10,7 @@ from pytz import timezone
 from gridfs import GridFSBucket
 import pymongo
 
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from database_management.base_database import BaseDatabase
 from database_management.exceptions import UserDoesntExistException
 
