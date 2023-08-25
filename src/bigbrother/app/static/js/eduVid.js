@@ -7,3 +7,15 @@ function onTimeStampClick(button)
     console.log("setting time: " + time)
     video.currentTime = button.value;
 }
+
+function onSubmitVideo(event)
+{
+    const infoBox= document.getElementById("upload-info")
+    infoBox.style.display = "inherit"
+    const uploadButton = document.getElementById("upload-button")
+    if(uploadButton !== null)
+        uploadButton.disabled = true;
+}
+
+const form = document.getElementById("submit-form");
+form?.addEventListener('submit', onSubmitVideo);

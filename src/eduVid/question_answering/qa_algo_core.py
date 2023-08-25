@@ -141,7 +141,7 @@ class SpeechRecog:
     """
 
     def __init__(self, audio_source):
-        self.model = WhisperModel("base")
+        self.model = WhisperModel("base", compute_type="float32")
         self.segments, self.info = self.model.transcribe(audio_source)
 
     def transcribe(self):

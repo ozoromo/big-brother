@@ -34,6 +34,22 @@
             {% endfor %}
         </div>
 
+        <h4 class="question-title">Question: {{ video_info["question"] }}</h4>
+        <h4 class="question-title">Answer: {{ video_info["answer"] }}</h4>
+
+        <div class="grid-container">
+            {% for entry in video_info.answer_time_stamps %}
+                <div class="grid-item">
+                    {% for label, time in entry.items() %}
+                        <button type="button" onclick="onTimeStampClick(this)"
+                                value="{{ time }}">
+                            {{ label }}: {{ formatSeconds(time) }}
+                        </button>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
     </div>
 {% endblock %}
 

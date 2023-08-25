@@ -159,7 +159,10 @@ It also removes the original image files after encoding.
     - The findEncoding(img, name, idx) function takes an image, class name, and index as parameters. The image is converted to RGB color space using cv2.cvtColor().
     The facial encoding of the image is computed using face_recognition.face_encodings().
     - The addToEncodings() function is called to save the encoding to a file in the "encodings" folder. The original image file is removed from "toBeEncoded" folder using os.remove().
-  
+
+- Problems
+    - The problem may arise when more than one face is recognized in a single photo. It may happen then that the calculated encodings are        not for the person who wants to log in/register, but for example for the face  on the t-shirt of the person logging in. 
+      
 ### example_usage_FaceReco_class
 A code named example_usage_FaceReco_class is basically just an example of using a previously written FaceReco_class.
 
