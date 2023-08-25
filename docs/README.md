@@ -136,7 +136,7 @@ If there is the same person in two images, the program returns the Boolean value
     - We calculate face distance using the face_recognition.face_distance function. This distance is a measure of similarity between the two facial encodings. A smaller value indicates a greater similarity between the faces.
     - Method returns the results list (with True or False indicating if it's the same person)
       
-- More inforamtions
+- More inforamtion
     - We wrote this code with threads, hoping to optimise program, but eventually gave up on this idea - right server did the job
        
 ### encodings_class
