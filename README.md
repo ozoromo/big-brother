@@ -54,3 +54,13 @@ We have a documentation in the [docs](docs/)-folder. We highly recommend you to
 at least skim through the documetnation in order to get a grasp of the project.
 And the folder structure that we decided upon if you want to contribute to/extend
 the codebase.
+
+# Tool stack
+- Programming language: Python 3.10
+- Frontend: [Flask](https://flask.palletsprojects.com/en/2.2.x/) Docker
+- FaceRecognition and other ML-libraries: 
+    - [openCV](https://pypi.org/project/opencv-python/)
+    - [OpenFace](https://cmusatyalab.github.io/openface/)
+    - [PyTorch](https://pytorch.org/)
+    - [TensorFlow](https://www.tensorflow.org/learn)
+- Database: [MongoDB](https://www.mongodb.com/)
