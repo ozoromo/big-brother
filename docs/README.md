@@ -93,7 +93,7 @@
 - [Explanation of face recognition strategy: ultra\_light\_and\_openface](tutorials/explanation_of_ultra_light_and_openface.md)
 
 # Examples
-- [Basic video management in database](examples/DBM/DatabaseManagement/videoInsertionRetrivalAndDeletion.py)
+- [Basic video management in database](examples/database_management/example_vdideo_insertion_retrival_and_deletion.py)
 - [Basic eduVid](examples/eduVid/qa_usage.py)
 - [Basic gesture recognition workflow](examples/gesture_recognition/example_gesture_recognizer.py)
 - Face recognition:
