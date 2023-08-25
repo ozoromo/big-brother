@@ -76,7 +76,6 @@
       - live Camera for login
       - taking photo for login via face recognition
 
-
 - PY Files
     - __init__.py:
       - is used to execute the code
@@ -90,12 +89,16 @@
 # Tutorials
 - [Introduction to our database](tutorials/introduction_to_our_database.md)
 - [Introduction to eduVid](tutorials/introduction_to_eduVid.md)
-- [Explanation of face recognition lib](tutorials/explanation_of_face_recognition_lib)
+- [Explanation of face recognition strategy: face recognition lib](tutorials/explanation_of_face_recognition_lib)
+- [Explanation of face recognition strategy: ultra\_light\_and\_openface](tutorials/explanation_of_ultra_light_and_openface.md)
 
 # Examples
-- [Basic video management](examples/DBM/DatabaseManagement/videoInsertionRetrivalAndDeletion.py)
+- [Basic video management in database](examples/DBM/DatabaseManagement/videoInsertionRetrivalAndDeletion.py)
 - [Basic eduVid](examples/eduVid/qa_usage.py)
 - [Basic gesture recognition workflow](examples/gesture_recognition/example_gesture_recognizer.py)
+- Face recognition:
+    - [Basic usage of face\_recognition\_lib](examples/face_recog/face_recognition_lib/example_usage_FaceReco_class.py)
+    - [Basic usage of haar\_and\_lbph](examples/face_recog/haar_and_lbph/example_cv2_recog.py)
 
 # API Documentation
 The API documentation can be found in [here](API%20Documentation/README.md).
