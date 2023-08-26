@@ -82,6 +82,9 @@ def eduVid():
         segments_json = json.loads(segments_data)
         segments = segments_json.get("time-stamps")
 
+        if not os.path.isdir(application.config["TMP_VIDEO_FOLDER"]):
+            os.makedirs(application.config["TMP_VIDEO_FOLDER"])
+
         # deletes every video file in tmp folder
         for vid_file in os.listdir(application.config["TMP_VIDEO_FOLDER"]):
             if vid_file.endswith(".md"):
