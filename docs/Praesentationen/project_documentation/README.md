@@ -137,37 +137,59 @@ Mechanismus genutzt als beim abspeichern der Bilder, da Bilder generell
 deutlich weniger Speicherplatz benötigen als Videos.
 
 ## Logik
-Für die Umsetzung der Gesichtserkennung wurde das python package "face-recognition"
-benutzt.
+Bei unserer Suche nach Möglichkeiten um Gesichter zu erkennen,
+haben wir uns parallel im Internet als auch in den Ergebnissen 
+der letzten Semester des Programmierpraktikums umgeschaut. 
 
-Das Python-Paket "face-recognition" ist eine Open-Source-Bibliothek, 
-die auf der Grundlage von OpenCV entwickelt wurde 
-und auf der Gesichtserkennungstechnologie von dlib basiert. 
-Sie ermöglicht die Erkennung und Analyse von Gesichtern in Bildern und Videos.
+Während man versucht hatte den Code aus den letzten Jahren zum Laufen
+zu bekommen (nicht gelungen), wurde man schnell fündig bei einem
+Youtube Kanal „Murtaza’s Workshop – Robotics and AI“ und paar anderen
+interessanten Artikeln. Zu den Artikeln später mehr.
 
-Die Gesichtserkennungstechnologie von dlib basiert auf dem 2017 veröffentlichten 
-"Histogram of Oriented Gradients for Human Detection" (HOG)-Feature-Extractor 
-und dem "Linear Support Vector Machines" (SVM)-Klassifikator. 
-Diese Methode wurde von Navneet Dalal und Bill Triggs in ihrer Veröffentlichung
-"Histograms of Oriented Gradients for Human Detection" vorgestellt.
+Für die Umsetzung der Gesichtserkennung wurde das python package
+"face-recognition" benutzt ähnlich auch wie von Murtaza erklärt. 
+Der Grund dafür war die Einfachheit der Nutzung und dadurch 
+der besser überschaubare Code. Zudem bekommt man eine hohe 
+Treffsicherheit von 99.38% hin. 
 
-Die dlib-Bibliothek verwendet eine Kombination aus HOG-Features und SVM-Klassifikation, 
-um Gesichter in Bildern zu erkennen. Der HOG-Algorithmus basiert auf der Idee, 
-dass das Erscheinungsbild eines Objekts durch die Verteilung von Gradienten 
-oder Kanteninformationen beschrieben werden kann. Es werden Histogramme der 
-Gradientenrichtungen erstellt und diese Histogramme dienen als Features für den Klassifikator.
+face-recognition ist eine Open-Source-Bibliothek, die auf der Grundlage
+von OpenCV entwickelt wurde und auf der Gesichtserkennungstechnologie
+von dlib basiert. Sie ermöglicht die Erkennung und Analyse von Gesichtern
+in Bildern und Videos.
 
-Der SVM-Klassifikator wird trainiert, um zwischen Gesichts- 
-und Nicht-Gesichtsregionen zu unterscheiden. Dafür werden positive Beispiele 
+Die Gesichtserkennungstechnologie von dlib basiert auf dem 2017 veröffentlichten
+"Histogram of Oriented Gradients for Human Detection" (HOG)-Feature-Extractor und 
+dem "Linear Support Vector Machines" (SVM)-Klassifikator. 
+Diese Methode wurde von Navneet Dalal und Bill Triggs in ihrer 
+Veröffentlichung "Histograms of Oriented Gradients for Human Detection" vorgestellt.
+
+Die dlib-Bibliothek verwendet eine Kombination aus HOG-Features und 
+SVM-Klassifikation, um Gesichter in Bildern zu erkennen. 
+Der HOG-Algorithmus basiert auf der Idee, dass das Erscheinungsbild 
+eines Objekts durch die Verteilung von Gradienten oder Kanteninformationen
+beschrieben werden kann. Es werden Histogramme der Gradientenrichtungen 
+erstellt und diese Histogramme dienen als Features für den Klassifikator.
+
+Der SVM-Klassifikator wird trainiert, um zwischen Gesichts- und 
+Nicht-Gesichtsregionen zu unterscheiden. Dafür werden positive Beispiele
 von Gesichtern und negative Beispiele von Nicht-Gesichtern verwendet. 
 Der SVM-Klassifikator lernt dann, diese beiden Klassen zu unterscheiden 
 und kann anschließend auf neue Bilder angewendet werden, um Gesichter zu erkennen.
 
-Die dlib-Bibliothek stellt auch eine vortrainierte Gesichtserkennungsmodell-Datei bereit, 
+Die dlib-Bibliothek stellt auch eine vortrainierte Gesichtserkennungsmodell-Datei bereit,
 die mit dem HOG-Feature-Extractor und dem SVM-Klassifikator trainiert wurde. 
-Dieses Modell wird verwendet, um Gesichter zu erkennen 
-und kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
+Dieses Modell wird verwendet, um Gesichter zu erkennen und 
+kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
 
+face-recognition arbeitet mit encodings von den Bildern, d.h. aus einem
+rgb Bild zum Beispiel jpeg oder pdf werden numpy arrays in Form von Matrizzen erstellt.
+Dazu wird die Methode `face_recognition.face_encodings()` benutzt. 
+Der Rückgabewert dieser Funktion ist dann das numpy array des Bildes. 
+Die Berechnung dieser numpy arrays ist allerdings rechenlastig und wird
+bei jedem Bild erneut gemacht, weswegen wir eine Möglichkeit gefunden haben
+eben diese encodings zu cashen. Das geschieht in encodings_class.py.
+
+TODO: die anderen methoden noch erläutern. 
 ## eduVid (engl. educational videos)
 
 ### Projektziele und ihre Erreichung
