@@ -5,14 +5,16 @@ Dieses Projekt wurde im Rahmen des Programmierpraktikums
 "moderne verteilte Anwendungen" absolviert. Ziel war es die Funktionalitäten
 der webbasierten Anwendung vom "big brother 2021" zu erweitern. Unser Ziel
 war es:
+
 - weitere Zulassungskontrollalgorithmen
-- Gestenerkennung 
+- Gestenerkennung
 - Lehrvideoanalyse
 zu implementieren. Wir haben außerdem vor gehabt die Datenbank des vergangenen
 Jahres noch flexibler mit MongoDB zu gestalten.
 
 ## Gruppenaufteilung
 Um diese Ziele zu erreichen haben wir uns in Untergruppen aufgeteilt:
+
 - Datenbank: Regelt implementation der Datenbank.
 - Logik: Implementiert weitere Algorithmen, welche in unseren Zielen stehen.
 Aufgrund der Komplexität dieser Aufgabe haben wir diese nochmals in 
@@ -31,6 +33,7 @@ mit Tests und Maßstäben (engl. benchmarks) sichergestellt werden. Die Tests
 sind vorallem wichtig, damit zukünftig an diesem Projekt arbeitende Gruppen
 unseren Code besser verstehen können und Schwierigkeiten beim Debuggen
 neu strukturieren können. Zusammengefasst haben Tests das Ziel
+
 - den Code besser zu erklären,
 - Workflows zu verdeutlichen,
 - debugging zu vereinfachen und
@@ -58,6 +61,7 @@ die Struktur leichter verständlich zu machen:
 Die Entitäten in diesem Modell sind *Collections* in MongoDB, wobei deren
 Inhalt *Documents* sind. Wir erklären die Entitäten, einige Beziehungen
 zueinenander und unsere Designentscheidungen im Folgenden kurz:
+
 - `resource`: Dies ist im eine Resource in unserem System. Wir nutzen dies,
 um beispielsweise Bilder zu speichern.
 - `resource_context`: Dies ermöglicht uns die IDs von den verschiedenen 
@@ -115,6 +119,7 @@ Die Struktur der Datenbank ist in dem unteren UML-Diagramm ersichtlich:
 ![UML database management](./images/classes_database_management.png)
 
 Die Komponenten mit ihrer Bedeutung wird nun kurz erläutert:
+
 - Exceptions: Wir haben zwei *exceptions* eingeführt, um Fehler besser 
 beschreiben zu können.
 - `BaseDatabase`: Hier sind die wesentlichen Funktionen für die 
@@ -171,6 +176,7 @@ We achieved the goal using the s2t library - `faster-whisper`. As for extractive
 ![UML database management](./images/diagram.png)
 
 **Auftretene Schwierigkeiten**
+
 - Speech recognition: Answers to the asked questions are searched in the so-called context, which is generated using a speech recognition algorithm. This is, so to speak, the first stage, on the basis of which later activities are carried out. Unfortunately, every algorithm has its weaknesses (such as recognizing words incorrectly) which in this case affect the correct operation of the program. During the work we came up with a couple of solutions that we did not manage to implement, but which may be useful (description in the next section)
 	- in addition, of all the program's operation, the longest process is text transcription, 	any form of optimization of execution time (while maintaining the accuracy of 	speech recognition) would be useful.
 - Answers are rarely well formulated sentences which could make asking for definitions of words difficult: The current algorithm gives the answer in a very concise way - these are actually snippets from the generated context. This form of answer is not always fully comprehensive and clear. It would be useful to present the answers in the form of well-structured sentences that go a little beyond the information given in context.
@@ -178,6 +184,7 @@ We achieved the goal using the s2t library - `faster-whisper`. As for extractive
 
 
 **Empfehlungen fuer weiteres Vorgehen (also Ideas)**
+
 - Speech rocognition: A nice touch would be adding some benchmarks. In addition to this, it would be important to replace misrecognized words with those that are most likely. Also a base of words specified for specific subjects (for example, a user can choose the type of category his video belongs to, and a predefined word base is used based on that), would come in handy.
 - Identify segments in audio and group them together or index them with keywords so that you can access relevant segments by demand: In our case, if the question asked is a keyword the algorithm will not be able to answer correctly. The expected answer would be well-formed sentences related to the given keyword. (This kind of solution is an idea for further work)
 - Slide extraction: We worked also on considering the content of the presentation (from the uploaded video) for context but did not complete it. The main idea was to recognize the change/transition of slides so that we could extract images with individual slides. OCR of the content contained in the photos was then performed. Interacting the audio track with the image for this task is taking it a step further and continuing with this idea seems to be the right thing to do. The codes we were able to write that we ultimately did not use can be found in "big-brother/src/eduVid /handle_presentation(unused)"
@@ -207,7 +214,7 @@ Zusätzlich zum Video Upload muss nun eine json Datei, welche passende Time-Stam
 Nach Upload werden passende Antworten gefunden und 1 oder mehere Time-Stamps zu diesen erstellt. Auf der neuen Seite stehen die Time-Stamps aus der json Datei so wie die aus der Logik Funktion erstellten Time-stamps zur verfügung, wie auch eine Antwort auf die gestellte Frage.
 Die json Datei muss einen Eintrag "time-stamps" enthalten, welcher Objekte der Form `{ "label": <time in seconds> }` enthalten muss.
 #### Beispiel einer Time-Stamps JSON Datei:
-```
+```javascript
 {
 	"time-stamps": [
 		{"Intro": 0.0},
