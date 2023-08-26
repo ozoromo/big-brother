@@ -3,32 +3,33 @@
 ## Einleitung und Zielsetzung
 Dieses Projekt wurde im Rahmen des Programmierpraktikums 
 "moderne verteilte Anwendungen" absolviert. Ziel war es die Funktionalitäten
-der webbasierten Anwendung vom "big brother 2021" zu erweitern. Unser Ziel
-war es:
+der webbasierten Anwendung vom Projekt "big brother 2021" zu erweitern. Unser
+Ziel war es:
 
-- weitere Zulassungskontrollalgorithmen
-- Gestenerkennung
-- Lehrvideoanalyse
-zu implementieren. Wir haben außerdem vor gehabt die Datenbank des vergangenen
+- weitere Zulassungskontrollalgorithmen,
+- Gestenerkennung und
+- Lehrvideoanalyse zu implementieren. 
+
+Wir haben außerdem vor gehabt die Datenbank des vergangenen
 Jahres noch flexibler mit MongoDB zu gestalten.
 
 ## Gruppenaufteilung
 Um diese Ziele zu erreichen haben wir uns in Untergruppen aufgeteilt:
 
-- Datenbank: Regelt implementation der Datenbank.
-- Logik: Implementiert weitere Algorithmen, welche in unseren Zielen stehen.
-Aufgrund der Komplexität dieser Aufgabe haben wir diese nochmals in 
+- **Datenbank**: Regelt implementation der Datenbank.
+- **Logik**: Implementiert weitere Algorithmen, welche in unseren Zielen stehen.
+Aufgrund der Komplexität dieser Aufgabe haben wir diese Gruppe nochmals in 
 Untergruppen unterteilt:
-    - FnG (engl. face and gesture): Diese Gruppe implementiert die Gesichts und
+    - **FnG** (engl. face and gesture): Diese Gruppe implementiert die Gesichts und
     Gestenerkennung.
-    - eduVid (engl. educational videos): Diese Gruppe implementiert das 
-    analysieren von Lehrvideos
-- Frontend: Diese Gruppe regelt die Webanwendung.
+    - **eduVid** (engl. educational videos): Diese Gruppe implementiert das 
+    Analysieren von Lehrvideos
+- **Frontend**: Diese Gruppe regelt die Webanwendung.
 
-Um die Kommunikation und Zusammenarbeit in den Gruppen nicht zu kompliziert 
-schwierig machen, haben wir uns dazu entschieden, dass jede Untergruppe einen
-verantwortliches Mitglied hat, welches dafür sort, dass die Schnittstellen,
-welche von den anderen Nutzer genutzt werden klar definiert sind. Dies soll
+Um die Kommunikation und Zusammenarbeit in den Gruppen einfacher zu gestalten,
+haben wir uns dazu entschieden, dass jede Untergruppe einen
+verantwortliches Mitglied hat, welches dafür sorgt, dass die Schnittstellen,
+welche von den anderen Nutzer genutzt werden, klar definiert sind. Dies soll
 mit Tests und Maßstäben (engl. benchmarks) sichergestellt werden. Die Tests
 sind vorallem wichtig, damit zukünftig an diesem Projekt arbeitende Gruppen
 unseren Code besser verstehen können und Schwierigkeiten beim Debuggen
@@ -43,14 +44,13 @@ haben zu müssen die Schnittstellen unbewusst kaputt zu machen.
 ## Datenbank
 Wie in der Einleitung bereits erwähnt, haben wir uns dazu entschieden die
 Datenbank in MongoDB zu implementieren. Dies ist eine NoSQL-Datenbank,
-welche nicht so strikt strukturiert werden muss, wie SQL. Hierbei werden die
-Inhalte in der Datenbank nicht normalisert, sondern so Erstellt, dass die
-Anfragen an die Datenbank schneller bearbeitet werden kann. Bei herkömmlichen
-Datenbanken nimmt man in der Regel nicht viel Rücksicht auf die 
+welche nicht so strikt strukturiert werden muss, wie SQL. Hierbei wird
+die Datenbank so strukturiert, dass sich Anfragen effizienter bearbeiten lassen.
+Bei herkömmlichen Datenbanken nimmt man in der Regel nicht viel Rücksicht auf die 
 spezifischen/oft vorkommenden Anfragen der Datenbank beim Erstellen dessen,
 weshalb Anfragen viele Tabellen mit Joins verknüpfen müssen, welche unnötigen
 overhead verursachen könnten. Da wir das Projekt in Zukunft oft mit neuen
-Ideen erweitern wollen, wollte die Datenbank auf flexibler sein.
+Ideen erweitern wollen, sien es sinnvoll eine flexiblere Datenbank aufzustellen.
 
 Hierzu haben wir ein zunächst ein Datenbankschema entwickelt. Hierbei nutzen wir
 eine Notation, welche ähnlich zu der ER-Model-Notation ist, um
@@ -65,20 +65,19 @@ zueinenander und unsere Designentscheidungen im Folgenden kurz:
 - `resource`: Dies ist im eine Resource in unserem System. Wir nutzen dies,
 um beispielsweise Bilder zu speichern.
 - `resource_context`: Dies ermöglicht uns die IDs von den verschiedenen 
-Resourcen zu gruppieren. Man kann sich das so ähnlich vorstellen, wie eine
+Resourcen zu gruppieren. Man kann sich das so vorstellen, wie eine
 Ordnerstruktur in einem Betriebssystem. Diese könnte auch genutzt werden, um
-eine hierarchische Ordnerstruktur zu erstellen. In unserem Projekt nutzen wir
-dies lediglich, um Resourcen zu gruppieren.
+eine hierarchische Ordnerstruktur zu erstellen.
 - `login_attempt`: Hier werden die Anmeldeversuche der Nutzer gespeichert.
 Falls diese nicht erfolgreich sind, d.h. das Gesichtserkennungsbild
 (also Passwort) wurde nicht erkannt, so ist der Eintrag `login_suc` auf *falsch*
-gesetzt. Falls die Anmeldung erfolgreich war, wo ist `login_succ` auf *wahr*
+gesetzt. Falls die Anmeldung erfolgreich war, wo ist `login_suc` auf *wahr*
 gesetzt, wobei die ID der Resource, die zum erfolgreichen Anmelden geführt hat
 in dem Feld `success_res_id` abgespeichert wird. Diese kann später abgerufen 
 werden. Die `success_res_type` beschreibt den Typ der Ressource, welche zum
 Erfolgreichen anmelden geführt hat. Wir nutzen in unserem System nur einen
 Typ, jedoch kann man in Zukunft auch Resourcen, wie ein Video stream oder 
-ähnlichen nutzen.
+ähnliches nutzen.
 - `user`: Speichert wichtige Nutzerdaten. Hierbei werden sogenannte "encodings"
 für jeden Nutzer abgespeichert. Diese enthalten Daten des Gesichts des Nutzers
 und werden für den Gesichtserkennungsalgorithmus benötigt. Da diese Daten so
@@ -98,23 +97,28 @@ zuerst die Tests und Beschreibung (in Python den *Docstring*) für zu
 implementierenden Funktionalitäten geschrieben hat und eine andere Person 
 die Funktionalitäten implementiert hat.
 
-In der dritten Phase des Projektes haben wir versucht zu überlegen, was 
-passieren könnte, wenn wir Nebenläufige Zugriffe auf die Datenbank haben.
+In der dritten Phase des Projektes haben wir uns Gedanken über Nebenläufige
+Datenbankzugriffe gemacht.
 Da MongoDB automatisch die Daten, auf die Zugegriffen werden blockiert,
 mussten wir hierbei nicht sehr viel machen. In dieser Phase haben wir
 außerdem einige Funktionalitäten für andere Gruppen implementiert, falls diese
-etwas in der Datenbank ablegen mussten.
+etwas in der Datenbank ablegen mussten. Dazu gehören:
+
+- speichern von Videos mit zusätzlichen Informationen
+- löschen von Videos
+- aktualisieren von encodings
+- und andere Hilfsfunktionen
 
 Am Anfang des Projektes viel es etwas schwer den anderen Gruppen zu zeigen,
 wie unsere Schnittstellen genutzt werden sollten. Hierzu haben wir zunächst
-eine automatische Dokumentation aus dem *Docstring* erstellt. Diese hab jedoch
-nicht wirklich gezeigt, wie die Methoden miteinander genutzt werden sollen.
+eine automatische Dokumentation aus dem *Docstring* erstellt. Diese Dokumentation
+hat jedoch nicht genügend verdeutlicht, wie die Methoden miteinander genutzt werden sollen.
 Dies haben wir gelöst, indem wir neben der Dokumentation auch noch Beispielcode
 den anderen Gruppen gegeben wurde. Diesen Beispielcode haben wir in unseren
 Tests implementiert, damit in Zukunft durch die automatischen Tests die
 Korrektheit (zumindest teilweise) bestätigt werden kann.
 
-Die Struktur der Datenbank ist in dem unteren UML-Diagramm ersichtlich:
+Die Struktur der Datenbank ist in dem UML-Diagramm ersichtlich.
 
 ![UML database management](./images/classes_database_management.png)
 
@@ -123,7 +127,7 @@ Die Komponenten mit ihrer Bedeutung wird nun kurz erläutert:
 - Exceptions: Wir haben zwei *exceptions* eingeführt, um Fehler besser 
 beschreiben zu können.
 - `BaseDatabase`: Hier sind die wesentlichen Funktionen für die 
-Benutzerverwaltung implementiert. Diese Klasse fungiert als fundament der
+Benutzerverwaltung implementiert. Diese Klasse fungiert als Fundament der
 anderen zwei Klassen, die in den folgenden Stichpunkten erkläutert werden.
 - `PictureDatabase`: Diese Klasse stellt die Funktionaliät bereit Bilder
 in der Datenbank zu speichern und aufzurufen.
@@ -164,56 +168,140 @@ die mit dem HOG-Feature-Extractor und dem SVM-Klassifikator trainiert wurde.
 Dieses Modell wird verwendet, um Gesichter zu erkennen 
 und kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
 
-## eduVid (engl. educational videos):
+## eduVid (engl. educational videos)
 
-**Projektziele und ihre Erreichung**
+### Projektziele und ihre Erreichung
+Wir nutzen folgende tools, um die Videoanalyse umzusetzen:
 
-We achieved the goal using the s2t library - `faster-whisper`. As for extractive question answering, we used the pretrained model from hugging face `mdeberta-v3-base-squad2`. For video editing we used `MoviePy` library.
+- `faster-whisper` für das umwandeln von Sprache zu Text.
+- Das vortrainierte model `mdeberta-v3-base-squad2` von *hugging face*, um
+die Fragen zu beantworten, welche man zum video hat.
+- `MoviePy` für das bearbeiten des Videos
 
-**Description of the effects achieved**
-:the user uploads a video (e.g. with a presentation) in .mp4 format. The program converts the file to a .wav format. Next, speech recognition is performed to obtain a transcription from the uploaded video. Then, the transcription is properly prepared (the processes have been described) to obtain the context, on the basis of which answers to the questions asked by the user are found. Additionally for the given answer, timestamps are returned. They indicate to a moment in video where displayed aswer is included.
+### Beschreibung des Algorithmus
+Im folgenden wird der Verlauf des Programms kurz beschrieben:
+
+1. Nutzer lädt ein Video in mp4-format hoch
+2. Die Audio wird von der mp4-Datei extrahiert und in dem wav-format
+gespeichert.
+3. Die Spracherkennung wird genutzt, um die Audiodatei in Text zu konvertieren.
+4. Das extrahierte Transkript wird verarbeitet, damit das Programm den Kontext
+zwischen den Sätzen versteht.
+5. Daraufhin wird das Model genutzt, um die Frage zu beantworten. Es wird 
+außerdem bestimmt, wann diese Antwort im Video erwähnt wird.
 
 ![UML database management](./images/diagram.png)
 
-**Auftretene Schwierigkeiten**
+### Auftretene Schwierigkeiten
 
-- Speech recognition: Answers to the asked questions are searched in the so-called context, which is generated using a speech recognition algorithm. This is, so to speak, the first stage, on the basis of which later activities are carried out. Unfortunately, every algorithm has its weaknesses (such as recognizing words incorrectly) which in this case affect the correct operation of the program. During the work we came up with a couple of solutions that we did not manage to implement, but which may be useful (description in the next section)
-	- in addition, of all the program's operation, the longest process is text transcription, 	any form of optimization of execution time (while maintaining the accuracy of 	speech recognition) would be useful.
-- Answers are rarely well formulated sentences which could make asking for definitions of words difficult: The current algorithm gives the answer in a very concise way - these are actually snippets from the generated context. This form of answer is not always fully comprehensive and clear. It would be useful to present the answers in the form of well-structured sentences that go a little beyond the information given in context.
-- Algorithm has difficulties with recognizing grammar of given question. In some cases, it could be important to recognize the grammar in the question being asked. For instance the tenses, since the answers given to them without taking them into consideration may be wrong/not entirely true.
+- Spracherkennung: Die Antworten auf die Fragen werden in dem Kontext gesucht,
+welche von der Spracherkennung generiert wurden. Beim Testen ist aufgefallen,
+dass jeder Spracherkennungalgorithmus seine schwächen hat und manche Wörter
+nicht korrekt erkennt. Dies beeinflusst die Antwort auf Fragen. Während
+des Arbeitens sind uns einige Teile des Algorithmus aufgefallen, welche wir
+in Zukunft optimieren könnten:
+    - der längste Prozess des Algorithmus ist die Spracherkennung. Wenn man
+    den Algorithmus verschnellern möchte, sollte man einen Weg finden diesen
+    zu verschnellern ohne einen zu starken Preis bezüglich der Korrektheit zu
+    zahlen.
+- Antworten der Algorithmen sind keine wohl-formilierten Sätze. Dies könnte
+die Antwort auf Definitionsfragen (z.B. Wie ist [...] definiert?) sehr
+unverständlich machen. Der Algorithmus beantwortet Fragen oft mit einzelnen
+Schlüsselfwörtern.
+- Der Algorithmus hat einige Schwierigkeiten grammatikalische Details einer
+Sprache ausfindig zu machen. Manchmal sind Zeitformen bei der Beantwortung
+der Fragen relevant. Diese werden nicht berücksichtigt, wodurch die Antwort
+auf eine Frage falsch sein könnte.
 
-
-**Empfehlungen fuer weiteres Vorgehen (also Ideas)**
-
-- Speech rocognition: A nice touch would be adding some benchmarks. In addition to this, it would be important to replace misrecognized words with those that are most likely. Also a base of words specified for specific subjects (for example, a user can choose the type of category his video belongs to, and a predefined word base is used based on that), would come in handy.
-- Identify segments in audio and group them together or index them with keywords so that you can access relevant segments by demand: In our case, if the question asked is a keyword the algorithm will not be able to answer correctly. The expected answer would be well-formed sentences related to the given keyword. (This kind of solution is an idea for further work)
-- Slide extraction: We worked also on considering the content of the presentation (from the uploaded video) for context but did not complete it. The main idea was to recognize the change/transition of slides so that we could extract images with individual slides. OCR of the content contained in the photos was then performed. Interacting the audio track with the image for this task is taking it a step further and continuing with this idea seems to be the right thing to do. The codes we were able to write that we ultimately did not use can be found in "big-brother/src/eduVid /handle_presentation(unused)"
-- Take recordings autoregressively guess what is said afterwards.
-- Remember topic changes from sound and image. Also, we wanted the interactive video produced by the program to show changes in the topics discussed. The process of recognizing topics and changing them was evpected to happen automatically (insted of predefining it by user).
+### Empfehlungen fuer weiteres Vorgehen
+- Spracherkennung:
+    - Automatische benchmarktests können genutzt werden, um die Bewertung der
+    Spracherkennung zu vereinfachen.
+    - Eventuell falsch erkannte Wörter könnten versucht werden zu identfizieren.
+    Daraufhin könnte versucht werden diese durch das wahrscheinlichste Wort, 
+    statt dem im Kontext sinnfreien Wort zu ersetzen. Falls der Sprecher
+    undeutlich Spricht kann dies zu einer höheren Genauigkeit der entgültigen
+    Antwort beitragen.
+    - In bestimmten Videos werden vielleicht bestimmte Fachwörter genutzt.
+    Es wäre nützlich, falls unser Programm diese Fachwörter verstehen könnte.
+- Slide-Extraktion: Wir haben auch daran gearbeitet das Bildmaterial des Videos
+zu verarbeiten, um die Antwort genauer zu machen, um den Kontext des Videos
+besser zu verstehen. Es wurde bereits ein Ansatz in dem eduVid-Ordner 
+(unter /src/eduVid/handle\_presentation(unused)) implementiert. Dieser Ansatz
+kann in Zukunft weiter geführt werden.
+- Ein weitere Schritt wäre es zu erkennen, wenn das Thema des videos geändert
+wird. Momentan haben fordern wir jedoch den Nutzer dazu auf eine Datei bereit
+zu stellen, die Aussagt, wann ein Thema gewechselt wird. Jedes Thema hat
+hierbei eine überschrift und ist entsprechend mit Schlüsselwörtern
+gekennzeichnet.
   
 ## Frontend
+### Webanwendung
+Wir haben uns dazu entschieden das Flask-Framework von dem vorherigen Projekt
+weiter zu nutzen. Flask ist möglichst einfach gehalten und besitzt
+im Vergleich zu anderen Webframeworks keine unnötigen Funktionen. Von anderen
+Bibliotheken abgedeckte Funktionen, werden nicht in Flask umgesetzt und lassen
+sich über die bestehenden Bibliotheken integrieren.
 
-**Webanwendung**
-Um die Webanwendung mit Python zu programmieren haben wir beschlossen das Webframework Flask zu nutzen. Flask ist möglichst einfach gehalten und besitzt im Vergleich zu anderen Webframeworks keine unnötigen Funktionen. Von anderen Bibliotheken abgedeckte Funktionen, werden nicht in Flask umgesetzt und lassen sich über die bestehenden Bibliotheken integrieren.
+### Milestone 1
+Als ersten Meilenstein haben wir uns gesetzt den Code vom Team21 zu analysieren
+und zu verstehen, sowie die Website zu überarbeiten. Um die Website zu
+überarbeiten, musste jedoch der Zugriff auf die Website hergestellt werden.
+Dafür wurden sämtliche Requirements mit den dafür vorgesehenen Versionen
+heruntergeladen. Dabei muss man auf die richtige Python Version (Python 3.10.2)
+achten, damit alle Requirements heruntergeladen werden können. Des Weiteren ist
+aufgefallen, dass es obsolete Requirements gab, die entfernt wurden. Dies war
+ein kleines Hindernis, da einige Probleme mit der Umstellung ihrer Python
+Versionen hatten. Anschließend wurde der Vorgang in der „ReadMe“ Datei
+dokumentiert.
 
-**Milestone 1**
-Als ersten Meilenstein haben wir uns gesetzt den Code vom Team21 zu analysieren und zu verstehen, sowie die Website zu überarbeiten. Um die Website zu überarbeiten, musste jedoch der Zugriff auf die Website hergestellt werden. Dafür wurden sämtliche Requirements mit den dafür vorgesehenen Versionen heruntergeladen. Dabei muss man auf die richtige Python Version (Python 3.10.2) achten, damit alle Requirements heruntergeladen werden können. Des Weiteren ist aufgefallen, dass es obsolete Requirements gibt, die entfernt wurden. Dies war ein kleines Hindernis, da einige Probleme mit der Umstellung ihrer Python Versionen hatten. Anschließend wurde der Vorgang in der „ReadMe“ Datei dokumentiert. Um die Website zu bearbeiten, mussten erst die Bugs gefixt werden. So gab es Probleme bei den Routes, Einige Funktionen funktionierten nicht und die Verbindung zum Backend musste hergestellt werden.
+### Milestone 2
+Die Aufgaben wurden innerhalb der Gruppe aufgeteilt. Es wurden fehlende Routes,
+wie „sign up with photo“ und „sign in with photo“, hinzugefügt und manuell
+getestet. Zusammen mit dem Backend und Logik Team wurden die Bugs gefixt. So wurden
+beispielsweise einige Variablen falsch übernommen. Wir haben bewusst mit den
+anderen Teams die Bugs gefixt, da die zu implementierenden Inhalte in ihren
+Themenfeldern waren, und sie dementsprechend schnell die gefundenen Fehler
+beheben konnten. Des Weiteren haben wir uns für ein neues Design der Website
+entschieden, um die Seite visuell attraktiver für den User zu gestalten.
+Während dieser Phase gab es Schnittstellen Probleme zur Registrierung und
+Anmeldung mit der Gesichtserkennung („FaceRecognition“).
 
-**Milestone 2**
-Daraus resultierten unsere nächsten Herausforderungen für den 2. Milestone. Die Aufgaben wurden innerhalb der Gruppe aufgeteilt. So wurden fehlende Routes, wie „sign up with photo“ und „sign in with photo“, hinzugefügt und getestet. Zusammen mit dem Backend und Logik Team wurden die Bugs gefixt. So wurden beispielsweise einige Variablen falsch übernommen. Wir haben bewusst mit den anderen Teams die Bugs gefixt, da die zu implementierenden Inhalte in ihren Themenfeldern waren, und sie dementsprechend schnell die gefundenen Fehler beheben konnten. Des Weiteren haben wir uns für ein neues Design der Website entschieden, um die Seite visuell attraktiver für den User zu gestalten. Während dieser Phase gab es Schnittstellen Probleme zur Registrierung und Anmeldung mit der Gesichtserkennung („FaceRecognition“).
+### Milestone 3
+So haben wir beschlossen in der Dritten Phase die Probleme bezüglich der
+Gesichtserkennung zu beheben. Bei der Anmeldung mit Kamera gab es nun einen
+Countdown und nach Ablauf des Countdowns wird ein Bild gemacht, welcher
+automatisch heruntergeladen wird. Für EduVid wurde vorerst ein Platzhalter
+implementiert, in der man lediglich ein Video mit einem Titel hochladen kann. 
+Des Weiteren haben wir das gesamtes Team SoSe2023 auf der Webseite verewigt,
+wie es das SoSe2021 vor uns gemacht hat.
 
-**Milestone 3**
-So haben wir beschlossen in der Dritten Phase die Probleme bezüglich der Gesichtserkennung zu beheben. Bei der Anmeldung mit Kamera gab es nun einen Countdown und nach Ablauf des Countdowns wird ein Bild gemacht, welcher automatisch gedownloaded wird. Hinzu musste ebenfalls der GPU-Server auf Coolify konfiguriert werden, weswegen die Implementierung der „EduVid“ Logik in den Hintergrund rückte. 
-Somit wurde für EduVid vorerst eine triviale Version implementiert, in der man lediglich ein Video mit einem Titel hochladen kann. Zusätzlich wurden Videounabhängige Time-Stamp Buttons erstellt, mit welchen man an bestimmte Stellen im Video springen kann. 
-Das Team hatte anfangs Probleme mit dem Konfigurieren des Servers, weswegen wir uns gemeinsam der Aufgabe gewidmet haben. Um den Server zu deployen haben wir angefangen einen Dockerfile zu erstellen. Dieser wurde nicht ganz fertig bis zum präsentieren des 3. Milestones. Währenddessen hatten wir die Idee unser gesamtes Team SoSe2023 zu verewigen, wie es das SoSe2021 vor uns gemacht hat.
+Der GPU-Server wurde konfiguriert. Das Team hatte anfangs Probleme mit dem
+Konfigurieren des Servers, weswegen wir uns gemeinsam der Aufgabe gewidmet
+haben. Um den Server zu deployen haben wir angefangen einen Dockerfile zu
+erstellen. Dieser wurde nicht ganz fertig bis zum präsentieren des 3.
+Milestones. 
 
-**Probleme und Problembehandlung**
-Der Docker Container der angefangen wurde im 3. Milestone wurde fertig gestellt und die FaceRecognition ebenfalls. Das Vergleichen des live Images mit den Bildern aus der Registrierung, welche im Backend gespeichert wird, war ein Erfolg. Die Idee in diesem Vorgang das Bild sichtbar für den User zu downloaden, wurde nicht übernommen.
-Nach dem 3. Milestone und nach dem die EduVid Logik fertig war, wurde die 2. Ausbaustufe von EduVid implementiert.
-Zusätzlich zum Video Upload muss nun eine json Datei, welche passende Time-Stamps für das Video enthält, und ein Frage zu dem Video angegeben werden.
-Nach Upload werden passende Antworten gefunden und 1 oder mehere Time-Stamps zu diesen erstellt. Auf der neuen Seite stehen die Time-Stamps aus der json Datei so wie die aus der Logik Funktion erstellten Time-stamps zur verfügung, wie auch eine Antwort auf die gestellte Frage.
-Die json Datei muss einen Eintrag "time-stamps" enthalten, welcher Objekte der Form `{ "label": <time in seconds> }` enthalten muss.
-#### Beispiel einer Time-Stamps JSON Datei:
+### Nach dem Milestone 3
+Nach dem 3. Milestone haben wir zunächst den Docker-Container zum laufen
+bekommen. Daraufhin haben wir die Gesichtserkennung fertig gestellt. Das
+Vergleichen des live Images mit den Bildern aus der Registrierung, welche im
+Backend gespeichert wird, war ein Erfolg. Die Idee in diesem Vorgang das Bild
+sichtbar für den User zu downloaden, wurde nicht übernommen.
+
+Nach dem 3. Milestone und nach dem die EduVid Logik fertig war, wurde die 2.
+Ausbaustufe von EduVid implementiert. Zusätzlich zum Video Upload muss nun eine
+json Datei, welche passende Time-Stamps für das Video enthält, und ein Frage zu
+dem Video angegeben werden. Nach Upload werden passende Antworten gefunden und
+1 oder mehere Time-Stamps zu diesen erstellt. Auf der neuen Seite stehen die
+Time-Stamps aus der json Datei so wie die aus der Logik Funktion erstellten
+Time-stamps zur verfügung, wie auch eine Antwort auf die gestellte Frage. Die
+json Datei muss einen Eintrag "time-stamps" enthalten, welcher Objekte der Form
+`{ "label": <time in seconds> }` enthalten muss.
+Zusätzlich wurden Videounabhängige Time-Stamp Buttons erstellt, mit welchen
+man an bestimmte Stellen im Video springen kann. 
+
+Beispiel einer Time-Stamps JSON Datei:
 ```javascript
 {
 	"time-stamps": [
@@ -228,5 +316,8 @@ Die json Datei muss einen Eintrag "time-stamps" enthalten, welcher Objekte der F
 ```
 
 #### Anmerkung zu EduVid:
-Beim verlassen der Seite läuft im Backend die logik zur Video verarbeitung weiter, hier könnte man in einer weiteren Ausbaustufe mittels einer socket connection überprüfen, ob man sich noch auf der Seite befindet (auf das Video ergebnis wartet) und ggf. die Verarbeitung frühzeitig abbrechen.
-Ähnlich wird dies bereits bei der Gestenerkennung umgesetzt.
+Beim verlassen der Seite läuft im Backend die Logik zur Video verarbeitung
+weiter, hier könnte man in einer weiteren Ausbaustufe mittels einer socket
+connection überprüfen, ob man sich noch auf der Seite befindet (auf das Video
+ergebnis wartet) und ggf. die Verarbeitung frühzeitig abbrechen. Ähnlich wird
+dies bereits bei der Gestenerkennung umgesetzt.
