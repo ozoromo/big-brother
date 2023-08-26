@@ -52,6 +52,7 @@ Ideen erweitern wollen, wollte die Datenbank auf flexibler sein.
 Hierzu haben wir ein zunächst ein Datenbankschema entwickelt. Hierbei nutzen wir
 eine Notation, welche ähnlich zu der ER-Model-Notation ist, um
 die Struktur leichter verständlich zu machen:
+
 ![DB schema image](./images/db_schema.png)
 
 Die Entitäten in diesem Modell sind *Collections* in MongoDB, wobei deren
@@ -110,7 +111,9 @@ Tests implementiert, damit in Zukunft durch die automatischen Tests die
 Korrektheit (zumindest teilweise) bestätigt werden kann.
 
 Die Struktur der Datenbank ist in dem unteren UML-Diagramm ersichtlich:
+
 ![UML database management](./images/classes_database_management.png)
+
 Die Komponenten mit ihrer Bedeutung wird nun kurz erläutert:
 - Exceptions: Wir haben zwei *exceptions* eingeführt, um Fehler besser 
 beschreiben zu können.
@@ -166,7 +169,6 @@ We achieved the goal using the s2t library - `faster-whisper`. As for extractive
 :the user uploads a video (e.g. with a presentation) in .mp4 format. The program converts the file to a .wav format. Next, speech recognition is performed to obtain a transcription from the uploaded video. Then, the transcription is properly prepared (the processes have been described) to obtain the context, on the basis of which answers to the questions asked by the user are found. Additionally for the given answer, timestamps are returned. They indicate to a moment in video where displayed aswer is included.
 
 ![UML database management](./images/diagram.png)
-
 
 **Auftretene Schwierigkeiten**
 - Speech recognition: Answers to the asked questions are searched in the so-called context, which is generated using a speech recognition algorithm. This is, so to speak, the first stage, on the basis of which later activities are carried out. Unfortunately, every algorithm has its weaknesses (such as recognizing words incorrectly) which in this case affect the correct operation of the program. During the work we came up with a couple of solutions that we did not manage to implement, but which may be useful (description in the next section)
