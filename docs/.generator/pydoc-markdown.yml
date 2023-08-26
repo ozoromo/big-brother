@@ -5,8 +5,8 @@ loaders:
       ../../src/face_recog/haar_and_lbph/,
       ../../src/face_recog/openface/,
       ../../src/face_recog/,
-      ../../src/bigbrother/,
-      ../../src/bigbrother/app/,
+      ../../src/web_application/,
+      ../../src/web_application/app/,
       ../../src/eduVid/question_answering,
       ../../src/eduVid/handle_presentation(unused)
     ]
@@ -30,7 +30,7 @@ renderer:
     - title: Home
       name: README
       source: README.md
-    - title: 'DatabaseManagement'
+    - title: 'Database management'
       contents:
         - 'base_database.BaseDatabase.*'
         - 'picture_database.PictureDatabase.*'

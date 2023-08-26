@@ -1,7 +1,7 @@
 docs_dir: API documentation
 nav:
 - Home: README.md
-- DatabaseManagement: databasemanagement.md
+- Database management: database-management.md
 - eduVid: eduvid.md
 repo_url: https://github.com/Programmierpraktikum-MVA/big-brother
 site_name: big-brother
