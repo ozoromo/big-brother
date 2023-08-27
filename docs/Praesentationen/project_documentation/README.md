@@ -265,6 +265,14 @@ im Vergleich zu anderen Webframeworks keine unnötigen Funktionen. Von anderen
 Bibliotheken abgedeckte Funktionen, werden nicht in Flask umgesetzt und lassen
 sich über die bestehenden Bibliotheken integrieren.
 
+### Ordnerstruktur
+Wir haben uns dazu entschieden Bluprints zu benutzen. Die Klassen ´user.py´,
+´utils.py´, ´__init__.py´ & ´user_manager.py´ waren zu unübersichtlich während der
+Bearbeitung. Blueprints bietet eine übersichtlichere Struktur im Projekt. Die Inhalte
+der Klassen wurden in die Ordner `logic`, `login`, `main` & `users` unterteilt.
+Der Entwicklungsprozess kann gezielter und effektiver gestaltet werden, wenn er
+eine bestimmte Struktur hat.
+
 ### Milestone 1
 Als ersten Meilenstein haben wir uns gesetzt den Code vom Team21 zu analysieren
 und zu verstehen, sowie die Website zu überarbeiten. Um die Website zu
@@ -310,6 +318,18 @@ bekommen. Daraufhin haben wir die Gesichtserkennung fertig gestellt. Das
 Vergleichen des live Images mit den Bildern aus der Registrierung, welche im
 Backend gespeichert wird, war ein Erfolg. Die Idee in diesem Vorgang das Bild
 sichtbar für den User zu downloaden, wurde nicht übernommen.
+
+Im History werden die Bilder, die zur Anmeldung genutzt werden aufgelistet.
+Das Datum der Anmeldung wurde neben den "Anmeldungsbildern" implementiert.
+
+Für die Gestenerkennung hatten wir uns überlegt, diese ebenfalls für die Anmeldung
+zu nutzen. Die Templates und Routes wurden dafür erstellt. Doch wir kamen zu dem
+Entschluss, dass die Anmeldung mit einer Geste keine Sicherheit gewährleistet.
+So wurde die Gestenerkennung für den User nach der Anmeldung implementiert.
+Dabei sind 2 Screens zu sehen. Auf dem linken Screen ist die live Cam, 
+bei der Fotos in einem bestimmten Zeitintervall erstellt werden. Bilder werden auf
+den rechten Screen übertragen und angezeigt. Um den Vorgang in Echtzeit zu
+realisieren nutzen wir Socket.IO.
 
 Nach dem 3. Milestone und nach dem die EduVid Logik fertig war, wurde die 2.
 Ausbaustufe von EduVid implementiert. Zusätzlich zum Video Upload muss nun eine
