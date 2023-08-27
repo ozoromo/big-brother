@@ -266,8 +266,8 @@ Bibliotheken abgedeckte Funktionen, werden nicht in Flask umgesetzt und lassen
 sich über die bestehenden Bibliotheken integrieren.
 
 ### Ordnerstruktur
-Wir haben uns dazu entschieden Bluprints zu benutzen. Die Klassen ´user.py´,
-´utils.py´, ´__init__.py´ & ´user_manager.py´ waren zu unübersichtlich während der
+Wir haben uns dazu entschieden Bluprints zu benutzen. Die Klassen `user.py`,
+`utils.py`, `__init__.py` & `user_manager.py` waren zu unübersichtlich während der
 Bearbeitung. Blueprints bietet eine übersichtlichere Struktur im Projekt. Die Inhalte
 der Klassen wurden in die Ordner `logic`, `login`, `main` & `users` unterteilt.
 Der Entwicklungsprozess kann gezielter und effektiver gestaltet werden, wenn er
