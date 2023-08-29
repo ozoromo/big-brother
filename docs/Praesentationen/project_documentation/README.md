@@ -152,7 +152,7 @@ Der Grund dafür war die Einfachheit der Nutzung und dadurch
 der besser überschaubare Code. Zudem bekommt man eine hohe 
 Treffsicherheit von 99.38% hin. 
 
-###face-recognition
+### face-recognition
 face-recognition ist eine Open-Source-Bibliothek, die auf der Grundlage
 von OpenCV entwickelt wurde und auf der Gesichtserkennungstechnologie
 von dlib basiert. Sie ermöglicht die Erkennung und Analyse von Gesichtern
