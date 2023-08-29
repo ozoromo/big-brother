@@ -209,7 +209,7 @@ implementieren. Zudem konnten wir nicht vorausschauen wie lange eine solche Impl
 dauern würde, bzw. wie aufwendig sie ist, also ob wir das überhaupt zur damaligen Deadline 
 geschafft hätten.  
 
-## Gestenerkennungsprojekt - Dokumentation
+## Gestenerkennungsprojekt
 
 ### Einführung
 
