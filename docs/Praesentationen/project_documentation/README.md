@@ -190,7 +190,15 @@ Die Berechnung dieser numpy arrays ist allerdings rechenlastig und wird
 bei jedem Bild erneut gemacht, weswegen wir eine Möglichkeit gefunden haben
 eben diese encodings zu cashen. Das geschieht in encodings_class.py.
 
-TODO: die anderen methoden noch erläutern. 
+### weitere Methoden
+Weitere Methoden zur Gesichtserkennung, die wir gefunden haben sind zum Beispiel 
+mit Hilfe von „Cascade Classifier“ (Erkennung von Objekten mittels machinellem Lernen),
+„Ultra-light face detector“ (gute Balance zwischen Geschwindigkeit und Genauigkeit mithilfe von neuronalen Netzen)
+oder „Principal Component Analysis“ (basierend der Annahme, dass die Variationen
+in den Gesichtsbildern hauptsächlich durch eine lineare Kombination der Eigenfaces
+dargestellt werden können)
+
+
 ## eduVid (engl. educational videos)
 
 ### Projektziele und ihre Erreichung
