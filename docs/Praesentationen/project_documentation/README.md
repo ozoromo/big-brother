@@ -198,6 +198,17 @@ oder „Principal Component Analysis“ (basierend der Annahme, dass die Variati
 in den Gesichtsbildern hauptsächlich durch eine lineare Kombination der Eigenfaces
 dargestellt werden können)
 
+### Schwierigkeiten
+Ein Problem welches erst zur späteren Phase des Projekts aufgetreten ist, war dass
+wir die python Kamera, die von OpenCV verwendet wird nicht im Frontend nutzen konnten.
+Wir konnten jedoch trotzdem weiterhin die Gesichtserkennung anhand von Bildern
+im Backend benutzen und so haben wir uns zusammen mit dem Frontend Team entschieden
+jeweils Schnappschüsse von Gesichtern im Backend zu bearbeiten und zu speichern. 
+Die Alternative wäre ein Datenstream gewesen, welches komplizierter wäre zu
+implementieren. Zudem konnten wir nicht vorausschauen wie lange eine solche Implementierung
+dauern würde, bzw. wie aufwendig sie ist, also ob wir das überhaupt zur damaligen Deadline 
+geschafft hätten.  
+
 
 ## eduVid (engl. educational videos)
 
