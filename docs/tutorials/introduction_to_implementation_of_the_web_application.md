@@ -1,85 +1,80 @@
 # Introduction to implementation of the web application
-### Functionality
-- Two ways of registration users
-  - With username + 3 pictures
-  - With username + video
-- Three ways of signing in
-  - With username + a picture
-  - With username + video (live face)
-  - With username + video (live gesture)
-...
-  
-- EduVid:
-  - User uploads Video in .mp4
-  - speech recognition performed to obtain transcription
-  - then transcription preparation
-    - detailed process description
-    - context extraction
-  - User questions
-    - is basis for answers
-  - return Timestamps
-    - indicate video moments
-    - correspond to displayed answers
+## Folder structure
+The folder structure of the web\_application-folder is described in here.
+There are two folders to discuss:
 
-- GestureRec:
-  - 
+- `app`: This package implements the flask application and is called via the
+`run.py`-script.
+- `face_recognition_strategies`: This implements the algorithms in a
+strategy pattern. This makes it easier to switch between differen algorithm
+implementations.  
+**NOTE**: In the future the pattern can also be used in the benchmark-tests.
+It would be necessary to put the `face_recognition_strategies`-folder into
+the `face_recog`-folder in order to have a more clear structure.
 
-- FaceRec:
-  - recognise face of registered user
-  - face for login via photo or video (live face)
-  - In case of large deviation of the face -> login fails
-  - otherwise success
+### app
+We describe the folder structure and certain files, that are worth describing,
+roughtly:
 
-### Project structure & Routes
-- HTML files
-    - algorithms.html:
-      - information about our algorithm
-    - base.html:
-      - 
-    - create.html:
-      -> registration with 3 photos + username
-    - eduVid.html:
-      - only uploading a video at the moment + name of the video
-    - eduVidPlayer.html:
-    - gestureReco.html:
-      - login with gesture
-      - needed for photo of certain gesture
-      - connecting to gestureRecognition.js
-    - index.html:
-    - login.html:
-    - logincamera.html:
-    - rejection.html:
-      - if certain process fails error message appears
-    - team23.html:
-      - the internship team of SS23
-    - team21.html: 
-      - the internship team of 2021
-    - test.html:
-    - userpage.html:
-    - validationauthenticated.html:
-      - appears when sign in was successful
-    - validationsignup.html:
-      - appears when sign up was successful
-    - webcam.html:
-      - 
-    - webcamJS.html:
-      - connection to main.js
+- `blueprints`: Used in order to structure the routes in the flask project
+more clearly based on content. This is a concept provided by flask
+(see documentation [here](https://flask.palletsprojects.com/en/2.3.x/blueprints/)).
+The different folders inside of the blueprint folders are the blueprints that
+are sorted based on their use-case:
 
-- JS files
-    - eduVid.js:
-      - 
-    - gestureRecognition.js:
-      - taking photo for ... with certain gesture
-    - main.js: 
-      - live Camera for login
-      - taking photo for login via face recognition
+    - `logic`: This is a section where the logic of the site is implemented that 
+    pretains everything after the login. Video analysis and gesture recogntion
+    is implemented in here.
+    - `login`: You can find all the login routes in here. Because the login of
+    users with different methods is a very big part of our project we decided to
+    use a blueprint for it.
+    - `main`: Those routes mostly only have information on them that can be
+    accessed without having logged in.
+    - `user`: This contains all the routes that has anything to do with user
+    management except of login. This includes deleting user, looking at history
+    of user, registering user...
 
-- PY Files
-    - __init__.py:
-      - is used to execute the code
-      - contains all routes & their functionalities
-    - user_manager.py:
-      - manages the users of the websites
-    - user.py:
-      - keeps the information about user
-    - utils.py:
+- `templates`: The HTML-templates can be found in here. The use cases for the
+pages are rather self explanatory when you look at the python code that uses those
+templates.
+- `static`: You can find css-files, js-files, and images in this folder.
+- `__init__.py`: We initialize the global variables in here that we use in
+our flask application. It's also important to mention that the blueprints have
+to be included farther below in order to avoid dependency issues.
+
+## Algorithm strategies
+
+## Registration and login of user
+We use an username and three images in order to register a user. The user
+can then log in with a camera or a picture of themselfs. If they chose
+to log in with a picture a different algorithm will be used than for the
+login with the camera. Those can be seen in the code.
+
+## EduVid
+This functionality is accesible only if the user is logged in. You may then
+upload a 
+
+- file name,
+- video,
+- json file with timestamps and
+- question you want the video content to answer
+
+in order for the video to get analyzed. This may take quite a long time
+depending on the length of the video. The json file describes the sections
+of the video, meaning what the content of a video is starting from a certain
+time (measured in seconds). This can be described with the following example:
+```javascript
+{
+	"time-stamps": [
+		{"Intro": 0.0},
+		{"Core Idea": 10.0},
+		{"Next Steps": 30.0},
+		{"Advanced": 300.0},
+		{"Conclusion": 500.0},
+		{"Outro": 700.0}
+	]
+}
+```
+The functionalities are implemented with the EduVid-API. You can find a
+tutorial in documentation.
+

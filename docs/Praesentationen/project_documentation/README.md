@@ -222,57 +222,55 @@ von Google, und einem trainierten TensorFlow-Modell können Handgesten erkannt u
 Die Gestenerkennung basiert auf folgenden Schritten:
 
 1. **Initialisierung:** Beim Starten des Programms werden die benötigten Bibliotheken
-   und Modelle initialisiert. Dazu gehören die Mediapipe-Bibliothek zur Handlandmarkenerkennung
-   und das TensorFlow-Modell zur Gestenerkennung. Das Modell wird aus einem spezifischen Verzeichnis geladen.
-
+und Modelle initialisiert. Dazu gehören die Mediapipe-Bibliothek zur Handlandmarkenerkennung
+und das TensorFlow-Modell zur Gestenerkennung. Das Modell wird aus einem spezifischen Verzeichnis geladen.
 2. **Handerkennung:** Der Video- oder Kamerastream wird in Frames aufgeteilt.
-   Jedes Frame wird vertikal gespiegelt, um eine konsistente Ausrichtung der
-   Handlandmarken zu gewährleisten. Anschließend wird das Frame in das RGB-Format konvertiert,
-    da Mediapipe RGB-Bilder erwartet. Mit der Mediapipe-Bibliothek werden die Handlandmarken
-   im Frame erkannt, und die Koordinaten der erkannten Landmarken werden zurückgegeben.
-
+Jedes Frame wird vertikal gespiegelt, um eine konsistente Ausrichtung der
+Handlandmarken zu gewährleisten. Anschließend wird das Frame in das RGB-Format konvertiert,
+da Mediapipe RGB-Bilder erwartet. Mit der Mediapipe-Bibliothek werden die Handlandmarken
+im Frame erkannt, und die Koordinaten der erkannten Landmarken werden zurückgegeben.
 4. **Zeichnen der Landmarken:** Die erkannten Handlandmarken werden auf dem Frame visualisiert,
-    indem Linien zwischen den Landmarken gezeichnet werden.
-   Dies ermöglicht eine visuelle Veranschaulichung der erkannten Handgeste.
-
+indem Linien zwischen den Landmarken gezeichnet werden.
+Dies ermöglicht eine visuelle Veranschaulichung der erkannten Handgeste.
 5. **Gestenerkennung:** Die erkannten Handlandmarken werden an das TensorFlow-Modell übergeben,
-    um die Gesten zu erkennen. Zunächst werden die Landmarken normalisiert
-    und in ein geeignetes Format gebracht. Anschließend wird das Modell verwendet,
-    um eine Vorhersage für die erkannte Handgeste zu treffen.
-   Das Modell wurde zuvor mit einer bestimmten Anzahl von Gesten trainiert.
-
+um die Gesten zu erkennen. Zunächst werden die Landmarken normalisiert
+und in ein geeignetes Format gebracht. Anschließend wird das Modell verwendet,
+um eine Vorhersage für die erkannte Handgeste zu treffen.
+Das Modell wurde zuvor mit einer bestimmten Anzahl von Gesten trainiert.
 6. **Ausgabe der Ergebnisse:** Das bearbeitete Frame wird zusammen mit dem Namen
-    der erkannten Geste ausgegeben. Das Frame enthält visuelle Markierungen
-    für die erkannte Handgeste, die zuvor gezeichnet wurden.
+der erkannten Geste ausgegeben. Das Frame enthält visuelle Markierungen
+für die erkannte Handgeste, die zuvor gezeichnet wurden.
 
 ### Verwendung
-
-Um die Gestenerkennung in einem eigenen Projekt zu verwenden, sind folgende Schritte erforderlich:
+Um die Gestenerkennung in einem eigenen Projekt zu verwenden, sind folgende Schritte
+erforderlich:
 
 1. Installieren der erforderlichen Bibliotheken: Mediapipe, TensorFlow und OpenCV.
-
-2. Lade das trainierte TensorFlow-Modell herunter oder trainiere es selbst auf einem geeigneten Datensatz von Handgesten.
-
+2. Lade das trainierte TensorFlow-Modell herunter oder trainiere es selbst auf einem
+geeigneten Datensatz von Handgesten.
 3. Integriere den Code zur Gestenerkennung in das Projekt. Erstelle eine Instanz
-    des `GestureRecognizer`-Objekts und rufe die Methode `recognize(frame)` auf,
-    wobei `frame` das Eingabebild ist. Das Ergebnis besteht aus dem bearbeiteten Frame
-    mit den visuellen Markierungen für die erkannte Handgeste sowie dem Namen der erkannten Geste.
-
-4. Verarbeite das Ergebnis entsprechend den Anforderungen des Teams. Man kann das bearbeitete Frame
-    anzeigen, speichern oder weiterverarbeiten, und den Namen der erkannten Geste für weitere Aktionen verwenden.
+des `GestureRecognizer`-Objekts und rufe die Methode `recognize(frame)` auf,
+wobei `frame` das Eingabebild ist. Das Ergebnis besteht aus dem bearbeiteten Frame
+mit den visuellen Markierungen für die erkannte Handgeste sowie dem Namen der
+erkannten Geste.
+4. Verarbeite das Ergebnis entsprechend den Anforderungen des Teams. Man kann
+das bearbeitete Frame anzeigen, speichern oder weiterverarbeiten, und den Namen
+der erkannten Geste für weitere Aktionen verwenden.
 
 ### Anpassung und Verbesserung
 
-Das Gestenerkennungsprojekt kann an die spezifischen Anforderungen und Gesten des Projekts angepasst werden. 
-Hier sind einige mögliche Verbesserungen und Erweiterungen:
+Das Gestenerkennungsprojekt kann an die spezifischen Anforderungen und Gesten
+des Projekts angepasst werden. Hier sind einige mögliche Verbesserungen und
+Erweiterungen:
 
-- Training mit einem größeren Datensatz von Handgesten, um die Genauigkeit der Erkennung zu verbessern.
-
-- Hinzufügen weiterer visueller Markierungen oder Informationen zum bearbeiteten Frame, um die Gestenerkennung zu unterstützen.
-
-- Integration anderer Bibliotheken oder Algorithmen zur verbesserten Handlandmarkenerkennung oder Gestenerkennung.
-
-- Implementierung einer Benutzerschnittstelle zur Steuerung von Aktionen basierend auf den erkannten Handgesten.
+- Training mit einem größeren Datensatz von Handgesten, um die Genauigkeit der
+Erkennung zu verbessern.
+- Hinzufügen weiterer visueller Markierungen oder Informationen zum bearbeiteten
+Frame, um die Gestenerkennung zu unterstützen.
+- Integration anderer Bibliotheken oder Algorithmen zur verbesserten
+Handlandmarkenerkennung oder Gestenerkennung.
+- Implementierung einer Benutzerschnittstelle zur Steuerung von Aktionen
+basierend auf den erkannten Handgesten.
 
 ## eduVid (engl. educational videos)
 
@@ -403,8 +401,8 @@ Vergleichen des live Images mit den Bildern aus der Registrierung, welche im
 Backend gespeichert wird, war ein Erfolg. Die Idee in diesem Vorgang das Bild
 sichtbar für den User zu downloaden, wurde nicht übernommen.
 
-Im History werden die Bilder, die zur Anmeldung genutzt werden aufgelistet.
-Das Datum der Anmeldung wurde neben den "Anmeldungsbildern" implementiert.
+Da die Projektdatei in flask, welche die Routen managed, sehr groß und
+unübersichtlich wurde, haben wir diese mithilfe von blueprints aufgeteilt.
 
 Für die Gestenerkennung hatten wir uns überlegt, diese ebenfalls für die Anmeldung
 zu nutzen. Die Templates und Routes wurden dafür erstellt. Doch wir kamen zu dem
@@ -447,3 +445,14 @@ weiter, hier könnte man in einer weiteren Ausbaustufe mittels einer socket
 connection überprüfen, ob man sich noch auf der Seite befindet (auf das Video
 ergebnis wartet) und ggf. die Verarbeitung frühzeitig abbrechen. Ähnlich wird
 dies bereits bei der Gestenerkennung umgesetzt.
+
+## Benchmarktests
+Die Benchmarks von den vorherigen Jahren wurden um die in diesem Jahr
+implementierten Algorithmus ergänzt. Es ist jedoch aufgefallen, dass die
+Implementation der Benchmarks nicht sehr sauber war. Dies sollte in Zukunft
+geändert werden. Dies kann unter anderem mit dem strategy-pattern realisiert
+werden, welche auch in dem `/src/web_application`-Ordner implementiert wurde.
+Wir würden empfehlen, dass man diesen Ordner in den `/src/face_recog`-Ordner
+bewegt und die Pfade in dem `/src/web_application`-Ordner so anpasst, dass es
+keine Importfehler gibt, falls man das Pattern auch in den Benchmarktests
+nutzen möchte.

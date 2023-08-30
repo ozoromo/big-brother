@@ -34,14 +34,12 @@ clarify it in the following:
     - `web_application`: This is the flask application. The other projects in
     this projects are implemented in here in order to make those 
     implementations accessible to a user.
-        - `blueprints`: Blueprints provides a clear direction. The content of the 
-          classes were divided into 4 folders: `logic`, `login`, `main` & `users`.
 
 ## Tutorials
 - [Introduction to implementation of the web application](tutorials/introduction_to_implementation_of_the_web_application.md)
 - [Introduction to our database](tutorials/introduction_to_our_database.md)
 - [Introduction to eduVid](tutorials/introduction_to_eduVid.md)
-- [Explanation of face recognition strategy: face recognition lib](tutorials/explanation_of_face_recognition_lib)
+- [Explanation of face recognition strategy: face recognition lib](tutorials/explanation_of_face_recognition_lib.md)
 - [Explanation of face recognition strategy: ultra\_light\_and\_openface](tutorials/explanation_of_ultra_light_and_openface.md)
 
 ## Examples
