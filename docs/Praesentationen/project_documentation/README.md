@@ -294,7 +294,7 @@ zwischen den Sätzen versteht.
 5. Daraufhin wird das Model genutzt, um die Frage zu beantworten. Es wird 
 außerdem bestimmt, wann diese Antwort im Video erwähnt wird.
 
-![UML database management](./images/diagram.png)
+![eduVid workflow diagram](./images/diagram.png)
 
 ### Auftretene Schwierigkeiten
 
