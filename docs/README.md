@@ -31,9 +31,11 @@ clarify it in the following:
     - `gesture_recognition`: The gesture recognition algorithm is implemented
     in here. Feel free to implement more gesture recognition algorithms. More
     detailed information in the [tutorials](#tutorials) section.
-    - `web_application`: This is the flask abpplication. The other projects in
+    - `web_application`: This is the flask application. The other projects in
     this projects are implemented in here in order to make those 
     implementations accessible to a user.
+        - `blueprints`: Blueprints provides a clear direction. The content of the 
+          classes were divided into 4 folders: `logic`, `login`, `main` & `users`.
 
 ## Tutorials
 - [Introduction to implementation of the web application](tutorials/introduction_to_implementation_of_the_web_application.md)

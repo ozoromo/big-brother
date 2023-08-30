@@ -137,36 +137,142 @@ Mechanismus genutzt als beim abspeichern der Bilder, da Bilder generell
 deutlich weniger Speicherplatz benötigen als Videos.
 
 ## Logik
-Für die Umsetzung der Gesichtserkennung wurde das python package "face-recognition"
-benutzt.
+Bei unserer Suche nach Möglichkeiten um Gesichter zu erkennen,
+haben wir uns parallel im Internet als auch in den Ergebnissen 
+der letzten Semester des Programmierpraktikums umgeschaut. 
 
-Das Python-Paket "face-recognition" ist eine Open-Source-Bibliothek, 
-die auf der Grundlage von OpenCV entwickelt wurde 
-und auf der Gesichtserkennungstechnologie von dlib basiert. 
-Sie ermöglicht die Erkennung und Analyse von Gesichtern in Bildern und Videos.
+Während man versucht hatte den Code aus den letzten Jahren zum Laufen
+zu bekommen (nicht gelungen), wurde man schnell fündig bei einem
+Youtube Kanal „Murtaza’s Workshop – Robotics and AI“ und paar anderen
+interessanten Artikeln. Zu den Artikeln später mehr.
 
-Die Gesichtserkennungstechnologie von dlib basiert auf dem 2017 veröffentlichten 
-"Histogram of Oriented Gradients for Human Detection" (HOG)-Feature-Extractor 
-und dem "Linear Support Vector Machines" (SVM)-Klassifikator. 
-Diese Methode wurde von Navneet Dalal und Bill Triggs in ihrer Veröffentlichung
-"Histograms of Oriented Gradients for Human Detection" vorgestellt.
+Für die Umsetzung der Gesichtserkennung wurde das python package
+"face-recognition" benutzt ähnlich auch wie von Murtaza erklärt. 
+Der Grund dafür war die Einfachheit der Nutzung und dadurch 
+der besser überschaubare Code. Zudem bekommt man eine hohe 
+Treffsicherheit von 99.38% hin. 
 
-Die dlib-Bibliothek verwendet eine Kombination aus HOG-Features und SVM-Klassifikation, 
-um Gesichter in Bildern zu erkennen. Der HOG-Algorithmus basiert auf der Idee, 
-dass das Erscheinungsbild eines Objekts durch die Verteilung von Gradienten 
-oder Kanteninformationen beschrieben werden kann. Es werden Histogramme der 
-Gradientenrichtungen erstellt und diese Histogramme dienen als Features für den Klassifikator.
+### face-recognition
+face-recognition ist eine Open-Source-Bibliothek, die auf der Grundlage
+von OpenCV entwickelt wurde und auf der Gesichtserkennungstechnologie
+von dlib basiert. Sie ermöglicht die Erkennung und Analyse von Gesichtern
+in Bildern und Videos.
 
-Der SVM-Klassifikator wird trainiert, um zwischen Gesichts- 
-und Nicht-Gesichtsregionen zu unterscheiden. Dafür werden positive Beispiele 
+Die Gesichtserkennungstechnologie von dlib basiert auf dem 2017 veröffentlichten
+"Histogram of Oriented Gradients for Human Detection" (HOG)-Feature-Extractor und 
+dem "Linear Support Vector Machines" (SVM)-Klassifikator. 
+Diese Methode wurde von Navneet Dalal und Bill Triggs in ihrer 
+Veröffentlichung "Histograms of Oriented Gradients for Human Detection" vorgestellt.
+
+Die dlib-Bibliothek verwendet eine Kombination aus HOG-Features und 
+SVM-Klassifikation, um Gesichter in Bildern zu erkennen. 
+Der HOG-Algorithmus basiert auf der Idee, dass das Erscheinungsbild 
+eines Objekts durch die Verteilung von Gradienten oder Kanteninformationen
+beschrieben werden kann. Es werden Histogramme der Gradientenrichtungen 
+erstellt und diese Histogramme dienen als Features für den Klassifikator.
+
+Der SVM-Klassifikator wird trainiert, um zwischen Gesichts- und 
+Nicht-Gesichtsregionen zu unterscheiden. Dafür werden positive Beispiele
 von Gesichtern und negative Beispiele von Nicht-Gesichtern verwendet. 
 Der SVM-Klassifikator lernt dann, diese beiden Klassen zu unterscheiden 
 und kann anschließend auf neue Bilder angewendet werden, um Gesichter zu erkennen.
 
-Die dlib-Bibliothek stellt auch eine vortrainierte Gesichtserkennungsmodell-Datei bereit, 
+Die dlib-Bibliothek stellt auch eine vortrainierte Gesichtserkennungsmodell-Datei bereit,
 die mit dem HOG-Feature-Extractor und dem SVM-Klassifikator trainiert wurde. 
-Dieses Modell wird verwendet, um Gesichter zu erkennen 
-und kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
+Dieses Modell wird verwendet, um Gesichter zu erkennen und 
+kann mit der Funktion `dlib.get_frontal_face_detector()` abgerufen werden.
+
+face-recognition arbeitet mit encodings von den Bildern, d.h. aus einem
+rgb Bild zum Beispiel jpeg oder pdf werden numpy arrays in Form von Matrizzen erstellt.
+Dazu wird die Methode `face_recognition.face_encodings()` benutzt. 
+Der Rückgabewert dieser Funktion ist dann das numpy array des Bildes. 
+Die Berechnung dieser numpy arrays ist allerdings rechenlastig und wird
+bei jedem Bild erneut gemacht, weswegen wir eine Möglichkeit gefunden haben
+eben diese encodings zu cashen. Das geschieht in encodings_class.py.
+
+### weitere Methoden
+Weitere Methoden zur Gesichtserkennung, die wir gefunden haben sind zum Beispiel 
+mit Hilfe von „Cascade Classifier“ (Erkennung von Objekten mittels machinellem Lernen),
+„Ultra-light face detector“ (gute Balance zwischen Geschwindigkeit und Genauigkeit mithilfe von neuronalen Netzen)
+oder „Principal Component Analysis“ (basierend der Annahme, dass die Variationen
+in den Gesichtsbildern hauptsächlich durch eine lineare Kombination der Eigenfaces
+dargestellt werden können)
+
+### Schwierigkeiten
+Ein Problem welches erst zur späteren Phase des Projekts aufgetreten ist, war dass
+wir die python Kamera, die von OpenCV verwendet wird nicht im Frontend nutzen konnten.
+Wir konnten jedoch trotzdem weiterhin die Gesichtserkennung anhand von Bildern
+im Backend benutzen und so haben wir uns zusammen mit dem Frontend Team entschieden
+jeweils Schnappschüsse von Gesichtern im Backend zu bearbeiten und zu speichern. 
+Die Alternative wäre ein Datenstream gewesen, welches komplizierter wäre zu
+implementieren. Zudem konnten wir nicht vorausschauen wie lange eine solche Implementierung
+dauern würde, bzw. wie aufwendig sie ist, also ob wir das überhaupt zur damaligen Deadline 
+geschafft hätten.  
+
+## Gestenerkennung
+
+### Einführung
+
+Das Gestenerkennungsprojekt umfasst die Implementierung einer Echtzeit-Gestenerkennung 
+in einem Video- oder Kamerastrom. Mithilfe von Mediapipe, einer Open-Source-Bibliothek 
+von Google, und einem trainierten TensorFlow-Modell können Handgesten erkannt und visualisiert werden.
+
+### Funktionsweise
+
+Die Gestenerkennung basiert auf folgenden Schritten:
+
+1. **Initialisierung:** Beim Starten des Programms werden die benötigten Bibliotheken
+   und Modelle initialisiert. Dazu gehören die Mediapipe-Bibliothek zur Handlandmarkenerkennung
+   und das TensorFlow-Modell zur Gestenerkennung. Das Modell wird aus einem spezifischen Verzeichnis geladen.
+
+2. **Handerkennung:** Der Video- oder Kamerastream wird in Frames aufgeteilt.
+   Jedes Frame wird vertikal gespiegelt, um eine konsistente Ausrichtung der
+   Handlandmarken zu gewährleisten. Anschließend wird das Frame in das RGB-Format konvertiert,
+    da Mediapipe RGB-Bilder erwartet. Mit der Mediapipe-Bibliothek werden die Handlandmarken
+   im Frame erkannt, und die Koordinaten der erkannten Landmarken werden zurückgegeben.
+
+4. **Zeichnen der Landmarken:** Die erkannten Handlandmarken werden auf dem Frame visualisiert,
+    indem Linien zwischen den Landmarken gezeichnet werden.
+   Dies ermöglicht eine visuelle Veranschaulichung der erkannten Handgeste.
+
+5. **Gestenerkennung:** Die erkannten Handlandmarken werden an das TensorFlow-Modell übergeben,
+    um die Gesten zu erkennen. Zunächst werden die Landmarken normalisiert
+    und in ein geeignetes Format gebracht. Anschließend wird das Modell verwendet,
+    um eine Vorhersage für die erkannte Handgeste zu treffen.
+   Das Modell wurde zuvor mit einer bestimmten Anzahl von Gesten trainiert.
+
+6. **Ausgabe der Ergebnisse:** Das bearbeitete Frame wird zusammen mit dem Namen
+    der erkannten Geste ausgegeben. Das Frame enthält visuelle Markierungen
+    für die erkannte Handgeste, die zuvor gezeichnet wurden.
+
+### Verwendung
+
+Um die Gestenerkennung in einem eigenen Projekt zu verwenden, sind folgende Schritte erforderlich:
+
+1. Installieren der erforderlichen Bibliotheken: Mediapipe, TensorFlow und OpenCV.
+
+2. Lade das trainierte TensorFlow-Modell herunter oder trainiere es selbst auf einem geeigneten Datensatz von Handgesten.
+
+3. Integriere den Code zur Gestenerkennung in das Projekt. Erstelle eine Instanz
+    des `GestureRecognizer`-Objekts und rufe die Methode `recognize(frame)` auf,
+    wobei `frame` das Eingabebild ist. Das Ergebnis besteht aus dem bearbeiteten Frame
+    mit den visuellen Markierungen für die erkannte Handgeste sowie dem Namen der erkannten Geste.
+
+4. Verarbeite das Ergebnis entsprechend den Anforderungen des Teams. Man kann das bearbeitete Frame
+    anzeigen, speichern oder weiterverarbeiten, und den Namen der erkannten Geste für weitere Aktionen verwenden.
+
+### Anpassung und Verbesserung
+
+Das Gestenerkennungsprojekt kann an die spezifischen Anforderungen und Gesten des Projekts angepasst werden. 
+Hier sind einige mögliche Verbesserungen und Erweiterungen:
+
+- Training mit einem größeren Datensatz von Handgesten, um die Genauigkeit der Erkennung zu verbessern.
+
+- Hinzufügen weiterer visueller Markierungen oder Informationen zum bearbeiteten Frame, um die Gestenerkennung zu unterstützen.
+
+- Integration anderer Bibliotheken oder Algorithmen zur verbesserten Handlandmarkenerkennung oder Gestenerkennung.
+
+- Implementierung einer Benutzerschnittstelle zur Steuerung von Aktionen basierend auf den erkannten Handgesten.
 
 ## eduVid (engl. educational videos)
 
@@ -243,6 +349,14 @@ im Vergleich zu anderen Webframeworks keine unnötigen Funktionen. Von anderen
 Bibliotheken abgedeckte Funktionen, werden nicht in Flask umgesetzt und lassen
 sich über die bestehenden Bibliotheken integrieren.
 
+### Ordnerstruktur
+Wir haben uns dazu entschieden Bluprints zu benutzen. Die Klassen `user.py`,
+`utils.py`, `__init__.py` & `user_manager.py` waren zu unübersichtlich während der
+Bearbeitung. Blueprints bietet eine übersichtlichere Struktur im Projekt. Die Inhalte
+der Klassen wurden in die Ordner `logic`, `login`, `main` & `users` unterteilt.
+Der Entwicklungsprozess kann gezielter und effektiver gestaltet werden, wenn er
+eine bestimmte Struktur hat.
+
 ### Milestone 1
 Als ersten Meilenstein haben wir uns gesetzt den Code vom Team21 zu analysieren
 und zu verstehen, sowie die Website zu überarbeiten. Um die Website zu
@@ -288,6 +402,18 @@ bekommen. Daraufhin haben wir die Gesichtserkennung fertig gestellt. Das
 Vergleichen des live Images mit den Bildern aus der Registrierung, welche im
 Backend gespeichert wird, war ein Erfolg. Die Idee in diesem Vorgang das Bild
 sichtbar für den User zu downloaden, wurde nicht übernommen.
+
+Im History werden die Bilder, die zur Anmeldung genutzt werden aufgelistet.
+Das Datum der Anmeldung wurde neben den "Anmeldungsbildern" implementiert.
+
+Für die Gestenerkennung hatten wir uns überlegt, diese ebenfalls für die Anmeldung
+zu nutzen. Die Templates und Routes wurden dafür erstellt. Doch wir kamen zu dem
+Entschluss, dass die Anmeldung mit einer Geste keine Sicherheit gewährleistet.
+So wurde die Gestenerkennung für den User nach der Anmeldung implementiert.
+Dabei sind 2 Screens zu sehen. Auf dem linken Screen ist die live Cam, 
+bei der Fotos in einem bestimmten Zeitintervall erstellt werden. Bilder werden auf
+den rechten Screen übertragen und angezeigt. Um den Vorgang in Echtzeit zu
+realisieren nutzen wir Socket.IO.
 
 Nach dem 3. Milestone und nach dem die EduVid Logik fertig war, wurde die 2.
 Ausbaustufe von EduVid implementiert. Zusätzlich zum Video Upload muss nun eine
