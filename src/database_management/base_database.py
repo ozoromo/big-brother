@@ -23,7 +23,9 @@ class BaseDatabase:
         the same structure as specified in the documentation.
         """
         if not mongo_client:
-            self.cluster = pymongo.MongoClient("mongodb+srv://admin:7EgqBof7tSUKlYBN@bigbrother.qse5xtp.mongodb.net/?retryWrites=true&w=majority",
+            #old_mongo = "mongodb+srv://admin:7EgqBof7tSUKlYBN@bigbrother.qse5xtp.mongodb.net/?retryWrites=true&w=majority"
+            new_mongo = "mongodb://root:example@mongodb"
+            self.cluster = pymongo.MongoClient(new_mongo,
                                                connectTimeoutMS=30000,
                                                socketTimeoutMS=None,
                                                connect=False,
