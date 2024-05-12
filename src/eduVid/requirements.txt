@@ -1,4 +1,0 @@
-transformers
-torch
-faster-whisper
-moviepy
