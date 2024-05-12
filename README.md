@@ -24,10 +24,10 @@ or the CLI. In case you use the CLI:
 1. To into the root of the git repository.
 2. Execute `docker build -t bigbrother .`. This takes quite a long time and 
 requires an internet connection.
-3. Execute `docker run -p 3000:3000 bigbrother:latest`. The `3000` refers to
-the port exposed in the docker container and the second `3000` is the port
+3. Execute `docker run -p 5000:5000 bigbrother:latest`. The `5000` refers to
+the port exposed in the docker container and the second `5000` is the port
 that you expose locally.
-4. After waiting for a few seconds you should be able to go to `127.0.0.1:3000`
+4. After waiting for a few seconds you should be able to go to `127.0.0.1:5000`
 in your browser and use the website.
 
 ### Local packages
@@ -47,7 +47,7 @@ on windows: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-re
     - Build it directly from the source
 4. Install the rest of the requirements with `pip install -r requirements.txt`.
 5. Execute `python ./src/bigbrother/run.py` to start the flask app. You can 
-then go to `127.0.0.1:3000` in your webbrowser.
+then go to `127.0.0.1:5000` in your webbrowser.
 
 # Documentation
 We have a documentation in the [docs](docs/)-folder. We highly recommend you to
