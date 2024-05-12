@@ -1,0 +1,67 @@
+\ProvidesPackage{myTheme1}
+
+\usetheme{Madrid}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor*{subtitle}{fg=white}
+
+\setbeamercolor{section title}{fg=white,bg=blue!30}
+\setbeamercolor{subsection title}{fg=white,bg=blue!30}
+\setbeamercolor{subsubsection title}{fg=white,bg=blue!30}
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{frame numbering}[fraction]
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{section title}
+    \usebeamerfont{section title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+\AtBeginSubsection{
+    \begin{frame}
+    \centering
+    {\usebeamerfont{subsection name}\usebeamercolor[fg]{subsection %
+    name}\subsectionname~\insertsubsectionnumber}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=4pt,center,shadow=true,rounded=true]{subsection title}
+      \usebeamerfont{subsection title}\insertsubsection\par
+    \end{beamercolorbox}
+    \end{frame}
+}
+\AtBeginSubsubsection{
+    \begin{frame}
+    \centering
+    {\usebeamerfont{subsubsection name}\usebeamercolor[fg]{subsubsection %
+    name}\subsubsectionname~\insertsubsubsectionnumber}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=4pt,center,shadow=true,rounded=true]{susubsection title}
+      \usebeamerfont{subsection title}\insertsubsubsection\par
+    \end{beamercolorbox}
+    \end{frame}
+}
+% Section numbering
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{subsection in toc}[subsections numbered]
+\makeatletter
+\setbeamertemplate{section page}{
+  \centering
+  \begin{minipage}{22em}
+    \raggedright
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \thesection. \insertsectionhead\\[-1ex]
+    \usebeamertemplate*{progress bar in section page}
+    \par
+    \ifx\insertsubsectionhead\@empty\else%
+      \usebeamercolor[fg]{subsection title}%
+      \usebeamerfont{subsection title}%
+      \thesection. \thesubsection.\insertsubsectionhead
+    \fi
+  \end{minipage}
+  \par
+  \vspace{\baselineskip}
+}
+\makeatother

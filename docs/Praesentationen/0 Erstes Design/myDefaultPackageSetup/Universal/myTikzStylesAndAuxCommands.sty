@@ -1,0 +1,18 @@
+\ProvidesPackage{myTikzStylesAndAuxCommands}
+
+\newcommand{\helpingGridxMin}{0}%
+\newcommand{\helpingGridxMax}{6}%
+\newcommand{\helpingGridyMin}{0}%
+\newcommand{\helpingGridyMax}{6}%
+\newcommand{\helpingGridStep}{0.5}%
+
+\newcommand{\helpingGrid}{
+  \foreach \i in {\helpingGridxMin,...,\helpingGridxMax} {
+        \node [below] at (\i,\helpingGridyMin) {\footnotesize$\i$};
+    }
+    \foreach \i in {\helpingGridyMin,...,\helpingGridyMax} {
+        \node [left] at (\helpingGridxMin,\i) {\footnotesize$\i$};
+    }
+    \draw[gray,step=\helpingGridStep] (\helpingGridxMin,\helpingGridyMin) grid
+    (\helpingGridxMax,\helpingGridyMax);
+}

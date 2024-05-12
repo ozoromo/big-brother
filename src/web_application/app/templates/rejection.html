@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Fehler{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 80vh;">
+    <h1 style="text-align: center;">{{rejectionDict['reason']}}</h1>
+</div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+{% endblock %}

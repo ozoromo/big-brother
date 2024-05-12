@@ -1,0 +1,160 @@
+\ProvidesPackage{GeneralAdjustmentsInUniversal}
+
+% Including things
+\RequirePackage{newclude}
+
+% Different languages
+\RequirePackage[latin1,utf8]{inputenc}
+\RequirePackage[ngerman]{babel}
+\RequirePackage{verbatim}
+% !! If ENGLISH
+%\RequirePackage[english]{babel}
+
+% For footers to be able to be 
+% in the section heading
+\RequirePackage[stable]{footmisc}
+
+% Links
+\RequirePackage{hyperref}
+\RequirePackage{xurl} % URL over multiple lines
+
+% Math stuff!!
+\RequirePackage{amssymb}
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\RequirePackage{mathtools}
+\RequirePackage{IEEEtrantools}
+
+% for addmargin!!
+\RequirePackage{scrextend}
+
+% Pictures
+\RequirePackage{graphicx}
+\RequirePackage{caption}
+%\RequirePackage[font={<size>}]{caption}
+
+% layout stuff
+%\RequirePackage{enumitem}
+\RequirePackage{array}
+\RequirePackage{tcolorbox}
+
+% For tables
+\RequirePackage{longtable}
+\RequirePackage{makecell}
+\RequirePackage{booktabs}
+
+\RequirePackage{multirow}
+\RequirePackage{multicol}
+
+% For extra symbols
+\usepackage{pifont}
+
+% I don't want \tag to show parenthesis
+\newtagform{noparen}{}{}
+\usetagform{noparen}
+
+% Path for Pictures
+\graphicspath{{./image/}}
+
+% Configuring look of hyperlinks
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=cyan,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%            Arrows               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\arrow}{$\rightarrow${ }}
+\newcommand{\narrow}{\newline{}$\rightarrow${ }}
+
+% characters on top
+\newcommand{\overarrow}[1]{$\overset{#1}{\rightarrow}${ }}
+\newcommand{\arrowF}{\overarrow{F}} % follows
+\newcommand{\arrowD}{\overarrow{D}} % defined as
+\newcommand{\arrowB}{\overarrow{B}} % example
+\newcommand{\arrowK}{\overarrow{K}} % Comment
+\newcommand{\arrowsF}{\overarrow{sF}} % should Follow
+\newcommand{\arrowA}{$\overset{A}\leftrightarrow${ }}
+
+% characters on top and newline
+\newcommand{\noverarrow}[1]{\newline{}$\overset{#1}{\rightarrow}${ }}
+\newcommand{\narrowF}{\noverarrow{F}} % follows
+\newcommand{\narrowD}{\noverarrow{D}} % defined as
+\newcommand{\narrowB}{\noverarrow{B}} % example
+\newcommand{\narrowK}{\noverarrow{K}} % Comment
+\newcommand{\narrowsF}{\noverarrow{sF}} % should Follow
+\newcommand{\narrowA}{$\newline\overset{A}\leftrightarrow${ }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                Fonts            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\txtrm}[1]{\textrm{#1}}
+\newcommand{\txtsf}[1]{\textsf{#1}}
+\newcommand{\txttt}[1]{\texttt{#1}}
+\newcommand{\txtmd}[1]{\textmd{#1}}
+\newcommand{\txtbf}[1]{\textbf{#1}}
+\newcommand{\txtit}[1]{\textit{#1}}
+\newcommand{\txtup}[1]{\textup{#1}}
+\newcommand{\txtsl}[1]{\textsl{#1}}
+\newcommand{\txtsc}[1]{\textsc{#1}}
+%\renewcommand{\emph}[1]{}
+
+% my own highlighting/emphasizing fonts
+\newcommand{\txtemph}[1]{\txtbf{#1}}
+
+% table font
+\newcommand{\txttH}[1]{\textbf{#1}}
+% item font (in enumitem and itemize)
+\newcommand{\txtItem}[1]{\txtbf{#1}}% if there it an item and then a description of it (\item <something>: Description/Specification)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%              Table              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcolumntype{\p}[1]{p{#1\textwidth}}
+\newcolumntype{\pc}[1]{>{\centering\arraybackslash}p{#1\textwidth}}
+\newcolumntype{\pr}[1]{>{\raggedright\arraybackslash}p{#1\textwidth}}
+\newcolumntype{\pl}[1]{>{\raggedleft\arraybackslash}p{#1\textwidth}}
+\newcolumntype{\m}[1]{m{#1\textwidth}}
+\newcolumntype{\mc}[1]{>{\centering\arraybackslash}m{#1\textwidth}}
+\newcolumntype{\mr}[1]{>{\raggedright\arraybackslash}m{#1\textwidth}}
+\newcolumntype{\ml}[1]{>{\raggedleft\arraybackslash}m{#1\textwidth}}
+\newcolumntype{\b}[1]{b{#1\textwidth}}
+\newcolumntype{\bc}[1]{>{\centering\arraybackslash}b{#1\textwidth}}
+\newcolumntype{\br}[1]{>{\raggedright\arraybackslash}b{#1\textwidth}}
+\newcolumntype{\bl}[1]{>{\raggedleft\arraybackslash}b{#1\textwidth}}
+
+\newcommand{\breakT}{\\ \hline}%break line
+
+% first Parameter: tablespec
+\newenvironment{tab}[1]
+{\begin{center}\begin{longtable}{#1}}
+{\end{longtable}\end{center}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Box around something       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Merkkasten
+\newenvironment{memoryBox}
+{\begin{center}\begin{tcolorbox}[width=1\textwidth]}
+{\end{tcolorbox}\end{center}}
+
+\newenvironment{memoryBoxTitle}[1]
+{\begin{center}\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, width=1\textwidth,title=\textbf{#1}]}
+{\end{tcolorbox}\end{center}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             To-Do List          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newlist{todolist}{itemize}{2}
+%\setlist[todolist]{label=$\square$}
+%\newcommand{\cmark}{\ding{51}}%
+%\newcommand{\xmark}{\ding{55}}%
+%\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+%\hspace{-2.5pt}}
+%\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}

@@ -1,0 +1,28 @@
+\ProvidesPackage{myDefaultsArtRepBook}
+
+\RequirePackage{myDefaultPackageSetup/Universal/myDefaultsUniversal}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             Layout              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage[margin=1.in]{geometry}
+\RequirePackage{setspace}
+\onehalfspace
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     Enumitem and Itemize        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% to modify spacing between the items of the 
+% itemize and enumerate environments
+\setitemize{topsep=2pt,parsep=2pt,partopsep=0pt,itemsep=1pt}
+\setenumerate{topsep=2pt,parsep=2pt,partopsep=0pt,itemsep=1pt}
+
+% the topsep is there to reverse the parsep-effect
+\newenvironment{itemizeIndent}
+{\begin{itemize}[topsep=-2pt]}
+{\end{itemize}}
+

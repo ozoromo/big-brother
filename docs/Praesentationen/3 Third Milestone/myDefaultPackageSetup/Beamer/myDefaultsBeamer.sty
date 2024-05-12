@@ -1,0 +1,8 @@
+\ProvidesPackage{myDefaultsBeamer}
+
+\RequirePackage{myDefaultPackageSetup/Universal/myDefaultsUniversal}
+\RequirePackage{geometry}
+
+\RequirePackage{ragged2e}
+\RequirePackage{etoolbox}
+\apptocmd{\frame}{}{\justifying}{} % Allow optional arguments after frame.

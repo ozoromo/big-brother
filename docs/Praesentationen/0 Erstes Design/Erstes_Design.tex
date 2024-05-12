@@ -1,0 +1,189 @@
+\documentclass[xcolor=x11names,table]{beamer}
+
+\usepackage{myDefaultPackageSetup/Beamer/myDefaultsBeamer}
+\include{myDefaultPackageSetup/Beamer/myTheme1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       Show notes on pympress      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{pgfpages}
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{show notes on second screen=right}
+%%\setbeameroption{show only notes}
+
+\title[\textcolor{white}{Erstes Design}]
+{Gruppe A3 - Big Brother: Erstes Design}
+\author{Gruppe A3}
+\institute[TU Berlin]{TU Berlin}
+\date{\today}
+
+\begin{document}
+\small
+\begin{frame}
+\titlepage
+\end{frame}
+
+%\begin{frame}{<++>}
+%\tableofcontents
+%\end{frame}
+
+\begin{frame}{Spezifikation}
+\begin{itemize}
+    \item Aufbauend auf SS21 und SS22
+    \narrow Es wird ausgewählt, welches implementation genutzt
+    wird
+    \item Angestrebte Funktionalitäten:
+    \begin{itemize}
+        \item Gestenerkennung mit Live Video 
+        \item Regulierung von Einstellungen mit Gesten
+        \narrowB Lautstärke
+        \item Nebenläufiger Webseitenzugriff
+        \item Gesten als Passwort nutzen
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Organisation}%
+\label{sec:Organisation}
+
+\begin{frame}{Projektmanagement}
+\begin{itemize}
+    \item Gruppenaufteilung nach Rollen:
+    \begin{itemize}
+        \item Rollen: Frontend, Logik, Backend
+        \item Gruppenverantwortlicher (eine Person):
+        \begin{itemize}
+            \item prüfen der Schnittstelle
+            \item Absprache mit anderen Gruppen
+            \item adequate Dokumentation
+        \end{itemize}
+        \item Kommunikation in kleineren Gruppen
+    \end{itemize}
+    \item Kommunikation über Discord
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Teamaufteilung}
+\begin{itemize}
+    \item Als Namen werden die Discord-Handles genutzt, wobei die
+    Verantwortlichen \txtbf{fett} markiert sind
+    \item Frontend: \txtbf{maltrim}, Leland, GOAT
+    \item Logik: \txtbf{Nimando}, Max1.1, erik, milosz, Mati,
+    adamm, minhdarine
+    \item Backend: \txtbf{Mike}, Julian, ic4russ,CrazyFisch
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Tools}
+\begin{itemize}
+    \item Sprache: Python
+    \item Frontend: 
+    \href{https://flask.palletsprojects.com/en/2.2.x/}{Flask}, 
+    HTML, CSS, JS
+    \item Datenbank: \href{https://www.mongodb.com/}{MongoDB}
+    \item Gesichtserkennung und Gestenerkennung: 
+    \href{https://pypi.org/project/opencv-python/}{openCV},
+    \href{https://pytorch.org/}{TensorFlow},
+    \href{https://pytorch.org/}{PyTorch}
+\end{itemize}
+\end{frame}
+
+
+\section{Planung - Projektablauf}
+\begin{frame}{1. Milestone}
+\begin{itemize}
+    \item Verstehen und umsetzen des Codes letzter vergangener
+    Jahre
+    \item Definieren und Dokumentieren von Schnittstellen
+    \begin{tab}{l|l|l}
+    \txttH{Frontend} & \txttH{Logik} & \txttH{Backend} \breakT
+    %
+    \begin{minipage}[t]{0.3\textwidth}
+    \begin{itemize}
+        \item Überarbeiten der Webseite
+    \end{itemize}
+    \end{minipage} & 
+    %
+    \begin{minipage}[t]{0.3\textwidth}
+    \begin{itemize}
+        \item Gesichtserkennung ausprobieren
+        \item Aufteilung in Subgruppen
+    \end{itemize}
+    \end{minipage} & 
+
+    \begin{minipage}[t]{0.3\textwidth}
+    \begin{itemize}
+        \item Datenbank zum laufen bekommen
+        \item Anfangen passende Trainings- und Testdaten zu
+        recherchieren
+    \end{itemize}
+    \end{minipage}
+    %
+    \end{tab}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. Milestone}
+\begin{tab}{l|l|l}
+\txttH{Frontend} & \txttH{Logik} & \txttH{Backend} \breakT
+%
+\begin{minipage}[t]{0.3\textwidth}
+\begin{itemize}
+    \item Verbindung mit Daten im Backend
+    \item Live Kamera-Aufnahmen an Logik übertragen
+    \item Design verbessern
+\end{itemize}
+\end{minipage} & 
+%
+\begin{minipage}[t]{0.3\textwidth}
+\begin{itemize}
+    \item Zuordnen von Gesichtern zu Personen
+    \item Gestenerkennung
+\end{itemize}
+\end{minipage} & 
+
+\begin{minipage}[t]{0.3\textwidth}
+\begin{itemize}
+    \item Daten(-bank) strukturieren
+    \item Erstellen wichtiger Datenbankanfragen
+\end{itemize}
+\end{minipage}
+%
+\end{tab}
+\end{frame}
+
+\begin{frame}{3. Milestone}
+\begin{tab}{l|l|l}
+\txttH{Frontend} & \txttH{Logik} & \txttH{Backend} \breakT
+%
+\begin{minipage}[t]{0.3\textwidth}
+\begin{itemize}
+    \item Zugriff von mehreren Nutzern auf Funktionalitäten
+\end{itemize}
+\end{minipage} & 
+%
+\begin{minipage}[t]{0.3\textwidth}
+\begin{itemize}
+    \item an ``Fingergesten'' Passwörter erkennen
+    \item Lautstärke mit Gesten kontrollieren
+\end{itemize}
+\end{minipage} & 
+
+\begin{minipage}[t]{0.3\textwidth}
+\begin{itemize}
+    \item Umgang mit parallelen Datenbankanfragen
+    \item Andere Gruppen helfen 
+\end{itemize}
+\end{minipage}
+%
+\end{tab}
+\end{frame}
+
+\begin{frame}{Sonstiges zum Projektablauf}
+\begin{itemize}
+    \item Am Ende jedes Milestones soll ein Endprodukt entstehen,
+    welches ausführbar und präsentierbar ist.
+\end{itemize}
+\end{frame}
+\end{document}
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="content">
+<form method="POST" enctype="multipart/form-data" id="myForm">
+        <table>
+            <tr>
+                <td>Name/EmailId</td>
+                <td>:  <input type="text" name="userID"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="Upload" onclick="upload()"></td>
+            </tr>
+        </table>
+    </form>
+    <div id="my_camera"></div>
+    <input type="button" onclick="snap()" value="Snap">
+    <div id="results"></div>
+</div>
+    <script>
+        function ShowCam() {
+            Webcam.set({
+                width: 320,
+                height: 240,
+                image_format: 'jpeg',
+                jpeg_quality: 100
+            });
+            Webcam.attach('#my_camera');
+        }
+        window.onload= ShowCam;
+
+        function snap() {
+            Webcam.snap( function(data_uri) {
+                // display results in page
+                document.getElementById('results').innerHTML =
+                '<img id="image" src="'+data_uri+'"/>';
+              } );
+        }
+
+        function upload() {
+            console.log("Uploading...")
+            var image = document.getElementById('image').src;
+            var form = document.getElementById('myForm');
+            var formData = new FormData(form);
+            formData.append("file", image);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "/signup");
+            xmlhttp.send(formData);
+            console.log(formData.get('file'));
+            console.log(formData.get('userID'));
+        }
+    </script>
+</body>
+</html>
