@@ -7,7 +7,7 @@ import pickle
 from pytz import timezone
 import pymongo
 
-from database_management.exceptions import UserDoesntExistException, UsernameExistsException
+#from database_management.exceptions import UserDoesntExistException, UsernameExistsException
 
 
 class BaseDatabase:
@@ -37,11 +37,11 @@ class BaseDatabase:
         self._RETRY_AFTER_FAILURE = 10
 
         # Values
-        self._db = self.cluster["BigBrother"]
+        self._db = self.cluster["bigbrotherdb"]
         self._user = self._db["user"]
-        self._login_attempt = self._db["login_attempt"]
+        self._login_attempt = self._db["loginAttempt"]
         self._resource = self._db["resource"]
-        self._resource_context = self._db["resource_context"]
+        self._resource_context = self._db["resourceContext"]
 
     def close(self):
         """
