@@ -35,12 +35,11 @@ class BaseDatabase:
         self._RETRY_AFTER_FAILURE = 10
 
         # Values
-        self._db = self.cluster["bigbrotherdb"]
+        self._db = self.cluster["BigBrother"]
         self._user = self._db["user"]
-        self._login_attempt = self._db["loginAttempt"]
+        self._login_attempt = self._db["login_attempt"]
         self._resource = self._db["resource"]
-        self._resource_context = self._db["resourceContext"]
-
+        self._resource_context = self._db["resource_context"]
 
 
     def close(self):
