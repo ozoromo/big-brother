@@ -159,3 +159,5 @@ class VideoDatabase(BaseDatabase):
         fs.delete(str(vid_uuid))
 
         return True
+
+    

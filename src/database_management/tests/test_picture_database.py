@@ -7,6 +7,7 @@ from parameterized import parameterized
 import mongomock
 from PIL import Image
 import numpy as np
+from pymongo import MongoClient
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from database_management.picture_database import PictureDatabase
@@ -17,10 +18,21 @@ class PictureDatabaseTest(unittest.TestCase):
         self.assertEqual(check, expected, 
                          f"Expected {expected}, but {check} found.")
 
-    def setUp(self):
-        client = mongomock.MongoClient()
-        self.db = PictureDatabase(mongo_client=client)
+    # def setUp(self):
+    #     client = mongomock.MongoClient()
+    #     self.db = PictureDatabase(mongo_client=client)
     
+    def setUp(self):
+        # Verbindung mit echter MongoDB-Datenbank
+        client = MongoClient("mongodb+srv://newUser:MGmWyibLl0xnu1GV@bigbrother.zrhmwhf.mongodb.net/?retryWrites=true&w=majority&appName=bigbrother") 
+        self.db = PictureDatabase(client)
+    
+    # wird automatisch nach jedem einzelnen Test aufgerufen
+    def tearDown(self):
+        # Bereinigen der Test-Datenbank nach jedem Test
+        self.db._db['resource'].delete_many({}) 
+        self.db._db['user'].delete_many({})   
+
     def test_basic_insertion_and_retrieval_pic(self):
         user_ids = [self.db.register_user("sylphid", None),
                    self.db.register_user("number", None),]
@@ -29,7 +41,7 @@ class PictureDatabaseTest(unittest.TestCase):
         img_np_sylphid = []
         pic_id_sylphid = []
         for i in range(3):
-            img = Image.open(f"images/sylphid{i}.jpg")
+            img = Image.open(f"src\\database_management\\tests\\images\\sylphid{i}.jpg")
             img_np = np.asarray(img, dtype=np.float64)
             img_np_sylphid.append(img_np)
 
