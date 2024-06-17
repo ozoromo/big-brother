@@ -10,7 +10,7 @@ from flask_socketio import emit
 
 import cv2
 import cv2.misc
-from PIL import Image
+from PIL import Image,UnidentifiedImageError
 import numpy as np
 import base64
 import urllib
@@ -39,27 +39,61 @@ def gestureReco():
 
 @socketio.on("gesture_recognition", namespace="/gesture_recognition")
 def recognizing_gestures(data):
-    img_url = data["image"].split(",")
-    if len(img_url) < 2:
-        return
-    
-    response = urllib.request.urlopen(data["image"])
-    buffer = io.BytesIO()
-    buffer.write(response.file.read())
-    pil_img = Image.open(io.BytesIO(buffer.getvalue()))
-    buffer.close()
-    np_img = np.asarray(pil_img)
+    try:
+        img_url = data.get("image")
+        if not img_url:
+            print("Error: No image data found in request.")
+            return
+        
+        # Check and split the base64 string
+        img_data_parts = img_url.split(",")
+        if len(img_data_parts) != 2:
+            print("Error: Image data is not in the expected base64 format.")
+            return
 
-    frame, className = gesture.recognize(np_img)
-    frame = cv2.flip(frame, 1)
-    cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+        # Decode the base64 image data
+        img_str = img_data_parts[1]
+        try:
+            img_data = base64.b64decode(img_str)
+        except Exception as e:
+            print(f"Error decoding base64 image data: {e}")
+            return
+        
+        # Load the image into a numpy array
+        try:
+            pil_img = Image.open(io.BytesIO(img_data))
+            np_img = np.array(pil_img)
+        except UnidentifiedImageError as e:
+            print(f"Error: Unable to identify image. {e}")
+            return
+        except Exception as e:
+            print(f"Error loading image into PIL: {e}")
+            return
 
-    pil_img = Image.fromarray(frame.astype('uint8'), 'RGB')
-    buffered = io.BytesIO()
-    pil_img.save(buffered, format="JPEG")
-    response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
+        # Convert the image to RGB (required by Mediapipe)
+        np_img = cv2.cvtColor(np_img, cv2.COLOR_BGR2RGB)
 
-    emit("ack_gesture_recognition", {"image": response_data_url})
+        # Perform gesture recognition
+        try:
+            annotated_image, class_name = gesture.recognize(np_img)
+        except Exception as e:
+            print(f"Error during gesture recognition: {e}")
+            return
+
+        # Convert the annotated image back to RGB for Pillow
+        annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
+        cv2.putText(annotated_image, class_name, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+        pil_annotated_img = Image.fromarray(annotated_image)
+
+        # Prepare annotated image for sending via socket
+        buffered = io.BytesIO()
+        pil_annotated_img.save(buffered, format="JPEG")
+        response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+        emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name})
+
+    except Exception as e:
+        print(f"Error in recognizing_gestures: {e}")
 
 
 @logic.route("/videos/<filename>")
