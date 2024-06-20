@@ -29,22 +29,25 @@ def authenticate_picture(user_uuid: uuid.UUID, picture: np.ndarray):
 
     face_recognition_context = FaceRecognitionContext(Cv2Strategy())
 
+    # Detection with Haar Model and Recognition with LBPH
     face_recognition_context.set_strategy(Cv2Strategy())
     cv_result = face_recognition_context.execute_strategy(
         training_data, picture
     )
 
+    # Detection with Ultra Light Model and neural network-based Torch Library
     face_recognition_context.set_strategy(OpenfaceStrategy())
     openface_result = face_recognition_context.execute_strategy(
         training_data, picture
     )
 
+    # Detection with WiRe Algorithms
     face_recognition_context.set_strategy(PCAStrategy(user_uuid))
     pca_result = face_recognition_context.execute_strategy(
         training_data, picture
     )
 
-    # algorithm is weighted
+    # All found results are weighted
     algo_score = int(cv_result) * 60 + int(openface_result) * 20 + int(pca_result) * 20
     THRESHHOLD_FOR_WEIGHTED_SCORE = 40
     return algo_score >= THRESHHOLD_FOR_WEIGHTED_SCORE
