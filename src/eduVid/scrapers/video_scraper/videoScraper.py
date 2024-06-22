@@ -16,6 +16,7 @@ import requests
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "handle_presentation"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "question_answering"))
 from slides_extractor import SlideExtractor
+from slides_ocr import SlideOCR
 from qa_algo_core import HelperFN,SpeechRecog
 
 class VideoScraper():
@@ -109,6 +110,7 @@ class VideoScraper():
 def Test():
     DOWNLOAD_PATH = "./video_dir"
     COURSE_ID = "38283"
+    TESSERACT_PATH = '/opt/homebrew/bin/tesseract' # PATH TO TESSERACT DIRECTORY
     if not os.path.exists(DOWNLOAD_PATH):
         os.makedirs(DOWNLOAD_PATH)
     # User input for password and username
@@ -136,9 +138,25 @@ def Test():
             helper.extract_audio_from_mp4(video_file, audio_file)
             recog = SpeechRecog(audio_file)
             context, tags = recog.transcribe()
-            # Mp4 Video -> Png Slide [SlideOCR]
-            # TODO: Slides mit Timestamps...
+            # Mp4 Video -> Png Slide
             extractor = SlideExtractor(video_file, slides_dir)
+            extractor.extract_slides_from_video()
+
+            # Png Slide -> Txt Slide [SlideOCR]
+            # TODO: More accurate and efficient OCR of Slides
+            slide_ocr = SlideOCR(TESSERACT_PATH, slides_dir)
+            slide_text = slide_ocr.ocr_text_from_slides()
+
+            # TODO: Themen Extraktion für Indexierung
+
+            video_data = {
+                "video_file": video_file,
+                "video_skript": context,
+                "tags": tags,
+                "slide_context": slide_text
+            }
+            # TODO: Where to save the gathered datas ?
+        video_scraper.logout()
 
     finally:
         video_scraper.driver.quit()
