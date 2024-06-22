@@ -102,25 +102,6 @@ class SegmentOCR():
         x, y, w, h = segment.x, segment.y, segment.w, segment.h
         rio = image[y:y+h, x:x+w]
         segment.text = pytesseract.image_to_string(rio)
-        
-
-    def segment_detection_test(self, edges):
-
-        # Adaptive Schwellenwertbildung
-        adaptive_thresh = cv2.adaptiveThreshold(edges, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-
-        # Morphologische Operationen zur Verbesserung der Segmentierung
-        kernel = np.ones((5,5), np.uint8)
-        morph = cv2.morphologyEx(adaptive_thresh, cv2.MORPH_CLOSE, kernel)
-
-        contours, _ = cv2.findContours(morph, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        segments = []
-        for contour in contours:
-            x, y, w, h = cv2.boundingRect(contour)
-            if w * h > 1000:
-                segments.append(Segment(x,y,w,h))
-
-        return segments
 
 
     def hierarchical_edge_detection(self, input_image_path):
@@ -134,7 +115,7 @@ class SegmentOCR():
         canny_output = np.zeros_like(image)
         canny_output[canny_edges != 0] = [255, 255, 255]
 
-        segments = self.segment_detection_test(edges=canny_edges)
+        segments = self.segment_detection(edges=canny_edges)
         root = self.create_segment_tree(segments, Segment(0, 0, img_width, img_height))
 
         # TODO: Efficient way to extract texts from sorted tree of segments
