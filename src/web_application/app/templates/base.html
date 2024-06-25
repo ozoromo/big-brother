@@ -1,85 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        {% block head %}
-            <title>{% block title %}{% endblock %}</title>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <!-- Bootstrap CSS -->
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-            <!-- Our CSS -->
-            <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
-        {% endblock %}
-    </head>
-    <body>
-        {% block navbar %}
-            <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #7d7d7d; color: white">
-                <a class="navbar-brand" href="{{ url_for('main.index') }}" >BigBrother</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Meet the Teams
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="\team21">Team 2021</a>
-                                <a class="dropdown-item" href="\team23">Team 2023</a>
-                            </div>
-                        </div>
-
-                        <li class="nav-item">
-                          <a class="nav-link" href="{{ url_for('main.algorithms') }}">Our Algorithms</a>
-                        </li>
-                    </ul>
-                    {% if not current_user.is_authenticated %}
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                             Login
-                        </a>
+<head>
+    {% block head %}
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!-- Our CSS -->
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    {% endblock %}
+</head>
+<body>
+    {% block navbar %}
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">
+            <img src="{{ url_for('static', filename='img/BigBrotherIcon.jpg') }}" alt="Big Brother Icon" class="icon">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle custom-button" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Meet the Teams
+                    </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="\logincamera">Login with Camera</a>
-                        <a class="dropdown-item" href="\login">Login with Photo</a>
-                    </div>
-                    </div>
-                    {% endif %}
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {% if current_user.is_authenticated %}
-                                {{ current_user.name }}!
-                            {% else %}
-                                Sign Up
-                            {% endif %}
-                        </a>
-                        {% if current_user.is_authenticated %}
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="\userpage">Your History</a>
-                                <a class="dropdown-item" href="\gestureReco">Gesture Recognition</a>
-                                <a class="dropdown-item" href="\eduVid">EduVid</a>
-                                <a class="dropdown-item" href="\deleteuser?usr={{ current_user.uuid }}">{{ current_user.name }}>Delete my account!</a>
-                                <a class="dropdown-item" href="\logout">Logout</a>
-                            </div>
-                        {% else %}
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="\create">Sign up with Photo</a>
-                            </div>
-                        {% endif %}
+                        <a class="dropdown-item" href="\team21">Team 2021</a>
+                        <a class="dropdown-item" href="\team23">Team 2023</a>
+                        <a class="dropdown-item" href="\team24">Team 2024</a>
                     </div>
                 </div>
-            </nav>
-        {% endblock %}
-
-        <div class="content">
-            {% block content %}
-            {% endblock %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.algorithms') }}">Our Algorithms</a>
+                </li>
+            </ul>
+            {% if not current_user.is_authenticated %}
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle custom-button" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Login
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="\logincamera">Login with Camera</a>
+                    <a class="dropdown-item" href="\login">Login with Photo</a>
+                </div>
+            </div>
+            {% endif %}
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle custom-button" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if current_user.is_authenticated %}
+                        {{ current_user.name }}!
+                    {% else %}
+                        Sign Up
+                    {% endif %}
+                </a>
+                {% if current_user.is_authenticated %}
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="\userpage">Your History</a>
+                        <a class="dropdown-item" href="\gestureReco">Gesture Recognition</a>
+                        <a class="dropdown-item" href="\eduVid">EduVid</a>
+                        <a class="dropdown-item" href="\deleteuser?usr={{ current_user.uuid }}">Delete my account ({{ current_user.name }})</a>
+                        <a class="dropdown-item" href="\logout">Logout</a>
+                    </div>
+                {% else %}
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="\create">Sign up with Photo</a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-
-        {% block js %}
-            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    </nav>
+      
+    {% endblock %}
+    <div class="content">
+        {% block content %}
         {% endblock %}
-    </body>
+    </div>
+    {% block js %}
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    {% endblock %}
+</body>
 </html>
