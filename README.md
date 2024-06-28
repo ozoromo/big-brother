@@ -22,12 +22,13 @@ a python environment setup.
 In this case you only need to setup docker. You may either use a docker GUI
 or the CLI. In case you use the CLI:
 1. To into the root of the git repository.
-2. Execute `docker build -t bigbrother .`. This takes quite a long time and 
+2. In Src/Database_Managmet/base_database.py in line 26 change Benutzername to newUser and Password to MGmWyibLl0xnu1GV.
+3. Execute `docker build -t bigbrother .`. This takes quite a long time and 
 requires an internet connection.
-3. Execute `docker run -p 5000:5000 bigbrother:latest`. The `5000` refers to
+4. Execute `docker run -p 5000:5000 bigbrother:latest`. The `5000` refers to
 the port exposed in the docker container and the second `5000` is the port
 that you expose locally.
-4. After waiting for a few seconds you should be able to go to `127.0.0.1:5000`
+5. After waiting for a few seconds you should be able to go to `127.0.0.1:5000`
 in your browser and use the website.
 
 ### Local packages
