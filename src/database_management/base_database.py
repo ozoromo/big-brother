@@ -1,7 +1,8 @@
+import os
 import uuid
 import datetime as dt
 import typing
-
+from dotenv import load_dotenv
 import numpy as np
 import pickle
 from pytz import timezone
@@ -21,9 +22,13 @@ class BaseDatabase:
         We also offer a default mongo cluster that you can use. In case you
         use a different cluster with pre-existing information it has to have
         the same structure as specified in the documentation.
+
         """
+        # load environment variables from .env-file 
+        load_dotenv()
+        
         if not mongo_client:
-            mongoURI = "mongodb+srv://Benutzername:Passwort@bigbrother.zrhmwhf.mongodb.net/?retryWrites=true&w=majority&appName=bigbrother"
+            mongoURI = os.getenv("MONGO_URI")
             self.cluster = pymongo.MongoClient(mongoURI,
                                                connectTimeoutMS=30000,
                                                socketTimeoutMS=None,
