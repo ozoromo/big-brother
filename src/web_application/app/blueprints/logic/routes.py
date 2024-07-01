@@ -16,7 +16,6 @@ import base64
 import urllib
 import json
 
-
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
@@ -30,7 +29,16 @@ import question_answering.qa_algo_core as qa
 logic = Blueprint("logic", __name__)
 gesture = GestureRecognizer()
 
-
+GESTURE_ACTIONS = {
+    "like": ["yes", "like","help","good","hungry"],
+    "rock": ["Good Morning/Afternoon/Evening", "How are you?","Thank you","Please","Hello"],
+    "closed_fist": ["I", "You", "it", "she/he","they"],
+    "call": ["be","eat","do","have","go"],
+    "ok": ["What","Where","When","Which","Who"],
+    "dislike":["no","hate","sorry","Delete All","Delete 1"], # if Delete 1 selected, then delete the last word. If Delete All selected, delete all.
+    "italy": ["spaghetti","pizza","lasagna","mamma mia","i love italy"]
+    # Add more gestures and actions as needed
+}
 @logic.route("/gestureReco")
 @flask_login.login_required
 def gestureReco():
@@ -45,13 +53,11 @@ def recognizing_gestures(data):
             print("Error: No image data found in request.")
             return
         
-        # Check and split the base64 string
         img_data_parts = img_url.split(",")
         if len(img_data_parts) != 2:
             print("Error: Image data is not in the expected base64 format.")
             return
 
-        # Decode the base64 image data
         img_str = img_data_parts[1]
         try:
             img_data = base64.b64decode(img_str)
@@ -59,7 +65,6 @@ def recognizing_gestures(data):
             print(f"Error decoding base64 image data: {e}")
             return
         
-        # Load the image into a numpy array
         try:
             pil_img = Image.open(io.BytesIO(img_data))
             np_img = np.array(pil_img)
@@ -70,32 +75,30 @@ def recognizing_gestures(data):
             print(f"Error loading image into PIL: {e}")
             return
 
-        # Convert the image to RGB (required by Mediapipe)
         np_img = cv2.cvtColor(np_img, cv2.COLOR_BGR2RGB)
 
-        # Perform gesture recognition
         try:
             annotated_image, class_name = gesture.recognize(np_img)
         except Exception as e:
             print(f"Error during gesture recognition: {e}")
             return
 
-        # Convert the annotated image back to RGB for Pillow
+        actions = GESTURE_ACTIONS.get(class_name, [])
+
         annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
         cv2.putText(annotated_image, class_name, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
         pil_annotated_img = Image.fromarray(annotated_image)
 
-        # Prepare annotated image for sending via socket
         buffered = io.BytesIO()
         pil_annotated_img.save(buffered, format="JPEG")
         response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-        emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name})
+        emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "actions": actions})
 
     except Exception as e:
         print(f"Error in recognizing_gestures: {e}")
 
-
+        
 @logic.route("/videos/<filename>")
 def serve_video(filename):
     return send_from_directory(application.config["TMP_VIDEO_FOLDER"], filename)
