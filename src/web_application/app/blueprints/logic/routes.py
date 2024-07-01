@@ -52,7 +52,7 @@ gesture = GestureRecognizer()
 def gestureReco():
     return render_template("gestureReco.html")
 
-
+'''
 @socketio.on("gesture_recognition", namespace="/gesture_recognition")
 def recognizing_gestures(data):
     img_url = data["image"].split(",")
@@ -76,7 +76,7 @@ def recognizing_gestures(data):
     response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
 
     emit("ack_gesture_recognition", {"image": response_data_url})
-    
+'''
     
 @socketio.on("gesture_recognition", namespace="/gesture_recognition")
 def recognizing_gestures(data):
