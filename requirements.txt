@@ -29,6 +29,13 @@ open-faces
 keras==2.8.0
 face_recognition
 
+### gestureRecognition ###
+albumentations
+omegaconf
+torchvision
+pyyaml
+pillow
+
 ### Math/Plotting ###
 numpy
 pandas

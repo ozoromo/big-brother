@@ -1,64 +1,48 @@
 import os
-
-import cv2
-import numpy as np
 import mediapipe as mp
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-
+#import numpy as np
+import visualizer
+import cv2
+import time
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
 class GestureRecognizer:
     def __init__(self):
-        # initialize mediapipe
+        BaseOptions = mp.tasks.BaseOptions
+        GestureRecognizer = mp.tasks.vision.GestureRecognizer
+        GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
+        GestureRecognizerResult = mp.tasks.vision.GestureRecognizerResult
+        VisionRunningMode = mp.tasks.vision.RunningMode
+        self.mp_drawing = mp.solutions.drawing_utils
         self.mp_hands = mp.solutions.hands
-        self.hands = self.mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
-        self.mp_draw = mp.solutions.drawing_utils
 
-        # initialize tensorflow
-        # Load the gesture recognizer model
+        # initialize mediapipe
+        options = GestureRecognizerOptions(
+        base_options=BaseOptions(model_asset_path='./src/gesture_recognition/mp_hand_gesture/gesture_recognizer.task'),
+        running_mode=VisionRunningMode.IMAGE)
 
-        path = os.path.dirname(os.path.abspath(__file__))
-        model_dir = os.path.abspath(os.path.join(path, 'mp_hand_gesture'))
-        self.model = load_model(model_dir)
+        self.recognizer = GestureRecognizer.create_from_options(options)
 
-        gesture_dir = os.path.abspath(os.path.join(path, 'gesture.names'))
 
-        # Load class names
-        with open(gesture_dir, 'r') as f:
-            self.class_names = f.read().split('\n')
+    #def preprocess(self, img: np.ndarray) -> tuple[Tensor, tuple[int, int], tuple[int, int]]:
+    #    pass
 
     def recognize(self, frame):
         """
-        Receive a frame, then return the frame with the recognized hand gesture highlighted as well as the name of the gesture.
+        Receive a frame, preprocess it and return 
         """
-        x, y, c = frame.shape
-
         # Flip the frame vertically
         frame = cv2.flip(frame, 1)
+        
+        #x, y, c = frame.shape
 
-        # DETECT HAND KEYPOINTS
-        framergb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        # Get hand landmark prediction
-        result = self.hands.process(framergb)
-
-        class_name = ""
-
-        # post process the result
-        if result.multi_hand_landmarks:
-            landmarks = []
-            for handslms in result.multi_hand_landmarks:
-                for lm in handslms.landmark:
-                    # print(id, lm)
-                    lmx = int(lm.x * x)
-                    lmy = int(lm.y * y)
-
-                    landmarks.append([lmx, lmy])
-
-                # Drawing landmarks on frames
-                self.mp_draw.draw_landmarks(frame, handslms, self.mp_hands.HAND_CONNECTIONS)
-
-                # Predict gesture in Hand Gesture Recognition project
-                prediction = self.model.predict([landmarks])
-                class_id = np.argmax(prediction)
-                class_name = self.class_names[class_id]
-        return frame, class_name
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+        frame_timestamp_ms = int(time.time() * 1000)
+        res = self.recognizer.recognize(mp_image)
+       
+        return visualizer.annotate_image_with_gesture_and_landmarks(frame, res)
+        
+        
+        #return frame, class_name
+  
