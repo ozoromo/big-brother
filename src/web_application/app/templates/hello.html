@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Log in with Camera{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div id="container">
+        <center>
+            <table cellspacing="0" cellpadding="0" class="table_report_line">
+                <tbody>
+                    <tr>
+                        <td> Your Webcam </td>
+                        <td> Gesture recognition </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <canvas id="originalWebcamCanvas" hidden></canvas>
+                            <video autoplay="true" id="videoElement"></video>
+                        </td>
+                        <td>
+                            <canvas id="gestureCanvas"></canvas>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/gestureRecognition.js') }}"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script>
+        const socket = io.connect('/gesture_recognition');
+
+        function sendImageData(imageData) {
+            socket.emit("gesture_recognition", {image: imageData});
+        }
+
+        socket.on("ack_gesture_recognition", function(data) {
+            const img = document.getElementById('gestureCanvas');
+            const ctx = img.getContext('2d');
+            const image = new Image();
+            image.onload = function() {
+                ctx.drawImage(image, 0, 0);
+            };
+            image.src = data.image;
+        });
+
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('originalWebcamCanvas');
+        const context = canvas.getContext('2d');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(err) {
+                console.log("An error occurred: " + err);
+            });
+
+        function captureGesture() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/jpeg');
+            sendImageData(imageData);
+        }
+
+        window.onload = () => {
+            setInterval(captureGesture, 5000); // Capture gesture every 5 seconds
+        }
+    </script>
+{% endblock %}

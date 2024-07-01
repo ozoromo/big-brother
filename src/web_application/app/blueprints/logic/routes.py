@@ -17,6 +17,22 @@ import urllib
 import json
 
 
+def create_restricted_lua():
+    lua = LuaRuntime(unpack_returned_tuples=True)
+    restricted_globals = lua.globals()
+    restricted_globals.os = None
+    restricted_globals.io = None
+    restricted_globals.dofile = None
+    restricted_globals.loadfile = None
+    restricted_globals.require = None
+    restricted_globals.load = None
+    return lua
+
+def load_lua_function(file_name):
+    with open(os.path.join(os.path.dirname(__file__), 'lua_functions', file_name), 'r') as lua_file:
+        lua_code = lua_file.read()
+    lua.execute(lua_code)
+
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
@@ -53,6 +69,45 @@ def recognizing_gestures(data):
     frame, className = gesture.recognize(np_img)
     frame = cv2.flip(frame, 1)
     cv2.putText(frame, className, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+    
+    pil_img = Image.fromarray(frame.astype('uint8'), 'RGB')
+    buffered = io.BytesIO()
+    pil_img.save(buffered, format="JPEG")
+    response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+    emit("ack_gesture_recognition", {"image": response_data_url})
+    
+    
+@socketio.on("gesture_recognition", namespace="/gesture_recognition")
+def recognizing_gestures(data):
+    img_url = data["image"].split(",")
+    if len(img_url) < 2:
+        return
+
+    response = urllib.request.urlopen(data["image"])
+    buffer = io.BytesIO()
+    buffer.write(response.read())
+    pil_img = Image.open(io.BytesIO(buffer.getvalue()))
+    buffer.close()
+    np_img = np.asarray(pil_img)
+
+    frame, className = gr.recognize_gesture(np_img)
+
+    if className:
+        # Map gestures to Lua programs
+        lua_file_map = {
+            'greet': 'greet.lua',
+            'currentTime': 'current_time.lua',
+            'randomNumber': 'random_number.lua',
+            'predefinedMessage': 'predefined_message.lua',
+            'simpleCalculation': 'simple_calculation.lua'
+        }
+
+        if className in lua_file_map:
+            load_lua_function(lua_file_map[className])
+            lua_func = lua.globals()[className]
+            result = lua_func()
+            print(f"Lua function result: {result}")  # Or handle the result as needed
 
     pil_img = Image.fromarray(frame.astype('uint8'), 'RGB')
     buffered = io.BytesIO()
@@ -60,6 +115,7 @@ def recognizing_gestures(data):
     response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
 
     emit("ack_gesture_recognition", {"image": response_data_url})
+
 
 
 @logic.route("/videos/<filename>")

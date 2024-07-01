@@ -1,0 +1,10 @@
+Gesture1:Lua1
+Gesture2:Lua1
+Gesture3:Lua1
+Gesture4:Lua1
+Gesture5:Lua1
+Gesture6:Lua1
+Gesture7:Lua1
+Gesture8:Lua1
+Gesture9:Lua1
+Gesture10:Lua1
