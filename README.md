@@ -46,9 +46,8 @@ on windows: https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-re
     - `pip install make cmake` and then `pip install dlib`
     - `pip install make cmake` and then `pip install dlib-binary`
     - Build it directly from the source
-4. In Src/Database_Managmet/base_database.py in line 26 change Benutzername to newUser and Password to MGmWyibLl0xnu1GV.
-5. Install the rest of the requirements with `pip install -r requirements.txt`.
-6. Execute `python ./src/bigbrother/run.py` to start the flask app. You can 
+4. Install the rest of the requirements with `pip install -r requirements.txt`.
+5. Execute `python ./src/bigbrother/run.py` to start the flask app. You can 
 then go to `127.0.0.1:5000` in your webbrowser.
 
 # Documentation
