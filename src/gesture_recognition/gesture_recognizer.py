@@ -1,64 +1,53 @@
 import os
-
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 import cv2
 import numpy as np
-import mediapipe as mp
-import tensorflow as tf
-from tensorflow.keras.models import load_model
+from mediapipe.framework.formats import landmark_pb2
 
+mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
 class GestureRecognizer:
     def __init__(self):
-        # initialize mediapipe
-        self.mp_hands = mp.solutions.hands
-        self.hands = self.mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
-        self.mp_draw = mp.solutions.drawing_utils
+        # Ensure the correct relative path to the gesture_recognizer.task file
+        base_dir = os.path.dirname(__file__)
+        model_path = os.path.join(base_dir, 'exported_model', 'gesture_recognizer.task')
+        base_options = python.BaseOptions(model_asset_path=model_path)
+        options = vision.GestureRecognizerOptions(base_options=base_options)
+        self.recognizer = vision.GestureRecognizer.create_from_options(options)
 
-        # initialize tensorflow
-        # Load the gesture recognizer model
+    def recognize(self, image):
+        # Convert the image to the required format for Mediapipe
+        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.asarray(rgb_image))
+        
+        # Perform gesture recognition
+        recognition_result = self.recognizer.recognize(mp_image)
+        
+        if not recognition_result.gestures:
+            return image, "No gesture recognized"
 
-        path = os.path.dirname(os.path.abspath(__file__))
-        model_dir = os.path.abspath(os.path.join(path, 'mp_hand_gesture'))
-        self.model = load_model(model_dir)
+        top_gesture = recognition_result.gestures[0][0]
+        hand_landmarks_list = recognition_result.hand_landmarks
 
-        gesture_dir = os.path.abspath(os.path.join(path, 'gesture.names'))
+        # Annotate the image
+        annotated_image = rgb_image.copy()
+        for hand_landmarks in hand_landmarks_list:
+            hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+            hand_landmarks_proto.landmark.extend([
+                landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
+            ])
+            mp_drawing.draw_landmarks(
+                annotated_image,
+                hand_landmarks_proto,
+                mp_hands.HAND_CONNECTIONS,
+                mp_drawing_styles.get_default_hand_landmarks_style(),
+                mp_drawing_styles.get_default_hand_connections_style()
+            )
 
-        # Load class names
-        with open(gesture_dir, 'r') as f:
-            self.class_names = f.read().split('\n')
-
-    def recognize(self, frame):
-        """
-        Receive a frame, then return the frame with the recognized hand gesture highlighted as well as the name of the gesture.
-        """
-        x, y, c = frame.shape
-
-        # Flip the frame vertically
-        frame = cv2.flip(frame, 1)
-
-        # DETECT HAND KEYPOINTS
-        framergb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        # Get hand landmark prediction
-        result = self.hands.process(framergb)
-
-        class_name = ""
-
-        # post process the result
-        if result.multi_hand_landmarks:
-            landmarks = []
-            for handslms in result.multi_hand_landmarks:
-                for lm in handslms.landmark:
-                    # print(id, lm)
-                    lmx = int(lm.x * x)
-                    lmy = int(lm.y * y)
-
-                    landmarks.append([lmx, lmy])
-
-                # Drawing landmarks on frames
-                self.mp_draw.draw_landmarks(frame, handslms, self.mp_hands.HAND_CONNECTIONS)
-
-                # Predict gesture in Hand Gesture Recognition project
-                prediction = self.model.predict([landmarks])
-                class_id = np.argmax(prediction)
-                class_name = self.class_names[class_id]
-        return frame, class_name
+        # Convert the annotated image back to BGR for consistency with OpenCV
+        annotated_image_bgr = cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR)
+        return annotated_image_bgr, top_gesture.category_name

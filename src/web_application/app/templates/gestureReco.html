@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Log in with Camera{% endblock %}
+{% block title %}Gesture Recognition{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
@@ -14,8 +14,8 @@
             <table cellspacing="0" cellpadding="0" class="table_report_line">
                 <tbody>
                     <tr>
-                        <td> Your Webcam </td>
-                        <td> Gesture recognition </td>
+                        <td>Your Webcam</td>
+                        <td>Gesture recognition</td>
                     </tr>
                     <tr>
                         <td>
@@ -23,6 +23,11 @@
                             <video autoplay="true" id="videoElement"></video>
                         </td>
                         <td>
+                            <div id="actionsContainer">
+                                <h3>Actions:</h3>
+                                <div id="actionList"></div>
+                                <textarea id="textField" rows="4" cols="50"></textarea>
+                            </div>
                             <canvas id="gestureCanvas"></canvas>
                         </td>
                     </tr>
@@ -37,4 +42,51 @@
     <script src="{{ url_for('static', filename='js/gestureRecognition.js') }}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port + '/gesture_recognition');
+        var currentActions = [];
+        var actionSelected = false;
+
+        socket.on('ack_gesture_recognition', function(data) {
+            if (data.actions.length > 0) {
+                currentActions = data.actions;
+                updateActionsList(data.gesture);
+                actionSelected = false;
+            } else if (["one", "peace", "three", "four", "highfive"].includes(data.gesture) && !actionSelected) {
+                selectAction(data.gesture);
+                actionSelected = true;
+            }
+        });
+
+        function updateActionsList(gesture) {
+            $('#actionList').empty();
+            $('#actionList').append('Recognized Gesture: ' + gesture + ' | Actions: ');
+            var actionsText = currentActions.map(function(action, index) {
+                return (index + 1) + '. ' + action;
+            }).join(', ');
+            $('#actionList').append(actionsText);
+        }
+
+        function selectAction(gestureName) {
+            var index = ["one", "peace", "three", "four", "highfive"].indexOf(gestureName);
+            if (index < currentActions.length) {
+                var action = currentActions[index];
+                executeAction(action);
+            }
+        }
+
+        function executeAction(action) {
+            var textField = $('#textField');
+            var currentText = textField.val();
+            if (action === "Delete 1") {
+                var words = currentText.trim().split(' ');
+                words.pop();
+                textField.val(words.join(' '));
+            } else if (action === "Delete All") {
+                textField.val('');
+            } else {
+                textField.val(currentText + ' ' + action);
+            }
+        }
+    </script>
 {% endblock %}
