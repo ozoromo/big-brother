@@ -1,6 +1,6 @@
 services:
   bigbrother:
-    image: big-brother:latest
+    image: bigbrother:latest
     ports:
       - "3000:3000"
     depends_on:
