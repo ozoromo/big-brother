@@ -17,6 +17,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libavcodec-dev \
     libavformat-dev \
     libgtk2.0-dev \
+    libhdf5-dev\
     libjpeg-dev \
     liblapack-dev \
     libswscale-dev \

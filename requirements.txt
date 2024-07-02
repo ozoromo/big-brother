@@ -29,7 +29,7 @@ tensorflow_io_gcs_filesystem==0.25.0
 tensorflow_probability==0.23.0
 imutils
 open-faces
-keras==2.8.0
+keras
 face_recognition
 
 ### Math/Plotting ###
