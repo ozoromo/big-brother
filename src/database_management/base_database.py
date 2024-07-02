@@ -47,6 +47,7 @@ class BaseDatabase:
         self._resource = self._db["resource"]
         self._resource_context = self._db["resource_context"]
 
+
     def close(self):
         """
         Close the connection with the database
