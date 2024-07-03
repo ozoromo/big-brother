@@ -22,7 +22,6 @@ a python environment setup.
 In this case you only need to setup docker. You may either use a docker GUI
 or the CLI. In case you use the CLI:
 1. To into the root of the git repository.
-2. In Src/Database_Managmet/base_database.py in line 26 change Benutzername to newUser and Password to MGmWyibLl0xnu1GV.
 3. Execute `docker build -t bigbrother .`. This takes quite a long time and 
 requires an internet connection.
 4. Execute `docker run -p 5000:5000 bigbrother:latest`. The `5000` refers to
