@@ -2,3 +2,6 @@ transformers
 torch
 faster-whisper
 moviepy
+
+selenium
+requests

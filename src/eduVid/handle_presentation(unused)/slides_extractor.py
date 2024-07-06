@@ -1,9 +1,10 @@
 import cv2
 import os
 import shutil
+import numpy as np
 
 class SlideExtractor:
-    def __init__(self, video_path: str, output_folder: str):
+    def __init__(self, video_path: str, output_folder: str, threshold: int = 20.0):
         """
         Arguments:
         video_path --  The path to the input video file (in mp4 format).
@@ -11,6 +12,13 @@ class SlideExtractor:
         """
         self.video_path = video_path
         self.output_folder = output_folder
+        self.threshold = threshold
+
+    def save_slide(self, previous_frame, time_from, timestamp, slide_counter):
+
+        print(f"Slide {slide_counter} change detected at timestamp: {timestamp:.1f} seconds")
+        slide_filename = os.path.join(self.output_folder, f"slide_[{time_from}-{timestamp:.1f}].jpg")
+        cv2.imwrite(slide_filename, previous_frame)
 
     def extract_slides_from_video(self):
         """
@@ -39,9 +47,13 @@ class SlideExtractor:
             return
 
         # Initialize variables
-        frame_counter = 0
         slide_counter = 0
+        frame_counter = 0
+        time_from = 0
         previous_frame = None
+        colored_frame = None
+
+        fps = video.get(cv2.CAP_PROP_FPS)
 
         # Process video frames
         while True:
@@ -50,36 +62,30 @@ class SlideExtractor:
             if not end:
                 break
 
-            # Skip the first frame as we need two frames for comparison
-            if previous_frame is None:
-                previous_frame = frame
-                continue
+            # Convert frame to grayscale for simplicity
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            # Compute the absolute difference between the current and previous frames
-            frame_diff = cv2.absdiff(previous_frame, frame)
+            # Check for a change in the slide
+            if previous_frame is not None:
 
-            # Convert the difference to grayscale
-            frame_diff_gray = cv2.cvtColor(frame_diff, cv2.COLOR_BGR2GRAY)
-
-            # Apply thresholding to emphasize the differences
-            _, thresholded_diff = cv2.threshold(frame_diff_gray, 30, 255, cv2.THRESH_BINARY)
-
-            # Count the number of white pixels in the difference image
-            num_white_pixels = cv2.countNonZero(thresholded_diff)
-
-            # If a slide change is detected, save the previous slide as a JPG image
-            if num_white_pixels > frame.shape[0] * frame.shape[1] * 0.01:
-                slide_counter += 1
-                slide_filename = os.path.join(self.output_folder, f"slide{slide_counter}.jpg")
-                cv2.imwrite(slide_filename, previous_frame)
+                frame_diff = cv2.absdiff(gray, previous_frame)
+                difference_score = frame_diff.mean()
+            
+                if difference_score > self.threshold:
+                    # If a slide change is detected, save the previous slide as a JPG image
+                    self.save_slide(colored_frame, time_from, (frame_counter/fps), slide_counter)
+                    slide_counter += 1
+                    time_from = frame_counter/fps
 
             # Update the previous frame with the current frame for the next iteration
-            previous_frame = frame
+            previous_frame = gray
+            colored_frame = frame
             frame_counter += 1
 
         # Save the last slide
         slide_counter += 1
-        slide_filename = os.path.join(self.output_folder, f"slide{slide_counter}.jpg")
+        print(f"Slide {slide_counter} change detected at timestamp: {frame_counter/fps:.1f} seconds")
+        slide_filename = os.path.join(self.output_folder, f"slide_[{time_from:.1f}-{frame_counter/fps:.1f}].jpg")
         cv2.imwrite(slide_filename, previous_frame)
 
         # Release the video capture
