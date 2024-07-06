@@ -28,8 +28,8 @@ class BaseDatabase:
         load_dotenv()
         
         if not mongo_client:
-            mongoURI = os.getenv("MONGO_URI")
-            self.cluster = pymongo.MongoClient(mongoURI,
+            new_mongo = "mongodb+srv://User:Hello@cluster0.rd6xjc9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            self.cluster = pymongo.MongoClient(new_mongo,
                                                connectTimeoutMS=30000,
                                                socketTimeoutMS=None,
                                                connect=False,

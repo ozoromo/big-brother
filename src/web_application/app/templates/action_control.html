@@ -5,14 +5,14 @@
         <h1>Welcome to Action Control</h1>
         
         <!-- Dropdown Menus for Gesture Actions -->
-        <form id="gestureActionForm" method="POST" action="{{ url_for('update_gesture_action') }}">
+        <form id="gestureActionForm" method="POST" action="{{ url_for('logic.action_control') }}">
             {% for gesture, action in gesture_script_map.items() %}
                 <div>
                     <label for="{{ gesture }}">{{ gesture }}:</label>
                     <select name="{{ gesture }}" id="{{ gesture }}">
                         {% for script in accessible_scripts %}
-                            <option value="{{ script[0] }}" {% if script[0] == action %}selected{% endif %}>
-                                {{ script[1] }}
+                            <option value="{{ script }}" {% if script == action %}selected{% endif %}>
+                                {{ script }}
                             </option>
                         {% endfor %}
                     </select>
@@ -23,7 +23,7 @@
         
         <!-- Form to Upload New Scripts -->
         <h2>Upload New Script</h2>
-        <form id="uploadScriptForm" method="POST" action="{{ url_for('upload_script') }}">
+        <form id="uploadScriptForm" method="POST" action="{{ url_for('logic.upload_script') }}">
             <div>
                 <label for="script_name">Script Name:</label>
                 <input type="text" name="script_name" id="script_name" required>
@@ -41,6 +41,6 @@
         
         <!-- Button to go back to Gesture Recognition -->
         <br>
-        <button onclick="location.href='{{ url_for('gesture_reco') }}'">Back to Gesture Recognition</button>
+        <button onclick="location.href='{{ url_for('logic.gestureReco') }}'">Back to Gesture Recognition</button>
     </div>
 {% endblock %}
