@@ -27,11 +27,14 @@
                                 <h3>Actions:</h3>
                                 <div id="actionList"></div>
                                 <textarea id="textField" rows="4" cols="50"></textarea>
-                            <canvas id="gestureCanvas"></canvas>
+                                <canvas id="gestureCanvas"></canvas>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <br>
+            <button onclick="location.href='{{ url_for('action_control') }}'">Go to Action Control</button>
         </center>
     </div>
 {% endblock %}

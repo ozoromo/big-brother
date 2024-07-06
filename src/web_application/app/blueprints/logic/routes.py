@@ -4,7 +4,7 @@ import io
 
 
 from flask import (render_template, request, Blueprint, url_for,
-                   send_from_directory)
+                   send_from_directory, redirect)
 import flask_login
 from flask_socketio import emit
 
@@ -18,6 +18,7 @@ import json
 
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
 
 from app.blueprints.logic.forms import VideoUploadForm
@@ -25,6 +26,10 @@ from app import application, socketio
 
 from gesture_recognizer import GestureRecognizer
 import question_answering.qa_algo_core as qa
+
+from base_database import BaseDatabase
+
+db = BaseDatabase()
 
 logic = Blueprint("logic", __name__)
 gesture = GestureRecognizer()
@@ -39,6 +44,18 @@ GESTURE_ACTIONS = {
     "italy": ["spaghetti","pizza","lasagna","mamma mia","i love italy"]
     # Add more gestures and actions as needed
 }
+
+Gesture_Script_Map = {
+    'like' : 'standart_like',
+    'rock' : 'standart_rock',
+    'closed_fist' : 'standart_closed_first',
+    'call' : 'standart_call',
+    'ok ': 'standart_ok',
+    'dislike' : 'standart_dislike',
+    'italy' : 'standart_italy'
+    # Add more gestures and actions as needed
+}
+
 @logic.route("/gestureReco")
 @flask_login.login_required
 def gestureReco():
@@ -97,7 +114,28 @@ def recognizing_gestures(data):
 
     except Exception as e:
         print(f"Error in recognizing_gestures: {e}")
+        
+@logic.route('/action_control', methods=['GET', 'POST'])
+def action_control():
+    if request.method == 'POST':
+        for gesture in Gesture_Script_Map.keys():
+            selected_script_id = request.form.get(gesture)
+            Gesture_Script_Map[gesture] = selected_script_id
+        return redirect(url_for('action_control'))
+    
+    accessible_scripts = db.get_accessible_scripts('user1')  # Assume 'user1' for now
+    return render_template('action_control.html', gesture_script_map=Gesture_Script_Map, accessible_scripts=accessible_scripts)
 
+@app.route('/upload_script', methods=['POST'])
+def upload_script():
+    script_name = request.form.get('script_name')
+    script_content = request.form.get('script_content')
+    is_private = request.form.get('is_private') == 'on'
+    username = 'user1'  # Assume 'user1' for now
+
+    # Save the new script
+    db.save_lua_script(username, script_name, script_content, is_private)
+    return redirect(url_for('action_control'))
         
 @logic.route("/videos/<filename>")
 def serve_video(filename):
