@@ -16,17 +16,14 @@ class SlideOCR:
     slide_ocr_.ocr_text_from_slides()
     ```
     """
-    def __init__(self, tesseract_path, images_folder, output_file, slide_separator='=== SLIDE ===', language='deu'):
+    def __init__(self, tesseract_path, images_folder, slide_separator='=== SLIDE ===', language='deu'):
         self.tesseract_path = tesseract_path
         self.images_folder = images_folder
-        self.output_file = output_file
         self.slide_separator = slide_separator
         self.language = language
-
-    def ocr_text_from_slides(self):
-        # Set Tesseract OCR executable path
         pytesseract.tesseract_cmd = self.tesseract_path
 
+    def ocr_text_from_slides(self):
         # Get the file names in the directory
         file_texts = []
 
@@ -54,6 +51,4 @@ class SlideOCR:
         # Join the file texts using the slide separator
         merged_text = '\n\n'.join([f"{self.slide_separator}\n{text}" for text in file_texts])
 
-        # Save the merged output as a single text file
-        with open(self.output_file, 'w', encoding='utf-8') as file:
-            file.write(merged_text)
+        return merged_text
