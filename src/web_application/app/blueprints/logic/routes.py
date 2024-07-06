@@ -126,7 +126,7 @@ def action_control():
     accessible_scripts = ['standart_like', 'standart_rock', 'standart_closed_first', 'standart_call', 'standart_ok', 'standart_dislike', 'standart_italy']#db.get_accessible_scripts('user1')  # Assume 'user1' for now
     return render_template('action_control.html', gesture_script_map=Gesture_Script_Map, accessible_scripts=accessible_scripts)
 
-@app.route('/upload_script', methods=['POST'])
+@logic.route('/upload_script', methods=['POST'])
 def upload_script():
     script_name = request.form.get('script_name')
     script_content = request.form.get('script_content')
