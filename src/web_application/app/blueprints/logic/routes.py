@@ -128,7 +128,7 @@ def action_control():
         for gesture in Gesture_Script_Map.keys():
             selected_script_id = request.form.get(gesture)
             Gesture_Script_Map[gesture] = selected_script_id
-        return redirect(url_for('action_control'))
+        return redirect(url_for('logic.action_control'))
     #['standart_like', 'standart_rock', 'standart_closed_first', 'standart_call', 'standart_ok', 'standart_dislike', 'standart_italy']
     user_id = request.args.get("usr", default=None, type=str)
     accessible_scripts = db.get_accessible_scripts(user_id)  # Assume 'user1' for now
