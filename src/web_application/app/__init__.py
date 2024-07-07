@@ -13,6 +13,7 @@ from config import Config
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from database_management.picture_database import PictureDatabase
+from database_management.base_database import BaseDatabase
 
 application = Flask(__name__)
 application.config.from_object(Config)
@@ -29,6 +30,7 @@ login_manager = flask_login.LoginManager()
 login_manager.init_app(application)
 
 picture_database = PictureDatabase()
+base_database = BaseDatabase()
 
 Payload.max_decode_packets = 1000
 socketio = SocketIO(application)

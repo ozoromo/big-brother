@@ -8,7 +8,7 @@ import pickle
 from pytz import timezone
 import pymongo
 
-from database_management.exceptions import UserDoesntExistException, UsernameExistsException
+from database_management.exceptions import UserDoesntExistException, UsernameExistsException, ScriptExistException, ScriptSearchError, ScriptCreateError
 
 
 class BaseDatabase:
@@ -28,8 +28,8 @@ class BaseDatabase:
         load_dotenv()
         
         if not mongo_client:
-            mongoURI = os.getenv("MONGO_URI")
-            self.cluster = pymongo.MongoClient(mongoURI,
+            new_mongo = "mongodb+srv://trieuduongdc:Bigbrother@2024!@cluster0.rd6xjc9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            self.cluster = pymongo.MongoClient(new_mongo,
                                                connectTimeoutMS=30000,
                                                socketTimeoutMS=None,
                                                connect=False,
@@ -46,6 +46,7 @@ class BaseDatabase:
         self._login_attempt = self._db["login_attempt"]
         self._resource = self._db["resource"]
         self._resource_context = self._db["resource_context"]
+        self._lua_scripts = self._db["lua_scripts"]
 
     def close(self):
         """
@@ -371,3 +372,43 @@ class BaseDatabase:
         if not user_entry:
             return None
         return uuid.UUID(user_entry["_id"])
+
+    def save_lua_script(self, user_id, script_name, script_content, is_private):
+        if self._lua_scripts.find_one({"script_name": script_name}) :
+            raise ScriptExistException("Script with same Name already exsists!")
+        
+        document = {
+            'user_id': user_id,
+            'script_name': script_name,
+            'script_content': script_content,
+            'is_private': is_private
+        }
+        
+        try:
+            self._lua_scripts.insert_one(document)
+        except Exception as e:
+            raise ScriptCreateError("An error occurred while adding the script to the Database")
+        
+        return script_name
+    
+    def get_accessible_scripts(self, user_id):
+        query = {
+            '$or': [
+                {'user_id': str(user_id)},
+                {'is_private': False}
+            ]
+        }
+        
+        try:
+            scripts = list(self._lua_scripts.find(query))
+        except Exception as e:
+            raise ScriptSearchError("An error occured while searching for scripts")
+        return [(script['script_name']) for script in scripts]
+        
+    def get_lua_script_by_id(self, script_name):
+        try:
+            script = self._lua_scripts.find_one({'script_name': script_name})
+        except Exception as e:
+            raise ScriptSearchError("Script not found")
+
+        return script['script_content']

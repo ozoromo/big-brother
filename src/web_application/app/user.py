@@ -76,3 +76,4 @@ class BigBrotherUser(UserMixin):
 
     def get_id(self):
         return self.uuid
+    

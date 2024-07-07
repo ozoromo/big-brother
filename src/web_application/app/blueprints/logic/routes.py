@@ -2,22 +2,17 @@ import os
 import sys
 import io
 
-
-from flask import (render_template, request, Blueprint, url_for,
-                   send_from_directory)
+from flask import (render_template, request, Blueprint, url_for, send_from_directory, redirect)
 import flask_login
 from flask_socketio import emit
-
 import cv2
-import cv2.misc
-from PIL import Image,UnidentifiedImageError
+from PIL import Image, UnidentifiedImageError
 import numpy as np
 import base64
-import urllib
-import json
 
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
 
 from app.blueprints.logic.forms import VideoUploadForm
@@ -26,24 +21,38 @@ from app import application, socketio
 from gesture_recognizer import GestureRecognizer
 import question_answering.qa_algo_core as qa
 
+from base_database import BaseDatabase
+
+db = BaseDatabase()
+
 logic = Blueprint("logic", __name__)
 gesture = GestureRecognizer()
 
 GESTURE_ACTIONS = {
-    "like": ["yes", "like","help","good","hungry"],
-    "rock": ["Good Morning/Afternoon/Evening", "How are you?","Thank you","Please","Hello"],
-    "closed_fist": ["I", "You", "it", "she/he","they"],
-    "call": ["be","eat","do","have","go"],
-    "ok": ["What","Where","When","Which","Who"],
-    "dislike":["no","hate","sorry","Delete All","Delete 1"], # if Delete 1 selected, then delete the last word. If Delete All selected, delete all.
-    "italy": ["spaghetti","pizza","lasagna","mamma mia","i love italy"]
-    # Add more gestures and actions as needed
+    "like": ["yes", "like", "help", "good", "hungry"],
+    "rock": ["Good Morning/Afternoon/Evening", "How are you?", "Thank you", "Please", "Hello"],
+    "closed_fist": ["I", "You", "it", "she/he", "they"],
+    "call": ["be", "eat", "do", "have", "go"],
+    "ok": ["What", "Where", "When", "Which", "Who"],
+    "dislike": ["no", "hate", "sorry", "Delete All", "Delete 1"],
+    "italy": ["spaghetti", "pizza", "lasagna", "mamma mia", "i love italy"]
 }
+
+Gesture_Script_Map = {
+    'like': 'standart_like',
+    'rock': 'standart_rock',
+    'closed_fist': 'standart_closed_first',
+    'call': 'standart_call',
+    'ok ': 'standart_ok',
+    'dislike': 'standart_dislike',
+    'italy': 'standart_italy'
+}
+
+# Gesture to Action 
 @logic.route("/gestureReco")
 @flask_login.login_required
 def gestureReco():
-    return render_template("gestureReco.html")
-
+    return render_template("gestureReco_actions.html")
 
 @socketio.on("gesture_recognition", namespace="/gesture_recognition")
 def recognizing_gestures(data):
@@ -98,7 +107,90 @@ def recognizing_gestures(data):
     except Exception as e:
         print(f"Error in recognizing_gestures: {e}")
 
+@logic.route('/action_control', methods=['GET', 'POST'])
+def action_control():
+    if request.method == 'POST':
+        for gesture in Gesture_Script_Map.keys():
+            selected_script_id = request.form.get(gesture)
+            Gesture_Script_Map[gesture] = selected_script_id
+        return redirect(url_for('logic.action_control'))
+    
+    accessible_scripts = ['standart_like', 'standart_rock', 'standart_closed_first', 'standart_call', 'standart_ok', 'standart_dislike', 'standart_italy'] # db.get_accessible_scripts('user1')
+    return render_template('action_control.html', gesture_script_map=Gesture_Script_Map, accessible_scripts=accessible_scripts)
+
+@logic.route('/upload_script', methods=['POST'])
+def upload_script():
+    script_name = request.form.get('script_name')
+    script_content = request.form.get('script_content')
+    is_private = request.form.get('is_private') == 'on'
+    user_id = 'user1'  # Assume 'user1' for now
+
+    # Save the new script
+    db.save_lua_script(user_id, script_name, script_content, is_private)
+    return redirect(url_for('logic.action_control'))
+
+# Gesture to Text Conversion
+@logic.route("/gestureReco_text")
+@flask_login.login_required
+def gestureReco_text():
+    return render_template("gestureReco_text.html")
+
+
+@socketio.on("gesture_recognition_text", namespace="/gesture_recognition_text")
+def recognizing_gestures_text(data):
+    try:
+        img_url = data.get("image")
+        if not img_url:
+            print("Error: No image data found in request.")
+            return
         
+        img_data_parts = img_url.split(",")
+        if len(img_data_parts) != 2:
+            print("Error: Image data is not in the expected base64 format.")
+            return
+
+        img_str = img_data_parts[1]
+        try:
+            img_data = base64.b64decode(img_str)
+        except Exception as e:
+            print(f"Error decoding base64 image data: {e}")
+            return
+        
+        try:
+            pil_img = Image.open(io.BytesIO(img_data))
+            np_img = np.array(pil_img)
+        except UnidentifiedImageError as e:
+            print(f"Error: Unable to identify image. {e}")
+            return
+        except Exception as e:
+            print(f"Error loading image into PIL: {e}")
+            return
+
+        np_img = cv2.cvtColor(np_img, cv2.COLOR_BGR2RGB)
+
+        try:
+            annotated_image, class_name = gesture.recognize(np_img)
+        except Exception as e:
+            print(f"Error during gesture recognition: {e}")
+            return
+
+        actions = GESTURE_ACTIONS.get(class_name, [])
+
+        annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
+        cv2.putText(annotated_image, class_name, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+        pil_annotated_img = Image.fromarray(annotated_image)
+
+        buffered = io.BytesIO()
+        pil_annotated_img.save(buffered, format="JPEG")
+        response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+        emit("ack_gesture_recognition_text", {"image": response_data_url, "gesture": class_name, "actions": actions})
+
+    except Exception as e:
+        print(f"Error in recognizing_gestures: {e}")
+
+
+
 @logic.route("/videos/<filename>")
 def serve_video(filename):
     return send_from_directory(application.config["TMP_VIDEO_FOLDER"], filename)
