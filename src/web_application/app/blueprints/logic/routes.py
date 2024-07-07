@@ -130,13 +130,18 @@ def action_control():
 @logic.route('/upload_script', methods=['POST'])
 def upload_script(): 
     script_name = request.form.get('script_name')
-    script_content = request.form.get('script_content')
+    script_file = request.files.get('script_file')
     is_private = request.form.get('is_private') == 'on'
-    user_id = request.args.get("usr", default=None, type=str)  # Assume 'user1' for now
+    username = 'user1'  # Assume 'user1' for now
 
-    # Save the new script
-    db.save_lua_script(user_id, script_name, script_content, is_private)
-    return redirect(url_for('action_control'))
+    if script_file and script_file.filename.endswith('.lua'):
+        script_content = script_file.read().decode('utf-8')
+        
+        # Save the new script
+        db.save_lua_script(username, script_name, script_content, is_private)
+        return redirect(url_for('action_control'))
+    else:
+        return "Invalid file type. Only Lua files are allowed.", 400
         
 @logic.route("/videos/<filename>")
 def serve_video(filename):
