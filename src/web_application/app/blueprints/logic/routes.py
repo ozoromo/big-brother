@@ -109,10 +109,18 @@ def recognizing_gestures(data):
         pil_annotated_img.save(buffered, format="JPEG")
         response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-        emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "actions": actions})
+        # Execute the Lua script based on the recognized gesture
+        script_id = Gesture_Script_Map.get(class_name)
+        if script_id:
+            script_content = db.get_lua_script_by_id(script_id)
+            lua_result = run_lua_in_sandbox(script_content)
+            emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "actions": actions, "lua_result": lua_result})
+        else:
+            emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "actions": actions, "lua_result": "No script found"})
 
     except Exception as e:
         print(f"Error in recognizing_gestures: {e}")
+
 
 @logic.route('/action_control', methods=['GET', 'POST'])
 def action_control():
