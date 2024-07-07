@@ -15,6 +15,7 @@ python-socketio==4.6.0
 
 ### gesture recognition ###
 mediapipe_model_maker
+lupa
 
 ### opencv ###
 opencv-python
