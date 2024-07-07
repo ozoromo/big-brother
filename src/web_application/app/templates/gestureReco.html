@@ -101,7 +101,8 @@
                 contentType: 'application/json',
                 data: JSON.stringify({gesture: gestureName}),
                 success: function(response) {
-                    var result = response.result;
+                    console.log("test");
+                    var result = "test";
                     $('#luaResultField').val(result);  // Display the result in the new text field
                 },
                 error: function(error) {
