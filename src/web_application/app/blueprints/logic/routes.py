@@ -122,16 +122,17 @@ def action_control():
             selected_script_id = request.form.get(gesture)
             Gesture_Script_Map[gesture] = selected_script_id
         return redirect(url_for('action_control'))
-    
-    accessible_scripts = ['standart_like', 'standart_rock', 'standart_closed_first', 'standart_call', 'standart_ok', 'standart_dislike', 'standart_italy']#db.get_accessible_scripts('user1')  # Assume 'user1' for now
+    #['standart_like', 'standart_rock', 'standart_closed_first', 'standart_call', 'standart_ok', 'standart_dislike', 'standart_italy']
+    user_id = request.args.get("usr", default=None, type=str)
+    accessible_scripts = db.get_accessible_scripts(user_id)  # Assume 'user1' for now
     return render_template('action_control.html', gesture_script_map=Gesture_Script_Map, accessible_scripts=accessible_scripts)
 
 @logic.route('/upload_script', methods=['POST'])
-def upload_script():
+def upload_script(): 
     script_name = request.form.get('script_name')
     script_content = request.form.get('script_content')
     is_private = request.form.get('is_private') == 'on'
-    user_id = 'user1'  # Assume 'user1' for now
+    user_id = request.args.get("usr", default=None, type=str)  # Assume 'user1' for now
 
     # Save the new script
     db.save_lua_script(user_id, script_name, script_content, is_private)

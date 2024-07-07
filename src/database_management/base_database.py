@@ -394,7 +394,7 @@ class BaseDatabase:
     def get_accessible_scripts(self, user_id):
         query = {
             '$or': [
-                {'user_id': str(user_id)},
+                {'user_id': user_id},
                 {'is_private': False}
             ]
         }
