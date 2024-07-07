@@ -13,6 +13,7 @@ import base64
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
 
 from app.blueprints.logic.forms import VideoUploadForm
@@ -22,6 +23,7 @@ from gesture_recognizer import GestureRecognizer
 import question_answering.qa_algo_core as qa
 
 from base_database import BaseDatabase
+from lus_sandbox import run_lua_in_sandbox
 
 db = BaseDatabase()
 
@@ -134,6 +136,17 @@ def upload_script():
         return redirect(url_for('logic.action_control'))
     else:
         return "Invalid file type. Only Lua files are allowed.", 400
+    
+@logic.route('/execute_gesture_action', methods=['POST'])
+def execute_gesture_action():
+    gesture = request.json.get('gesture')
+    script_id = Gesture_Script_Map.get(gesture)
+    if script_id:
+        script_content = db.get_lua_script_by_id(script_id)
+        result = run_lua_in_sandboxun(script_content)
+        return jsonify({"result": result})
+    else:
+        return jsonify({"error": "Invalid gesture"}), 400
 
 # Gesture to Text Conversion
 @logic.route("/gestureReco_text")

@@ -90,5 +90,21 @@
                 textField.val(currentText + ' ' + action);
             }
         }
+        function executeAction(gestureName) {
+            $.ajax({
+                url: "{{ url_for('logic.execute_gesture_action') }}",
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({gesture: gestureName}),
+                success: function(response) {
+                    var result = response.result;
+                    $('#textField').val(result);
+                },
+                error: function(error) {
+                    console.log("Error:", error);
+                    $('#textField').val("Error: " + error.responseText);
+                }
+            });
+        }
     </script>
 {% endblock %}
