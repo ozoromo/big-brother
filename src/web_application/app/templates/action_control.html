@@ -23,14 +23,14 @@
         
         <!-- Form to Upload New Scripts -->
         <h2>Upload New Script</h2>
-        <form id="uploadScriptForm" method="POST" action="{{ url_for('logic.upload_script') }}">
+        <form id="uploadScriptForm" method="POST" action="{{ url_for('logic.upload_script') }}" enctype="multipart/form-data">
             <div>
                 <label for="script_name">Script Name:</label>
                 <input type="text" name="script_name" id="script_name" required>
             </div>
             <div>
-                <label for="script_content">Script Content:</label>
-                <textarea name="script_content" id="script_content" rows="10" required></textarea>
+                <label for="script_file">Lua Script File:</label>
+                <input type="file" name="script_file" id="script_file" accept=".lua" required>
             </div>
             <div>
                 <label for="is_private">Private:</label>

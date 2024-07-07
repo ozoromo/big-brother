@@ -13,9 +13,8 @@ import base64
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
-
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
 from app.blueprints.logic.forms import VideoUploadForm
 from app import application, socketio
 
@@ -24,6 +23,8 @@ import question_answering.qa_algo_core as qa
 
 from base_database import BaseDatabase
 from lua_sandbox_runner import run_lua_in_sandbox
+
+from base_database import BaseDatabase
 
 db = BaseDatabase()
 
@@ -41,15 +42,15 @@ GESTURE_ACTIONS = {
 }
 
 Gesture_Script_Map = {
-    'like': 'hello_welt',
-    'rock': 'hello_welt',
-    'closed_fist': 'hello_welt',
+    'like': 'standart_like',
+    'rock': 'standart_rock',
+    'closed_fist': 'standart_closed_first',
     'call': 'standart_call',
-    'ok ': 'hello_welt',
-    'dislike': 'hello_welt',
-    'italy': 'hello_welt',
+    'ok ': 'standart_ok',
+    'dislike': 'standart_dislike',
+    'italy': 'standart_italy',    
     'one' : 'hello_welt', 
-    'peace' : 'hello_welt',
+    'piece' : 'hello_welt',
     'three' : 'hello_welt', 
     'four' : 'hello_welt',
     'highfive' : 'hello_welt'
@@ -109,18 +110,10 @@ def recognizing_gestures(data):
         pil_annotated_img.save(buffered, format="JPEG")
         response_data_url = "data:image/jpeg;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-        # Execute the Lua script based on the recognized gesture
-        script_id = Gesture_Script_Map.get(class_name)
-        if script_id:
-            script_content = db.get_lua_script_by_id(script_id)
-            lua_result = run_lua_in_sandbox(script_content)
-            emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "actions": actions, "lua_result": lua_result})
-        else:
-            emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "actions": actions, "lua_result": "No script found"})
+        emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "actions": actions})
 
     except Exception as e:
         print(f"Error in recognizing_gestures: {e}")
-
 
 @logic.route('/action_control', methods=['GET', 'POST'])
 def action_control():
@@ -143,13 +136,42 @@ def upload_script():
 
     if script_file and script_file.filename.endswith('.lua'):
         script_content = script_file.read().decode('utf-8')
-        
         # Save the new script
         db.save_lua_script(username, script_name, script_content, is_private)
         return redirect(url_for('logic.action_control'))
     else:
         return "Invalid file type. Only Lua files are allowed.", 400
-  
+    
+@app.route('/logic/execute_gesture_action', methods=['POST'])
+def execute_gesture_action():
+    data = request.get_json()
+    gesture = data.get('gesture')
+    
+    # Example: Mapping gestures to Lua scripts
+    gesture_script_map = {
+        'one': 'script_one.lua',
+        'peace': 'script_peace.lua',
+        'three': 'script_three.lua',
+        # Add mappings for other gestures...
+    }
+
+    script = gesture_script_map.get(gesture)
+    
+    if script:
+        # Execute the Lua script (example implementation)
+        try:
+            result = execute_lua_script(script)
+            return jsonify(result=result)
+        except Exception as e:
+            return jsonify(error=str(e)), 500
+    else:
+        return jsonify(error="No script found for gesture"), 400
+
+def execute_lua_script(script):
+    # Implement the logic to execute the Lua script and return the result
+    # This is a placeholder function
+    return "Result from " + script
+    
 # Gesture to Text Conversion
 @logic.route("/gestureReco_text")
 @flask_login.login_required
@@ -209,6 +231,8 @@ def recognizing_gestures_text(data):
 
     except Exception as e:
         print(f"Error in recognizing_gestures: {e}")
+
+
 
 @logic.route("/videos/<filename>")
 def serve_video(filename):
