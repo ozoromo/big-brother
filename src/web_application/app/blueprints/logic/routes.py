@@ -23,7 +23,7 @@ from gesture_recognizer import GestureRecognizer
 import question_answering.qa_algo_core as qa
 
 from base_database import BaseDatabase
-from lus_sandbox import run_lua_in_sandbox
+from lua_sandbox_runner import run_lua_in_sandbox
 
 db = BaseDatabase()
 
