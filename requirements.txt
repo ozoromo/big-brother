@@ -54,6 +54,7 @@ scikit-learn
 uuid
 pymongo==4.1.1
 dnspython
+dotenv
 
 ### aditional ###
 protobuf==3.20.*
