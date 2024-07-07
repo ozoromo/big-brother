@@ -60,5 +60,6 @@ protobuf==3.20.*
 
 ### gestureRecognition ###
 mediapipe-model-maker
+lupa
 
 
