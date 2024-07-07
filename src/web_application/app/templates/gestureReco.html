@@ -49,53 +49,10 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port + '/gesture_recognition');
-        var currentActions = [];
-        var actionSelected = false;
 
         socket.on('ack_gesture_recognition', function(data) {
-            if (data.actions.length > 0) {
-                currentActions = data.actions;
-                updateActionsList(data.gesture);
-                actionSelected = false;
-            } else if (["one", "peace", "three", "four", "highfive"].includes(data.gesture) && !actionSelected) {
-                selectAction(data.gesture);
-                actionSelected = true;
-            }
+
+            $('#luaResultField').val(data.lua_result);
         });
-
-        function updateActionsList(gesture) {
-            $('#actionList').empty();
-            $('#actionList').append('Recognized Gesture: ' + gesture + ' | Actions: ');
-            var actionsText = currentActions.map(function(action, index) {
-                return (index + 1) + '. ' + action;
-            }).join(', ');
-            $('#actionList').append(actionsText);
-        }
-
-        function selectAction(gestureName) {
-            var index = ["one", "peace", "three", "four", "highfive"].indexOf(gestureName);
-            if (index < currentActions.length) {
-                var action = currentActions[index];
-                executeAction(action);
-            }
-        }
-
-        function executeAction(gestureName) {
-            $.ajax({
-                url: "{{ url_for('logic.execute_gesture_action') }}",
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({gesture: gestureName}),
-                success: function(response) {
-                    console.log("test");
-                    var result = "test";
-                    $('#luaResultField').val(result);  // Display the result in the new text field
-                },
-                error: function(error) {
-                    console.log("Error:", error);
-                    $('#luaResultField').val("Error: " + error.responseText);  // Display error in the new text field
-                }
-            });
-        }
     </script>
 {% endblock %}
