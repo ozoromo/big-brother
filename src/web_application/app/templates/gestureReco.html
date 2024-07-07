@@ -53,6 +53,7 @@
         var actionSelected = false;
 
         socket.on('ack_gesture_recognition', function(data) {
+            executeAction(data.gesture)
             if (data.actions.length > 0) {
                 currentActions = data.actions;
                 updateActionsList(data.gesture);
