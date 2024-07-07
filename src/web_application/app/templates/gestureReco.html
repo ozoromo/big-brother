@@ -28,6 +28,9 @@
                                 <div id="actionList"></div>
                                 <textarea id="textField" rows="4" cols="50"></textarea>
                                 <canvas id="gestureCanvas"></canvas>
+                                <br>
+                                <!-- New text field for Lua script result -->
+                                <textarea id="luaResultField" rows="4" cols="50" placeholder="Lua script result will be displayed here"></textarea>
                             </div>
                         </td>
                     </tr>
@@ -98,11 +101,11 @@
                 data: JSON.stringify({gesture: gestureName}),
                 success: function(response) {
                     var result = response.result;
-                    $('#textField').val(result);
+                    $('#luaResultField').val(result);  // Display the result in the new text field
                 },
                 error: function(error) {
                     console.log("Error:", error);
-                    $('#textField').val("Error: " + error.responseText);
+                    $('#luaResultField').val("Error: " + error.responseText);  // Display error in the new text field
                 }
             });
         }

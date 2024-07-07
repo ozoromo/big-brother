@@ -41,13 +41,18 @@ GESTURE_ACTIONS = {
 }
 
 Gesture_Script_Map = {
-    'like': 'standart_like',
-    'rock': 'standart_rock',
-    'closed_fist': 'standart_closed_first',
+    'like': 'hello_welt',
+    'rock': 'hello_welt',
+    'closed_fist': 'hello_welt',
     'call': 'standart_call',
-    'ok ': 'standart_ok',
-    'dislike': 'standart_dislike',
-    'italy': 'standart_italy'
+    'ok ': 'hello_welt',
+    'dislike': 'hello_welt',
+    'italy': 'hello_welt',
+    'one' : 'hello_welt', 
+    'piece' : 'hello_welt',
+    'three' : 'hello_welt', 
+    'four' : 'hello_welt',
+    'highfive' : 'hello_welt'
 }
 
 # Gesture to Action 
