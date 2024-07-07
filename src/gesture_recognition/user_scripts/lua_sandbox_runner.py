@@ -3,9 +3,12 @@ from lupa import LuaRuntime, LuaError
 # Create a Lua runtime with restricted libraries.
 lua = LuaRuntime(unpack_returned_tuples=True)
 
+def print_sandbox(input):
+    print("from lua Sandbox: ", input)
+
 # Default sanbox only allows printing and acess to math functions
 safe_globals = {
-        'print': print,  # To allow print statements from Lua to appear in Python output
+        'print': print_sandbox,  # To allow print statements from Lua to appear in Python output
         'math': lua.globals().math,  # Expose the math library
     }
 
@@ -38,4 +41,3 @@ def run_lua_in_sandbox(lua_code, safe_globals=safe_globals):
 #output = run_lua_in_sandbox(lua_code)
 
 #print(output)
-
