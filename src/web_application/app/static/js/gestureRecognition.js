@@ -5,7 +5,7 @@ $(document).ready(function(){
     gestureCanvas.width = video.videoWidth;
     gestureCanvas.height = video.videoHeight;
 
-    var socket = io.connect("http://" + document.domain + ":" + location.port + "/gesture_recognition");
+    var socket = io.connect("https://" + document.domain + ":" + location.port + "/gesture_recognition");
 
     setInterval(function(){
         originalWebcamCanvas.width = video.videoWidth;
