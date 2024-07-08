@@ -49,7 +49,7 @@ Gesture_Script_Map = {
     'dislike': 'hello_welt',
     'italy': 'hello_welt',
     'one' : 'hello_welt', 
-    'piece' : 'hello_welt',
+    'peace' : 'hello_welt',
     'three' : 'hello_welt', 
     'four' : 'hello_welt',
     'highfive' : 'hello_welt'
