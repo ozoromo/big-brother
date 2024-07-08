@@ -2,7 +2,6 @@ import os
 import uuid
 import datetime as dt
 import typing
-from dotenv import load_dotenv
 import numpy as np
 import pickle
 from pytz import timezone
@@ -24,12 +23,10 @@ class BaseDatabase:
         the same structure as specified in the documentation.
 
         """
-        # load environment variables from .env-file 
-        load_dotenv()
         
         if not mongo_client:
-            mongoURI = os.getenv("MONGO_URI")
-            self.cluster = pymongo.MongoClient(mongoURI,
+            new_mongo = "mongodb+srv://trieuduongdc:bigbrother2024!@cluster0.rd6xjc9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            self.cluster = pymongo.MongoClient(new_mongo,
                                                connectTimeoutMS=30000,
                                                socketTimeoutMS=None,
                                                connect=False,

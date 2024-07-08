@@ -41,4 +41,3 @@ def run_lua_in_sandbox(lua_code, safe_globals=safe_globals):
 #output = run_lua_in_sandbox(lua_code)
 
 #print(output)
-

@@ -26,10 +26,12 @@ class GestureRecognizer:
         
         # Perform gesture recognition
         recognition_result = self.recognizer.recognize(mp_image)
-        
+
         if not recognition_result.gestures:
             return image, "No gesture recognized"
-
+        top_gesture = recognition_result.gestures[0][0]
+        if top_gesture.score < 0.50:
+            return image, "No gesture recognized"
         top_gesture = recognition_result.gestures[0][0]
         hand_landmarks_list = recognition_result.hand_landmarks
 

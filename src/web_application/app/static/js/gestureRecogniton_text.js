@@ -5,7 +5,7 @@ $(document).ready(function(){
     gestureCanvas.width = video.videoWidth;
     gestureCanvas.height = video.videoHeight;
 
-    var socket = io.connect("https://" + document.domain + ":" + location.port + "/gesture_recognition");
+    var socket = io.connect("https://" + document.domain + ":" + location.port + "/gesture_recognition_text");
 
     setInterval(function(){
         originalWebcamCanvas.width = video.videoWidth;
@@ -15,10 +15,10 @@ $(document).ready(function(){
         );
 
         var dataURL = originalWebcamCanvas.toDataURL("image/jpeg");
-        socket.emit("gesture_recognition", {image: dataURL});
+        socket.emit("gesture_recognition_text", {image: dataURL});
     }, 700);
 
-    socket.on("ack_gesture_recognition", function(image) {
+    socket.on("ack_gesture_recognition_text", function(image) {
         gestureCanvas.width = video.videoWidth;
         gestureCanvas.height = video.videoHeight;
         var ctx = gestureCanvas.getContext("2d");

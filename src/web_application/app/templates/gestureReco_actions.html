@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Gesture Recognition{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div id="container">
+        <center>
+            <table cellspacing="0" cellpadding="0" class="table_report_line">
+                <tbody>
+                    <tr>
+                        <td>Your Webcam</td>
+                        <td>Gesture recognition</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <canvas id="originalWebcamCanvas" hidden></canvas>
+                            <video autoplay="true" id="videoElement"></video>
+                        </td>
+                        <td>
+                            <div id="actionsContainer">
+                                <h3>Actions:</h3>
+                                <div id="actionList">one, peace, three, four, highfive, call, ok, like, dislike, italy, rock, closed_fist</div>
+                                <textarea id="luaResultField" rows="4" cols="50" placeholder="Lua script result will be displayed here"></textarea>
+                                <canvas id="gestureCanvas"></canvas>
+                                <br>
+                                <!-- New text field for Lua script result -->
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <button onclick="location.href='{{ url_for('logic.action_control') }}'">Go to Action Control</button>
+        </center>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/gestureRecognition.js') }}"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script>
+        var socket = io.connect('https://' + document.domain + ':' + location.port + '/gesture_recognition');
+
+        socket.on('ack_gesture_recognition', function(data) {
+
+            $('#luaResultField').val(data.lua_result);
+        });
+    </script>
+{% endblock %}

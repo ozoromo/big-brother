@@ -20,18 +20,15 @@
                     <tr>
                         <td>
                             <canvas id="originalWebcamCanvas" hidden></canvas>
-                            <video autoplay="true" id="videoElement"></video>
+                            <video autoplay="true" id="videoElement" playsinline></video>
                         </td>
                         <td>
                             <div id="actionsContainer">
                                 <h3>Actions:</h3>
-                                <div id="actionList"></div>
+                                <div id="actionList">one, peace, three, four, highfive, call, ok, like, dislike, italy, rock, closed_fist</div>
                                 <textarea id="textField" rows="4" cols="50"></textarea>
-                                <canvas id="gestureCanvas"></canvas>
-                                <br>
-                                <!-- New text field for Lua script result -->
-                                <textarea id="luaResultField" rows="4" cols="50" placeholder="Lua script result will be displayed here"></textarea>
                             </div>
+                            <canvas id="gestureCanvas"></canvas>
                         </td>
                     </tr>
                 </tbody>
@@ -48,11 +45,31 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
     <script>
-        var socket = io.connect('http://' + document.domain + ':' + location.port + '/gesture_recognition');
+        var socket = io.connect('https://' + document.domain + ':' + location.port + '/gesture_recognition');
 
         socket.on('ack_gesture_recognition', function(data) {
+            var gesture = data.gesture;
+            $('#textField').val('Recognized Gesture: ' + gesture);
 
-            $('#luaResultField').val(data.lua_result);
+            // Execute the Lua script for the recognized gesture
+            executeLuaScript(gesture);
         });
+
+        function executeLuaScript(gesture) {
+            $.ajax({
+                url: "{{ url_for('logic.execute_gesture_action') }}",
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({gesture: gesture}),
+                success: function(response) {
+                    var result = response.result;
+                    $('#textField').val('Gesture: ' + gesture + '\nResult: ' + result);
+                },
+                error: function(error) {
+                    console.log("Error:", error);
+                    $('#textField').val('Error: ' + error.responseText);
+                }
+            });
+        }
     </script>
 {% endblock %}
