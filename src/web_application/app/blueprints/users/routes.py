@@ -13,9 +13,11 @@ import uuid
 from flask import render_template, request, flash, Blueprint
 from flask_login import login_required, logout_user
 
-# Math
+# Math and facerecognition libraries
 import numpy as np
 import face_recognition
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "face_recog"))
+import face_recognition_lib.FaceReco_class as LogikFaceRec
 
 # Dealing with images
 from imageio import imread
@@ -157,7 +159,10 @@ def create():
             
         if len(face_encodings) >= 2:
             for i in range(1, len(face_encodings)):
-                if not np.allclose(face_encodings[0], face_encodings[i], atol=0.6):
+                logik = LogikFaceRec.FaceReco()
+                (results, dists) = logik.encoding_to_encoding(face_encodings[0], face_encodings[i])
+                result = results[0]
+                if not result:
                     rejectionDict["reason"] = "Faces in provided images do not match"
                     picture_database.delete_user_with_id(user_uuid)
                     return render_template("rejection.html",
@@ -165,7 +170,7 @@ def create():
                                         title="Reject", form=form)
 
 
-        picture_database.update_user_enc(user_uuid, encodings[0])
+        picture_database.update_user_enc(user_uuid, face_encodings[0])
         encodings_saved = True
 
         for storage in pictures:
