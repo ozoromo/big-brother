@@ -1,4 +1,5 @@
 from lupa import LuaRuntime, LuaError
+import webbrowser
 
 # Create a Lua runtime with restricted libraries.
 lua = LuaRuntime(unpack_returned_tuples=True)
