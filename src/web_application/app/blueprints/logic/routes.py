@@ -112,7 +112,8 @@ def recognizing_gestures(data):
 
         # Execute the Lua script based on the recognized gesture
         script_id = Gesture_Script_Map.get(class_name)
-        if script_id and (datetime.now() - last_executed_lua_script) > timedelta(seconds =2):
+        global last_executed_lua_script
+        if script_id and (datetime.now() - last_executed_lua_script) > timedelta(seconds=2):
             script_content = db.get_lua_script_by_id(script_id)
             lua_result = run_lua_in_sandbox(script_content)
             last_executed_lua_script = datetime.now()
