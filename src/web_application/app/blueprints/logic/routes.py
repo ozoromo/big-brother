@@ -1,6 +1,7 @@
 import os
 import sys
 import io
+from datetime import datetime, timedelta
 
 from flask import (render_template, request, Blueprint, url_for, send_from_directory, redirect)
 import flask_login
@@ -26,6 +27,8 @@ from base_database import BaseDatabase
 from lua_sandbox_runner import run_lua_in_sandbox
 
 db = BaseDatabase()
+
+last_executed_lua_script = datetime.now()
 
 logic = Blueprint("logic", __name__)
 gesture = GestureRecognizer()
@@ -109,9 +112,10 @@ def recognizing_gestures(data):
 
         # Execute the Lua script based on the recognized gesture
         script_id = Gesture_Script_Map.get(class_name)
-        if script_id:
+        if script_id and (datetime.now() - last_executed_lua_script) > timedelta(seconds =2):
             script_content = db.get_lua_script_by_id(script_id)
             lua_result = run_lua_in_sandbox(script_content)
+            last_executed_lua_script = datetime.now()
             emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "lua_result": lua_result})
         else:
             emit("ack_gesture_recognition", {"image": response_data_url, "gesture": class_name, "lua_result": "No script found"})
