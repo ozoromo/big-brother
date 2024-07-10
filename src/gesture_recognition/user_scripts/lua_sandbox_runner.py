@@ -5,11 +5,20 @@ lua = LuaRuntime(unpack_returned_tuples=True)
 
 def print_sandbox(input):
     print("from lua Sandbox: ", input)
+    
+def open_webpage(url):
+    webbrowser.open(url)
+    return f"{url}"
 
 # Default sanbox only allows printing and acess to math functions
 safe_globals = {
         'print': print_sandbox,  # To allow print statements from Lua to appear in Python output
         'math': lua.globals().math,  # Expose the math library
+        'os': {
+            'date': lua.globals().os.date  # Expose the date function from os library
+        },
+        'open_webpage' : open_webpage
+        
     }
 
 def run_lua_in_sandbox(lua_code, safe_globals=safe_globals):
