@@ -203,6 +203,22 @@
                 "course_name": "Projekte@mdt"
             },
             {
+                "course_id": "32753",
+                "course_name": "IV Grundzüge der Technischen Optik SoSe 2024"
+            },
+            {
+                "course_id": "30017",
+                "course_name": "Projekt Elektrische Antriebe"
+            },
+            {
+                "course_id": "13844",
+                "course_name": "Lichttechnik Organisation"
+            },
+            {
+                "course_id": "37052",
+                "course_name": "Aktuelle Forschung an Energiewandlern und Energiespeichern SoSe 2024"
+            },
+            {
                 "course_id": "36973",
                 "course_name": "Maschinelles Lernen für die Fehlerdetektion WiSe 23/24 -"
             },
@@ -771,6 +787,222 @@
             {
                 "course_id": "37999",
                 "course_name": "[SoSe 2024] Modelle zur Informationsverarbeitung im _Gehirn"
+            },
+            {
+                "course_id": "37981",
+                "course_name": "[SoSe 2024] Parameterized Algorithmics"
+            },
+            {
+                "course_id": "37952",
+                "course_name": "[SoSe 2024] Deep Learning 2"
+            },
+            {
+                "course_id": "37947",
+                "course_name": "[SoSe 2024] IMSEM Seminar on Hot Topics in Information Management"
+            },
+            {
+                "course_id": "37927",
+                "course_name": "[SoSe 2024] Theoretische Grundlagen der Informatik"
+            },
+            {
+                "course_id": "37912",
+                "course_name": "[SoSe 2024] Machine Intelligence II: Unsupervised Methods"
+            },
+            {
+                "course_id": "37909",
+                "course_name": "[SoSe 2024] Communicating Hot Topics in Intelligence Research (Science of Intelligence: Distilling Discourse into Outreach)"
+            },
+            {
+                "course_id": "37892",
+                "course_name": "[SoSe 2024] Seminar: Machine Learning and Data Management Systems"
+            },
+            {
+                "course_id": "37889",
+                "course_name": "[SoSe 2024] Programmierpraktikum Modelle Dynamischer Systeme"
+            },
+            {
+                "course_id": "37840",
+                "course_name": "[SoSe 2024] Cognitive Algorithms"
+            },
+            {
+                "course_id": "37815",
+                "course_name": "[SoSe 2024] Informationssysteme und Datenanalyse (E-Prüfung)"
+            },
+            {
+                "course_id": "37805",
+                "course_name": "[SoSe 2024] Informationssysteme und Datenanalyse"
+            },
+            {
+                "course_id": "37800",
+                "course_name": "[SoSe 2024] Algorithmentheorie"
+            },
+            {
+                "course_id": "37785",
+                "course_name": "[SoSe 2024] Machine Learning in Neuroscience"
+            },
+            {
+                "course_id": "37776",
+                "course_name": "[SoSe 2024] Seminar: Aktuelle Themen der Algorithmik"
+            },
+            {
+                "course_id": "37775",
+                "course_name": "[SoSe 2024] Algorithm Engineering II"
+            },
+            {
+                "course_id": "37750",
+                "course_name": "[SoSe 2024] World of Proofcraft"
+            },
+            {
+                "course_id": "37748",
+                "course_name": "[SoSe 2024] Formale Sprachen und Automaten"
+            },
+            {
+                "course_id": "37747",
+                "course_name": "[SoSe 2024] Einführung in das interaktive Theorembeweisen (Isabelle-Lab)"
+            },
+            {
+                "course_id": "37745",
+                "course_name": "[SoSe 24] Programming Lab: Quality Data Science"
+            },
+            {
+                "course_id": "37743",
+                "course_name": "[SoSe 24] Uncertainty in Machine Learning"
+            },
+            {
+                "course_id": "37695",
+                "course_name": "[SoSe24] Classical Topics in Machine Learning"
+            },
+            {
+                "course_id": "37694",
+                "course_name": "[SoSe 24] Seminar: Explainable Machine Learning"
+            },
+            {
+                "course_id": "37693",
+                "course_name": "Machine Learning for Quantum Chemistry SoSe24"
+            },
+            {
+                "course_id": "37692",
+                "course_name": "Seminar Hot Topics in ML SS24"
+            },
+            {
+                "course_id": "37645",
+                "course_name": "[SoSe 2024] BDSPRO - Big Data Systems Project"
+            },
+            {
+                "course_id": "37588",
+                "course_name": "[SoSe 24] Julia Programming for Machine Learning"
+            },
+            {
+                "course_id": "37571",
+                "course_name": "[SoSe 2024] Programmierpraktikum Datensysteme: Data Systems Coding Club (FG DIMA)"
+            },
+            {
+                "course_id": "37519",
+                "course_name": "Current Topics in Intelligence Research: Quantitative Approaches to Behavior"
+            },
+            {
+                "course_id": "37511",
+                "course_name": "[SoSe24] Datenbankpraktikum"
+            },
+            {
+                "course_id": "37510",
+                "course_name": "Data Science for Cognitive Neuroscience"
+            },
+            {
+                "course_id": "37508",
+                "course_name": "[SoSe 2024] BDASEM Big Data Analytics Seminar"
+            },
+            {
+                "course_id": "37507",
+                "course_name": "[SS 2024] DBSEM Seminar on Advanced Topics in Database and Information Systems (Data Stream Management)"
+            },
+            {
+                "course_id": "37506",
+                "course_name": "[SS 2024] Master’s Thesis Colloquium in Data Management Systems"
+            },
+            {
+                "course_id": "37500",
+                "course_name": "[SS 2024] Bachelor's Thesis Colloquium in Data Management Systems"
+            },
+            {
+                "course_id": "37443",
+                "course_name": "Large-scale Data Engineering (SoSe 2024)"
+            },
+            {
+                "course_id": "37405",
+                "course_name": "[2024-SoSe] Programmierpraktikum Algorithmen und Datenstrukturen"
+            },
+            {
+                "course_id": "37400",
+                "course_name": "[Summer 24] Python for Machine Learning"
+            },
+            {
+                "course_id": "37390",
+                "course_name": "Bachelorarbeiten am FG NEURO - AlgoGames"
+            },
+            {
+                "course_id": "37360",
+                "course_name": "[SoSe 24] Programmierpraktikum Meta-Seite"
+            },
+            {
+                "course_id": "37355",
+                "course_name": "Programmierpraktikum: Datensysteme (SoSe 24)"
+            },
+            {
+                "course_id": "37354",
+                "course_name": "Architecture of Machine Learning Systems (SoSe 24)"
+            },
+            {
+                "course_id": "37266",
+                "course_name": "[SoSe 24] Programmierpraktikum Cyber-Physical Systems"
+            },
+            {
+                "course_id": "37239",
+                "course_name": "[SoSe 2024] Seminar Quality and Usability"
+            },
+            {
+                "course_id": "37217",
+                "course_name": "[SoSe24] Neural Information Processing Projects"
+            },
+            {
+                "course_id": "37212",
+                "course_name": "[SoSe 24] IT-SecLab: Vulnerability Assessment"
+            },
+            {
+                "course_id": "37162",
+                "course_name": "[SoSe24] Praktisches Programmieren und Rechneraufbau"
+            },
+            {
+                "course_id": "37077",
+                "course_name": "[2024-SoSe] Ausgewählte Themen zu Algorithmen und Datenstrukturen"
+            },
+            {
+                "course_id": "37008",
+                "course_name": "[SoSe 24] Lecture: Machine Learning for Computer Security"
+            },
+            {
+                "course_id": "37007",
+                "course_name": "[SoSe 24] Lab: Applied Security Lab"
+            },
+            {
+                "course_id": "27927",
+                "course_name": "SESE Thesis Lab"
+            },
+            {
+                "course_id": "37013",
+                "course_name": "[SoSe 24] Seminar: Mobile Privacy and Security"
+            },
+            {
+                "course_id": "37009",
+                "course_name": "[SoSe 24] Project: Security Playground for Generative Agents"
+            },
+            {
+                "course_id": "37010",
+                "course_name": "[SoSe 24] Project: Steganography with Language Models"
+            },
+            {
+                "course_id": "37012",
+                "course_name": "[SoSe 24] Seminar: Privacy and Security in Learning"
             },
             {
                 "course_id": "37141",
@@ -1485,6 +1717,30 @@
             {
                 "course_id": "34507",
                 "course_name": "[INET] Algorithms for Networked Systems [SoSe 2024]"
+            },
+            {
+                "course_id": "37042",
+                "course_name": "[SoSe 2024] Open Distributed Systems - Seminar"
+            },
+            {
+                "course_id": "37067",
+                "course_name": "[SoSe 2024] ODS Open Distributed Systems - Project"
+            },
+            {
+                "course_id": "1037",
+                "course_name": "NÜ: Adaptive Filter"
+            },
+            {
+                "course_id": "2550",
+                "course_name": "NÜ: Quellencodierung"
+            },
+            {
+                "course_id": "1038",
+                "course_name": "NÜ: Projekte und Seminare"
+            },
+            {
+                "course_id": "2552",
+                "course_name": "NÜ: Digitale Nachrichtenübertragung"
             },
             {
                 "course_id": "36996",

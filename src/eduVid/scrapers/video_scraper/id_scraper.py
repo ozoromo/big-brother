@@ -100,6 +100,41 @@ class IdScraper():
                         "course_name": course_name
                     })
 
+                # Find if other pages exists for more courses
+                try:
+                    mehr_anzeigen_button = self.wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(@class, "paging")]//a[contains(text(), "Mehr anzeigen")]')))
+                    mehr_anzeigen_button.click()
+                    i = 1
+                    while True:
+                        print("On page ",i)
+                        course_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class, "coursebox")]')))
+                        if len(course_elements) == 0:
+                            break
+
+                        for course in course_elements:
+                            course_id = course.get_attribute('data-courseid')
+                            course_name = course.find_element(By.CSS_SELECTOR, 'div.coursename > a').text
+                            
+                            institute_entry['courses'].append({
+                                "course_id": course_id,
+                                "course_name": course_name
+                            })
+                        i += 1
+                        
+                        try:
+                            next_page = self.wait.until(EC.presence_of_element_located((By.XPATH, '//li[contains(@class, "page-item")]//a[contains(@class, "page-link") and span[contains(text(), "»")]]')))
+                            next_page_link = next_page.get_attribute('href')
+                            self.driver.get(next_page_link)
+                        except TimeoutException:
+                            print("Next page link not found")
+                            break
+
+                except TimeoutException:
+                    print("Mehr anzeigen button not found")
+
+                self.driver.get(link)
+                time.sleep(3)
+
                 # Get all archieved modules from WS 23/24
                 try:
                     archivebereich = self.driver.find_element(By.XPATH, '//div[contains(@class, "category")]//a[contains(text(), "Archivbereich")]')
