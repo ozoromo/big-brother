@@ -3,10 +3,6 @@
         "name": "Institut für Energie- und Automatisierungstechnik",
         "courses": [
             {
-                "course_id": "37800",
-                "course_name": "[SoSe 2024] Algorithmentheorie"
-            },
-            {
                 "course_id": "39268",
                 "course_name": "[WiSe 2024/25] Material Grundlagen der Lichttechnik für Abschlussarbeiten"
             },
