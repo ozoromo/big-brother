@@ -112,14 +112,10 @@ class VideoScraper():
                 video_url = video.get_attribute('src')
                 if video_url:
                     video_dir = os.path.join(course_dir, f"video_{index + 1}")
-                    slides_dir = os.path.join(video_dir, "slides")
-                    # Create directories for video and slides
+                    # Create directories for video
                     if not os.path.exists(video_dir):
                         os.makedirs(video_dir)
                         print(f"Folder created: {video_dir}")
-                    if not os.path.exists(slides_dir):
-                        os.makedirs(slides_dir)
-                        print(f"Folder created: {slides_dir}")
                     # Download video
                     self.download_video(session, video_url, video_dir, f"video_{index + 1}.mp4")
             except Exception as e:
