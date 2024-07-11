@@ -138,7 +138,8 @@ class IdScraper():
                 # Get all archieved modules from WS 23/24
                 try:
                     archivebereich = self.driver.find_element(By.XPATH, '//div[contains(@class, "category")]//a[contains(text(), "Archivbereich")]')
-                    self.driver.get(archivebereich.get_attribute('href'))
+                    archiv_link = archivebereich.get_attribute('href')
+                    self.driver.get(archiv_link)
 
                     ws23 = self.driver.find_element(By.XPATH, '//div[contains(@class, "category")]//a[contains(text(), "WS23/24")]')
                     self.driver.get(ws23.get_attribute('href'))
@@ -152,6 +153,22 @@ class IdScraper():
                             "course_id": course_id,
                             "course_name": course_name
                         })
+
+                    self.driver.get(archiv_link)
+
+                    ss23 = self.driver.find_element(By.XPATH, '//div[contains(@class, "category")]//a[contains(text(), "SS23")]')
+                    self.driver.get(ss23.get_attribute('href'))
+
+                    course_elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.coursebox')
+                    for course in course_elements:
+                        course_id = course.get_attribute('data-courseid')
+                        course_name = course.find_element(By.CSS_SELECTOR, 'div.coursename > a').text
+                        
+                        institute_entry['courses'].append({
+                            "course_id": course_id,
+                            "course_name": course_name
+                        })
+
                 except Exception as e:
                     print(f"Error processing archived modules for {name}: {e}")
 
