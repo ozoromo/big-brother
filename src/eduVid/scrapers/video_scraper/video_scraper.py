@@ -94,6 +94,16 @@ class VideoScraper():
         
         hrefs = [link.get_attribute('href') for link in links]
 
+        if not hrefs:
+            print("No videos found under ", courseId)
+            return
+        if len(hrefs) > 30:
+            print("Too much videos found under ", courseId, ". Please check and confirm to process further: ")
+            confirmation = input("To continue enter 1: ")
+            if confirmation != "1":
+                print("Skipping videos from course: ", courseId)
+                return
+
         for index, link in enumerate(hrefs):
             try:
                 self.driver.get(link)
