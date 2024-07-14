@@ -5,3 +5,11 @@ moviepy
 
 selenium
 requests
+
+nltk
+langdetect
+pymongo
+gridfs
+llama_index
+llama_parse
+sentence_transformers

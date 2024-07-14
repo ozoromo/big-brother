@@ -5,3 +5,5 @@ __pycache__
 .gitconfig
 .vscode
 .env
+config.json
+processed_video_ids.json
