@@ -1,4 +1,7 @@
 from lupa import LuaRuntime, LuaError
+import threading
+import multiprocessing
+import time
 
 # Create a Lua runtime with restricted libraries.
 lua = LuaRuntime(unpack_returned_tuples=True)
@@ -12,8 +15,7 @@ safe_globals = {
         'math': lua.globals().math,  # Expose the math library
     }
 
-def run_lua_in_sandbox(lua_code, safe_globals=safe_globals):
-    # Load the Lua code with restricted globals
+def lua_runner(lua_code, safe_globals, queue):
     try:
         lua_func = lua.eval("""
             function(sandbox, code)
@@ -22,14 +24,25 @@ def run_lua_in_sandbox(lua_code, safe_globals=safe_globals):
                 return func()
             end
         """)
-
         # Execute the Lua code in the sandboxed environment
         result = lua_func(safe_globals, lua_code)
-        return result
-
+        queue.put(result)
     except LuaError as e:
-        return f"LuaError: {e}"
+        queue.put(f"LuaError: {e}")
 
+def run_lua_in_sandbox(lua_code, safe_globals=safe_globals, timeout=30):
+    queue = multiprocessing.Queue()
+    process = multiprocessing.Process(target=lua_runner, args=(lua_code, safe_globals, queue))
+
+    process.start()
+    process.join(timeout)
+
+    if process.is_alive:
+        process.terminate()
+        process.join()
+        return "Execution exceeded the time limit and was terminated"
+    else:
+        return queue.get()
 
 # Besipiels lua code
 # lua_code = """
