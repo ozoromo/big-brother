@@ -145,9 +145,9 @@ def scrape_videos():
     video_scraper = VideoScraper()
     # Login to ISIS Website:
     try:
+        video_scraper.login(USERNAME,PASSWORD)
         for i, course_id in enumerate(all_course_ids):
             # Gather educational videos from ISIS
-            video_scraper.login(USERNAME,PASSWORD)
             institut_dir = os.path.join(DOWNLOAD_PATH, all_institut_names[i])
             video_scraper.scrap_videos(institut_dir, course_id)
 
