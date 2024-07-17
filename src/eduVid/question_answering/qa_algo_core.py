@@ -134,6 +134,25 @@ class HelperFN:
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
+    def extract_audio_from_mp4_segment(self, input_file, output_file, start_time, end_time):
+        """
+        Extracts .wav file from .mp4 with start and end timestamps
+
+        Arguments:
+        input_file - .mp4 file path
+        output_file - path where .wav file will be saved
+        start_time - start point of the clip
+        end_time - end poing of the clip
+        """
+        try:
+            video_clip = VideoFileClip(input_file).subclip(start_time, end_time)
+            audio_clip = video_clip.audio
+            audio_clip.write_audiofile(output_file, codec="pcm_s16le")
+            audio_clip.close()
+            video_clip.close()
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
 
 class SpeechRecog:
     """

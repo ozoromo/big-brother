@@ -4,7 +4,7 @@ import shutil
 import numpy as np
 
 class SlideExtractor:
-    def __init__(self, video_path: str, output_folder: str, threshold: int = 5.0):
+    def __init__(self, video_path: str, output_folder: str, start_time: float = None, end_time: float = None, threshold: int = 5.0):
         """
         Arguments:
         video_path --  The path to the input video file (in mp4 format).
@@ -12,6 +12,8 @@ class SlideExtractor:
         """
         self.video_path = video_path
         self.output_folder = output_folder
+        self.start_time = start_time
+        self.end_time = end_time
         self.threshold = threshold
 
     def save_slide(self, previous_frame, time_from, timestamp, slide_counter):
@@ -55,11 +57,15 @@ class SlideExtractor:
 
         fps = video.get(cv2.CAP_PROP_FPS)
 
+        if self.start_time is not None:
+            video.set(cv2.CAP_PROP_POS_MSEC, self.start_time * 1000)
+            frame_counter = int(self.start_time * fps)
+
         # Process video frames
         while True:
             # Read the next frame
             end, frame = video.read()
-            if not end:
+            if not end or (self.end_time and frame_counter/fps >= self.end_time):
                 break
 
             # Skip frames

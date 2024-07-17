@@ -25,6 +25,7 @@ import nltk
 from pymongo import MongoClient
 import gridfs
 from bson.objectid import ObjectId
+from moviepy.video.io.VideoFileClip import VideoFileClip
 
 
 # Global variables for slide counting and slide limit
@@ -126,11 +127,11 @@ def download_video(fs, video_id, save_path):
     return save_path
 
 # Mp4 Video -> Mp3 Wav *-> Txt Text *[s2t Algorithm]
-def extract_audio_and_script(video_file):
-    audio_file = video_file.replace('.mp4', '.wav')
+def extract_audio_and_script(video_file, start_time, end_time):
+    audio_file = video_file.replace('.mp4', f'_segment_{start_time}_{end_time}.wav')
     print("Started extraction of audio...")
     helper = HelperFN()
-    helper.extract_audio_from_mp4(video_file, audio_file)
+    helper.extract_audio_from_mp4_segment(video_file, audio_file, start_time, end_time)
     print("Audio extraction completed.")
 
     print("Started extraction of script...")
@@ -150,10 +151,11 @@ def extract_audio_and_script(video_file):
     return context, tags
 
 # Mp4 Video -> Png Slide
-def extract_and_parse_slides(video_file, slides_dir, file_extractor):
+def extract_and_parse_slides(video_file, start_time, end_time, segment_number, file_extractor):
     global slide_counter, slide_limit_reached
+    slides_dir = video_file.replace('.mp4', f'_slides_segment_{segment_number}')
     print("Started extraction of slides...")
-    extractor = SlideExtractor(video_file, slides_dir)
+    extractor = SlideExtractor(video_file, slides_dir, start_time, end_time)
     extractor.extract_slides_from_video()
     print("Slide extraction completed.")
 
@@ -182,47 +184,61 @@ def extract_and_parse_slides(video_file, slides_dir, file_extractor):
 
     return slides_info
 
+# Extract data from the whole video, divide the video into 10 minute-segments
 def extract_data_from_video(video_dir, institute_name, course_name, course_id, parser, embed_model):
     global processed_video_ids
+    def process_segment(start_time, end_time, segment_number):
+        with ThreadPoolExecutor() as executor:
+            future_script = executor.submit(extract_audio_and_script, video_file, start_time, end_time)
+            future_slides = executor.submit(extract_and_parse_slides, video_file, start_time, end_time, segment_number, file_extractor)
+
+            context, tags = future_script.result()
+            slides_info = future_slides.result()
+
+        segment_data = {
+            "institute_name": institute_name,
+            "course_id": course_id,
+            "course_name": course_name,
+            "video_id": video_id,
+            "segment_number": segment_number,
+            "video_skript": context,
+            "tags": tags,
+            "slides": slides_info
+        }
+
+        segment_data = merge_clusters(segment_data)
+
+        # Text embedding
+        print("Started text encoding for segment", segment_number)
+        combined_text = segment_data['video_skript']
+        combined_text += ' '.join(slide['text'] for slide in segment_data['slides'])
+        preprocessed_text = preprocess_text(combined_text)
+
+        segment_data['embedding'] = embed_model.encode(preprocessed_text).tolist()
+        print("Text encoding completed for segment", segment_number)
+
+        segment_data_path = os.path.join("./storage", f"{course_id}_{video_id}_segment_{segment_number}.json")
+
+        with open(segment_data_path, 'w', encoding='utf-8') as f:
+            json.dump(segment_data, f, ensure_ascii=False, indent=4)
+
+        print(f"JSON data for segment {segment_number} created successfully.")
+    
     file_extractor = {".jpg": parser}
     video_id = int((os.path.basename(video_dir)).replace("video_", ""))
     video_file = os.path.join(video_dir, f"{os.path.basename(video_dir)}.mp4")
-    slides_dir = os.path.join(video_dir, "slides")
 
-    with ThreadPoolExecutor() as executor:
-        future_script = executor.submit(extract_audio_and_script, video_file)
-        future_slides = executor.submit(extract_and_parse_slides, video_file, slides_dir, file_extractor)
+    # Determine the duration of the video
+    with VideoFileClip(video_file) as video:
+        duration = video.duration
 
-        context, tags = future_script.result()
-        slides_info = future_slides.result()
+    segment_duration = 10 * 60  # 10 minutes in seconds
+    num_segments = int(duration // segment_duration) + 1
 
-    video_data = {
-        "institute_name": institute_name,
-        "course_id": course_id,
-        "course_name": course_name,
-        "video_id": video_id,
-        "video_skript": context,
-        "tags": tags,
-        "slides": slides_info
-    }
-
-    video_data = merge_clusters(video_data)
-
-    # text embedding
-    print("Started text encoding...")
-    combined_text = video_data['video_skript']
-    combined_text += ' '.join(slide['text'] for slide in video_data['slides'])
-    preprocessed_text = preprocess_text(combined_text)
-
-    video_data['embedding'] = embed_model.encode(preprocessed_text).tolist()
-    print("Text encoding completed...")
-
-    video_data_path = os.path.join("./storage", f"{course_id}_{video_id}.json")
-
-    with open(video_data_path, 'w', encoding='utf-8') as f:
-        json.dump(video_data, f, ensure_ascii=False, indent=4)
-
-    print(f"JSON data for {course_id}_{video_id} created successfully.")
+    for segment_number in range(1, num_segments + 1):
+        start_time = (segment_number - 1) * segment_duration
+        end_time = min(segment_number * segment_duration, duration)
+        process_segment(start_time, end_time, segment_number)
 
     # Delete video file after processing
     os.remove(video_file)
@@ -232,7 +248,7 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
     processed_video_ids.append(video_id)
     save_processed_video_ids(processed_video_ids)
 
-
+# Process videos from mongodb
 def process_videos_from_mongodb(uri, db_name, collection_name):
     global slide_limit_reached, processed_video_ids
     processed_video_ids = load_processed_video_ids()
@@ -271,6 +287,13 @@ def process_videos_from_mongodb(uri, db_name, collection_name):
         extract_data_from_video(video_path, institute_name, course_name, course_id, 
                                 parser, embed_model)
 
+# Upload the extracted json data to mongodb
+def upload_extracted_data():
+    return
+    #TODO...
+
+
+
 if __name__ == "__main__":
     config_data = json.load(open("config.json"))
     LLAMA_TOKEN = config_data["LLAMA-CLOUD"]
@@ -280,3 +303,5 @@ if __name__ == "__main__":
     collection_name = ""
 
     process_videos_from_mongodb(mongo_uri, database_name, collection_name)
+
+    
