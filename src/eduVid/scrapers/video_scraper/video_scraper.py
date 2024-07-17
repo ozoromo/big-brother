@@ -88,6 +88,7 @@ class VideoScraper():
         self.driver.get(f"https://isis.tu-berlin.de/mod/videoservice/view.php/course/{courseId}/browse")
         session = self.setup_session_with_cookies()
         try:
+            links = []
             links = self.wait_long.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'div.thumbnail-container a')))
         except TimeoutException:
             print("No videos found")
@@ -121,39 +122,42 @@ class VideoScraper():
             except Exception as e:
                 print(f"Error processing video {courseId}_{index + 1}: {e}")
 
-def scrape_videos():
-    DOWNLOAD_PATH = "./video_dir"
+if __name__ == "__main__":
+    def scrape_videos():
+        DOWNLOAD_PATH = "./video_dir"
 
-    with open('course_ids.json', 'r', encoding='utf-8') as f:
-        courses_data = json.load(f)
+        with open('src\eduVid\scrapers\\video_scraper\own_course_ids.json', 'r', encoding='utf-8') as f:
+            courses_data = json.load(f)
 
-    all_course_ids = []
-    all_institut_names = []
+        all_course_ids = []
+        all_institut_names = []
 
-    for institute in courses_data:
-        for course in institute['courses']:
-            all_course_ids.append(course['course_id'])
-            all_institut_names.append(institute['name'])
+        for institute in courses_data:
+            for course in institute['courses']:
+                all_course_ids.append(course['course_id'])
+                all_institut_names.append(institute['name'])
 
-    if not os.path.exists(DOWNLOAD_PATH):
-        os.makedirs(DOWNLOAD_PATH)
-    # User input for password and username
-    USERNAME = input("Enter your username: ")
-    PASSWORD = getpass()
+        if not os.path.exists(DOWNLOAD_PATH):
+            os.makedirs(DOWNLOAD_PATH)
+        # User input for password and username
+        USERNAME = input("Enter your username: ")
+        PASSWORD = getpass()
 
-    # Initialize Selenium Scraper:
-    video_scraper = VideoScraper()
-    # Login to ISIS Website:
-    try:
-        video_scraper.login(USERNAME,PASSWORD)
-        for i, course_id in enumerate(all_course_ids):
-            # Gather educational videos from ISIS
-            institut_dir = os.path.join(DOWNLOAD_PATH, all_institut_names[i])
-            video_scraper.scrap_videos(institut_dir, course_id)
+        # Initialize Selenium Scraper:
+        video_scraper = VideoScraper()
+        # Login to ISIS Website:
+        try:
+            video_scraper.login(USERNAME,PASSWORD)
+            for i, course_id in enumerate(all_course_ids):
+                # Gather educational videos from ISIS
+                institut_dir = os.path.join(DOWNLOAD_PATH, all_institut_names[i])
+                video_scraper.scrap_videos(institut_dir, course_id)
 
-        video_scraper.logout()
+                video_scraper.logout()
 
-    finally:
-        video_scraper.driver.quit()
+        finally:
+            video_scraper.driver.quit()
+        
+    scrape_videos()
 
         

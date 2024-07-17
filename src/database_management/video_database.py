@@ -23,8 +23,9 @@ class VideoDatabase(BaseDatabase):
     def __init__(self,dbhost=None):
         BaseDatabase.__init__(self, dbhost)
         self._VIDEO_RESOURCE_BUCKET = "vid_resource"
+        self._VIDEO_RESOURCE_BUCKET_FILES = "vid_resource.files"
 
-    def insert_video(self, vid, user_uuid: uuid.UUID, filename: str, video_transcript: str):
+    def insert_video(self, vid, user_uuid: uuid.UUID, filename: str, kursID: str, video_transcript=""):
         """
         Inserts a new video into the database and returns the 
         uuid of the inserted video.
@@ -56,14 +57,15 @@ class VideoDatabase(BaseDatabase):
             try:
                 fs.upload_from_stream_with_id(
                     vid_uuid,
-                    str(user_uuid),
+                    str(user_uuid), # filename but doesnt make much sense to set user_uuid as filename
                     source = vid,
                     metadata = {
                         "vid_id": vid_uuid,
                         "user_id": str(user_uuid),
+                        "course_id": kursID,
                         "date": dt.datetime.now(tz=timezone('Europe/Amsterdam')),
                         "filename": filename,
-                        "video_transcript": video_transcript,
+                        "video_transcript": video_transcript
                     },
                 )
                 break
@@ -97,6 +99,7 @@ class VideoDatabase(BaseDatabase):
            raise TypeError
 
         fs = GridFSBucket(self._db, self._VIDEO_RESOURCE_BUCKET)
+        
         fs.download_to_stream(str(vid_uuid), stream)
         
         user_uuid = filename = video_transcript = None
@@ -137,7 +140,38 @@ class VideoDatabase(BaseDatabase):
             meta = gridout.metadata
             vid_ids.append(uuid.UUID(meta["vid_id"]))
         return vid_ids
-
+    
+    # default values for download and path, path is set just for testing
+    def get_videos_of_course(self,kurs_id, download=False, video_download_path="video_dir\TESTS\Marketing" ): 
+        video_infos = []
+        fs = GridFSBucket(self._db, self._VIDEO_RESOURCE_BUCKET)
+        for gridout in fs.find({"metadata.course_id": kurs_id}):
+            print(gridout)
+            video_infos.append(gridout)
+        
+        if download: 
+            if not os.path.exists(video_download_path):
+                os.makedirs(video_download_path)
+        
+            for video in video_infos:  
+                name = f"{video.metadata['filename']}"
+                output_path = os.path.join(video_download_path, f"{name}.mp4")
+                with open(output_path, 'wb') as path:
+                        self.get_video_stream(uuid.UUID(video._id), path)
+        
+        return video_infos
+    
+    def insert_multiple_videos_from_path(self, courses_path): 
+        video_ids = []
+        for course in courses_path: 
+            for video_in_course_folder in os.listdir(f"video_dir\Marketing\{course}"):
+                for video_in_folder in os.listdir(f"video_dir\Marketing\{course}\{video_in_course_folder}"):
+                    video_path = f"video_dir\Marketing\{course}"
+                    with open(f"{video_path}\{video_in_course_folder}\{video_in_folder}", 'rb') as video_file:
+                        vid_uuid = db.insert_video(video_file, user_uuid, filename=video_in_course_folder, kursID=course)
+                        video_ids.append(vid_uuid)
+        return video_ids
+    
     def delete_video(self, vid_uuid: uuid.UUID) -> bool:
         """
         Deletes a video.
@@ -160,4 +194,26 @@ class VideoDatabase(BaseDatabase):
 
         return True
 
+
+#### JUST FOR TESTING; DELETE IF PUSHING TO SERVER ####
+if __name__ == "__main__":
+    import io
+    import uuid
+
+    db = VideoDatabase()
+    user_uuid = uuid.UUID("98513bb1-45a1-4cf4-805e-be38f64e2d18") # Test user in DB
+    # vid = io.BytesIO(b"Hello World")
+    video_path = "video_dir\\Marketing\\37922\\video_1\\video_1.mp4"
+    courses = os.listdir("video_dir\Marketing")
+
+
+
+    kurs_id = '37922'
+    videos = db.get_videos_of_course(kurs_id=kurs_id, download=True)
+
+    for video in videos:
+        print(video)
+
+    vid_id_of_user = db.get_video_id_of_user(user_uuid)
+    print(vid_id_of_user)
     
