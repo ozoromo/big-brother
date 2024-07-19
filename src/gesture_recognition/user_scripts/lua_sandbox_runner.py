@@ -39,20 +39,22 @@ def lua_runner(lua_code, safe_globals, queue):
         queue.put(result)
     except LuaError as e:
         queue.put(f"LuaError: {e}")
-
+last_script = ""
 def run_lua_in_sandbox(lua_code, safe_globals=safe_globals, timeout=30):
     queue = multiprocessing.Queue()
     process = multiprocessing.Process(target=lua_runner, args=(lua_code, safe_globals, queue))
 
     process.start()
     process.join(timeout)
-
-    if process.is_alive:
+    global last_script
+    if process.is_alive():
         process.terminate()
         process.join()
-        return "Execution exceeded the time limit and was terminated"
+        return last_script
     else:
-        return queue.get()
+        if not queue.empty():
+            last_script = queue.get()
+        return last_script
 
 # Besipiels lua code
 # lua_code = """
