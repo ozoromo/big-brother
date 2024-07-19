@@ -50,8 +50,9 @@
         var socket = io.connect('http://' + document.domain + ':' + location.port + '/gesture_recognition');
 
         socket.on('ack_gesture_recognition', function(data) {
-
-            $('#luaResultField').val(data.lua_result);
+            if (data.lua_result !== "No script found") {
+                $('#luaResultField').val(data.lua_result);
+            }
         });
     </script>
 {% endblock %}
