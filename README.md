@@ -67,7 +67,7 @@ the codebase.
 
 # Benchmark
 ## Gesture Recognition
-The Benchmark loads the trained model and evaluate it.  
+The Benchmark loads the trained model from checkpoint and evaluate it. You can also use it to finetune the model.   
 Go to benchmarks/gesture_recognition and RUN: 
 ` docker build -t gesture-recognition .`
 `docker run --gpus all -v $(pwd):/app -it gesture-recognition`
