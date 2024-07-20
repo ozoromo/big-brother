@@ -58,7 +58,7 @@ def find_similar_embeddings(embedding, collection):
             "segment_number": 1,
             "thumbnail_id": 1,
             "score": { 
-                "$meta": "vector_index" 
+                "$meta": "vectorSearchScore" 
                 }
             }
         }
