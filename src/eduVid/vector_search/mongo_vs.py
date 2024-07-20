@@ -39,27 +39,6 @@ def embed_query(query):
 
     return embedding
 
-def preprocess_text(text):
-    # Detect language
-    try:
-        language = detect(text)
-    except:
-        language = 'unknown'
-
-    if language == 'de':
-        stop_words = set(stopwords.words('german'))
-    elif language == 'en':
-        stop_words = set(stopwords.words('english'))
-    else:
-        stop_words = set(stopwords.words('english')) | set(stopwords.words('german'))
-
-    words = nltk.word_tokenize(text)
-    processed_words = []
-    for word in words:
-        if word not in stop_words:
-            processed_words.append(word)
-    processed_text = ' '.join(processed_words)
-    return processed_text
 
 def find_similar_embeddings(embedding, collection):
     results = collection.aggregate([
@@ -79,7 +58,7 @@ def find_similar_embeddings(embedding, collection):
             "segment_number": 1,
             "thumbnail_id": 1,
             "score": { 
-                "$meta": "vectorSearchScore" 
+                "$meta": "vector_index" 
                 }
             }
         }
