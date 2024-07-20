@@ -1,11 +1,66 @@
 [
     {
-        "name": "Marketing",
+        "name": "Institut für Softwaretechnik und Theoretische Informatik",
         "courses": [
             {
-                "course_id": "37922",
-                "course_name": "[SoSe 2024] Marketing- und Produktionsmanagement"
+                "course_id": "38479",
+                "course_name": "[SoSe 2024] Algorithmen und Datenstrukturen"
+            },
+            {
+                "course_id": "37805",
+                "course_name": "[SoSe 2024] Informationssysteme und Datenanalyse"
+            },
+            {
+                "course_id": "35958",
+                "course_name": "[WiSe 23/24] Softwaretechnik und Programmierparadigmen"
+            },
+            {
+                "course_id": "35440",
+                "course_name": "[WiSe2023/24] Logik"
+            },
+            {
+                "course_id": "37800",
+                "course_name": "[SoSe 2024] Algorithmentheorie"
+            }
+        ]
+    },
+    {
+        "name": "Institut für Technische Informatik und Mikroelektronik",
+        "courses": [
+            {
+                "course_id": "35785",
+                "course_name": "Rechnerorganisation WS 23/24"
+            },
+            {
+                "course_id": "34950",
+                "course_name": "[WiSe 2023/24] Informatik Propädeutikum"
+            },
+            {
+                "course_id": "34749",
+                "course_name": "TKN Rechnernetze und verteilte Systeme 2023w"
+            },
+            {
+                "course_id": "39302",
+                "course_name": "[WiSe 2024/25] Wissenschaftliches Rechnen"
+            }
+    
+        ]
+    },
+    {
+        "name": "Institut für Telekommunikationssysteme",
+        "courses": [
+            {
+                "course_id": "35532",
+                "course_name": "WS 23/24 ODS Einführung in die Programmierung"
+            },
+            {
+                "course_id": "37659",
+                "course_name": "Systemprogrammierung SoSe 2024"
+            },
+            {
+                "course_id": "37656",
+                "course_name": "Verteilte Systeme SoSe 2024"
             }
         ]
     }
-]
+    ]

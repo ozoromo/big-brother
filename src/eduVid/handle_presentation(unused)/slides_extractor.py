@@ -22,7 +22,7 @@ class SlideExtractor:
         slide_filename = os.path.join(self.output_folder, f"slide_[{time_from}-{timestamp:.1f}].jpg")
         cv2.imwrite(slide_filename, previous_frame)
 
-    def extract_slides_from_video(self, frame_skip = 20):
+    def extract_slides_from_video(self, frame_skip = 120):
         """
         This method extracts individual slides from the input video.
         It utilizes the `slides_extractor` module to perform the extraction and

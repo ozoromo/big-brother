@@ -42,9 +42,12 @@ nose
 nolearn
 mediapipe
 transformers
+sentence_transformers
 torch
 faster-whisper
 moviepy
+nltk
+langdetect
 
 
 ### Data ###

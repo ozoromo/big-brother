@@ -2,6 +2,12 @@
 {% block title %}EduVid{% endblock %}
 {% block head %}
     {{ super() }}
+    <style>
+        .video-thumbnail {
+            max-width: 320px; /* Adjust as needed */
+            max-height: 240px; /* Adjust as needed */
+        }
+    </style>
 {% endblock %}
 
 {% block navbar %}
@@ -9,90 +15,47 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
-        <div class="card-body">
-            <h3 class="card-title">Video Upload</h3>
-            <form action="" id="submit-form" method="post" role="form" enctype='multipart/form-data'>
-                {{ form.csrf_token }}
-                <fieldset class="form-group">
-                    <div class="form-group">
-                        {{ form.name.label(class="form-control-label") }}
-
-                        {% if form.name.errors %}
-                            {{ form.name(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
+                    <div class="card-body">
+                        <form method="POST" id="search-form" role="form">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                {{ form.query.label(class="form-label") }}
+                                {{ form.query(class="form-control", id="query") }}
                             </div>
-                        {% else %}
-                            {{ form.name(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.video.label(class="form-control-label") }}
-
-                        {% if form.video.errors %}
-                            {{ form.video(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.video.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-outline-info" id="search-button">Search</button>
                             </div>
-                        {% else %}
-                            {{ form.video(class="form-control form-control-lg") }}
-                        {% endif %}
+                        </form>
                     </div>
-
-                    <div class="form-group">
-                        {{ form.segments.label(class="form-control-label") }}
-
-                        {% if form.segments.errors %}
-                            {{ form.segments(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.segments.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.segments(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.question.label(class="form-control-label") }}
-
-                        {% if form.question.errors %}
-                            {{ form.question(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.question.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.question(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-                </fieldset>
-                <div class="form-group">
-                    {{ form.submit(class="btn btn-outline-info", id="upload-button") }}
                 </div>
-            </form>
-
-        <div class="upload-info" id="upload-info" style="display: none">
-            <h5>This operation might take a while</h5>
-
-            <div class="spinner-container">
-                <div class="spinner"></div>
+            </div>
+            <div class="col-md-6">
+                <div id="recommended-videos">
+                    {% if videos %}
+                        {% for video in videos %}
+                            <div class="video-item list-group-item">
+                                <img src="{{ video.thumbnail_url }}" alt="{{ video.course_id }} thumbnail" class="video-thumbnail">
+                                <div>{{ video.course_id }}</div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No recommended videos available.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-
+        <div class="row">
+            <div id="video-player" class="col-md-12 embed-responsive embed-responsive-16by9">
+                <video id="main-video" class="embed-responsive-item" controls></video>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block js %}
-    <script src="{{ url_for('static', filename='js/eduVid.js') }}"></script>
     {{ super() }}
 {% endblock %}

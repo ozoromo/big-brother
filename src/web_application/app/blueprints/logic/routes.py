@@ -2,21 +2,23 @@ import os
 import sys
 import io
 
-from flask import (render_template, request, Blueprint, url_for, send_from_directory, redirect)
+from flask import (render_template, request, Blueprint, url_for, send_from_directory, redirect, Response, jsonify)
 import flask_login
 from flask_socketio import emit
 import cv2
 from PIL import Image, UnidentifiedImageError
 import numpy as np
 import base64
+import gridfs
+from bson import ObjectId
 
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid/vector_search"))
 
-from app.blueprints.logic.forms import VideoUploadForm
+from app.blueprints.logic.forms import VideoUploadForm, QueryForm
 from app import application, socketio
 
 from gesture_recognizer import GestureRecognizer
@@ -25,7 +27,10 @@ import question_answering.qa_algo_core as qa
 from base_database import BaseDatabase
 from lua_sandbox_runner import run_lua_in_sandbox
 
+from mongo_vs import vector_search
+
 db = BaseDatabase()
+fs = gridfs.GridFS(db)
 
 logic = Blueprint("logic", __name__)
 gesture = GestureRecognizer()
@@ -215,9 +220,9 @@ def serve_video(filename):
     return send_from_directory(application.config["TMP_VIDEO_FOLDER"], filename)
 
 
-@logic.route("/eduVid", methods=["GET", "POST"])
+@logic.route("/old_eduVid", methods=["GET", "POST"])
 @flask_login.login_required
-def eduVid():
+def old_eduVid():
     form = VideoUploadForm()
 
     if form.validate_on_submit():
@@ -282,4 +287,50 @@ def eduVid():
 
         return render_template("eduVidPlayer.html", video_info=video_info)
 
-    return render_template("eduVid.html", form=form)
+    return render_template("eduVid_old.html", form=form)
+
+
+@logic.route("/eduVid", methods=["GET", "POST"])
+@flask_login.login_required
+def eduVid():
+    collection_name = "thumbnails"
+    form = QueryForm()
+    recommended_videos = []
+    if form.validate_on_submit():
+        query = form.query.data
+
+        new_recommendations = vector_search(query)
+        recommended_videos.extend(new_recommendations)
+
+        if len(recommended_videos) > 10:
+            recommended_videos = recommended_videos[-10:]
+            
+        # Convert base64 thumbnails to image URLs
+        for video in recommended_videos:
+            if 'thumbnail_id' in video:
+                thumbnail_id = video['thumbnail_id']
+                fs = gridfs.GridFS(db, collection=collection_name)
+                if isinstance(thumbnail_id, str):
+                    thumbnail_id = ObjectId(thumbnail_id)
+                thumbnail_data = fs.get(thumbnail_id).read()
+
+                thumbnail_base64 = base64.b64encode(thumbnail_data).decode('utf-8')
+                # Add base64 thumbnail to video object
+                video['thumbnail'] = f"data:image/jpeg;base64,{thumbnail_base64}"
+
+    return render_template("eduVid.html", form=form, videos=recommended_videos)
+
+
+@logic.route('/video/<video_id>', methods=['GET'])
+def serve_video(video_id):
+    try:
+        # Retrieve the video file from GridFS
+        file = fs.get(ObjectId(video_id))
+
+        # Set content type as video/mp4 assuming it's an MP4 file
+        response = Response(file, content_type='video/mp4')
+        return response
+
+    except Exception as e:
+        print(f"Error serving video: {e}")
+        return "Video not found", 404

@@ -4,54 +4,31 @@ import json
 import requests
 import shutil
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "handle_presentation"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "question_answering"))
-from slides_extractor import SlideExtractor
-from slides_ocr import SlideOCR
-from qa_algo_core import HelperFN,SpeechRecog
-
 from llama_parse import LlamaParse
 from llama_index.core import SimpleDirectoryReader
 from sentence_transformers import SentenceTransformer
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from collections import Counter
-from threading import Lock
-
 from nltk.corpus import stopwords
 from langdetect import detect
 import nltk
 
+from moviepy.video.io.VideoFileClip import VideoFileClip
+import cv2
 from pymongo import MongoClient
 import gridfs
-from bson.objectid import ObjectId
-from moviepy.video.io.VideoFileClip import VideoFileClip
+from gridfs import GridFSBucket
+import numpy as np
+import matplotlib.pyplot as plt
+from bson import ObjectId
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "handle_presentation"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "question_answering"))
+
+from slides_extractor import SlideExtractor
+from qa_algo_core import HelperFN, SpeechRecog
 
 
-# Global variables for slide counting and slide limit
-# Because LLama Parse allows only 1000 free page parsing daily...
-slide_counter = Counter()
-slide_counter_lock = Lock()
-slide_limit_reached = False
-# Global list to store processed video IDs
-processed_video_ids = []
-
-# Run this locally with venv
-
-# Load processed video IDs
-def load_processed_video_ids():
-    try:
-        with open("processed_video_ids.json", "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []
-
-# Save processed video IDs
-def save_processed_video_ids(video_ids):
-    with open("processed_video_ids.json", "w") as f:
-        json.dump(video_ids, f)
-
-# Merge non-sentence tags
 def merge_clusters(data):
     merged_tags = []
     current_start = data['tags'][0][0]
@@ -101,37 +78,12 @@ def preprocess_text(text):
     processed_text = ' '.join(processed_words)
     return processed_text
 
-# Load JSON file containing course IDs and names
-def load_course_data(json_file_path):
-    with open(json_file_path, 'r', encoding='utf-8') as f:
-        course_data = json.load(f)
-    return course_data
-
-# Find course name and institute name by course ID
-def find_course_and_institute(course_data, course_id):
-    for institute in course_data:
-        institute_name = institute["name"]
-        for course in institute["courses"]:
-            if course["course_id"] == course_id:
-                return course["course_name"], institute_name
-    return None, None
-
-# Download the video
-def download_video(fs, video_id, save_path):
-    # Ensure directory exists
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    grid_out = fs.get(video_id)
-
-    with open(save_path, 'wb') as video_file:
-        video_file.write(grid_out.read())
-    return save_path
-
 # Mp4 Video -> Mp3 Wav *-> Txt Text *[s2t Algorithm]
 def extract_audio_and_script(video_file, start_time, end_time):
     audio_file = video_file.replace('.mp4', f'_segment_{start_time}_{end_time}.wav')
     print("Started extraction of audio...")
     helper = HelperFN()
-    helper.extract_audio_from_mp4_segment(video_file, audio_file, start_time, end_time)
+    helper.extract_audio_from_mp4(video_file, audio_file, start_time, end_time)
     print("Audio extraction completed.")
 
     print("Started extraction of script...")
@@ -152,7 +104,7 @@ def extract_audio_and_script(video_file, start_time, end_time):
 
 # Mp4 Video -> Png Slide
 def extract_and_parse_slides(video_file, start_time, end_time, segment_number, file_extractor):
-    global slide_counter, slide_limit_reached
+
     slides_dir = video_file.replace('.mp4', f'_slides_segment_{segment_number}')
     print("Started extraction of slides...")
     extractor = SlideExtractor(video_file, slides_dir, start_time, end_time)
@@ -160,15 +112,26 @@ def extract_and_parse_slides(video_file, start_time, end_time, segment_number, f
     print("Slide extraction completed.")
 
     print("Started slide parsing...")
-    documents = SimpleDirectoryReader(input_dir=slides_dir, file_extractor=file_extractor).load_data()
+
     slides_info = []
+    timeout_seconds = 2 * 60  # 2 minutes
 
-    with slide_counter_lock:
-        if slide_counter['count'] + len(documents) > 900:
-            print("Slide limit of 900 reached. Stopping until tomorrow...")
-            slide_limit_reached = True
+    def load_data_with_timeout():
+        documents = SimpleDirectoryReader(input_dir=slides_dir, file_extractor=file_extractor, raise_on_error=True).load_data()
+        return documents
+    with ThreadPoolExecutor() as executor:
+        future = executor.submit(load_data_with_timeout)
+        try:
+            documents = future.result(timeout=timeout_seconds)
+        except TimeoutError:
+            print("Slide parsing timed out. Skipping this segment.")
+            shutil.rmtree(slides_dir)
+            return slides_info  # Return empty slides info if timeout occurs
+        except Exception as e:
+            print(f"An error occurred while parsing slides: {e}")
+            shutil.rmtree(slides_dir)
+            return slides_info  # Return empty slides info if an error occurs
 
-        slide_counter['count'] += len(documents)
 
     for doc in documents:
         slide_info = {
@@ -184,16 +147,68 @@ def extract_and_parse_slides(video_file, start_time, end_time, segment_number, f
 
     return slides_info
 
-# Extract data from the whole video, divide the video into 10 minute-segments
+# Extract thumbnail
+def extract_thumbnail(video_file, start_time, uri, thumbnail_size = (640, 480)):
+    db_name = "BigBrother"
+    collection_name = "thumbnails"
+    client = MongoClient(uri)
+    db = client[db_name]
+
+    capture_time = start_time + 1 
+    cap = cv2.VideoCapture(video_file)
+    if not cap.isOpened():
+        print("Error opening video file.")
+        return None
+
+    cap.set(cv2.CAP_PROP_POS_MSEC, capture_time * 1000)
+    ret, frame = cap.read()
+    cap.release()
+
+    if ret:
+        # Resize the frame to the desired thumbnail size
+        resized_frame = cv2.resize(frame, thumbnail_size)
+        # Convert frame to JPEG image in memory
+        _, buffer = cv2.imencode('.jpg', resized_frame)
+        # Store JPEG buffer in MongoDB using GridFS
+        fs = gridfs.GridFS(db, collection=collection_name)
+        thumbnail_id = fs.put(buffer.tobytes())
+        print("Thumbnail saved successfully as blob.")
+        return thumbnail_id
+    else:
+        print(f"Error capturing thumbnail at time {capture_time} seconds.")
+        return None
+
+# Upload the extracted json data to mongodb
+def upload_extracted_data(json_data, uri):
+
+    db_name = "BigBrother"
+    collection_name = "extracted_data"
+    client = MongoClient(uri)
+    db = client[db_name]
+    collection = db[collection_name]
+
+    json_str = json.dumps(json_data)
+    data = json.loads(json_str)
+
+    collection.insert_one(data)
+
 def extract_data_from_video(video_dir, institute_name, course_name, course_id, parser, embed_model):
-    global processed_video_ids
+
+    if len(os.listdir(video_dir)) < 1:
+        print("This video is already analysed.")
+        return
+    config_data = json.load(open("../config.json"))
+    uri = config_data["MONGO_URI"]
+
     def process_segment(start_time, end_time, segment_number):
         with ThreadPoolExecutor() as executor:
             future_script = executor.submit(extract_audio_and_script, video_file, start_time, end_time)
             future_slides = executor.submit(extract_and_parse_slides, video_file, start_time, end_time, segment_number, file_extractor)
 
-            context, tags = future_script.result()
+            context, _ = future_script.result()
             slides_info = future_slides.result()
+
+        thumbnail_id = extract_thumbnail(video_file, start_time, uri)
 
         segment_data = {
             "institute_name": institute_name,
@@ -201,12 +216,12 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
             "course_name": course_name,
             "video_id": video_id,
             "segment_number": segment_number,
+            "thumbnail_id": str(thumbnail_id),
             "video_skript": context,
-            "tags": tags,
-            "slides": slides_info
+            "slides": slides_info,
         }
 
-        segment_data = merge_clusters(segment_data)
+        #segment_data = merge_clusters(segment_data)
 
         # Text embedding
         print("Started text encoding for segment", segment_number)
@@ -217,12 +232,9 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
         segment_data['embedding'] = embed_model.encode(preprocessed_text).tolist()
         print("Text encoding completed for segment", segment_number)
 
-        segment_data_path = os.path.join("./storage", f"{course_id}_{video_id}_segment_{segment_number}.json")
+        upload_extracted_data(segment_data, uri)
 
-        with open(segment_data_path, 'w', encoding='utf-8') as f:
-            json.dump(segment_data, f, ensure_ascii=False, indent=4)
-
-        print(f"JSON data for segment {segment_number} created successfully.")
+        print(f"JSON data for segment {segment_number} uploaded successfully.")
     
     file_extractor = {".jpg": parser}
     video_id = int((os.path.basename(video_dir)).replace("video_", ""))
@@ -244,64 +256,38 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
     os.remove(video_file)
     print(f"Deleted video file: {video_file}")
 
-    # Save processed video IDs
-    processed_video_ids.append(video_id)
-    save_processed_video_ids(processed_video_ids)
 
-# Process videos from mongodb
-def process_videos_from_mongodb(uri, db_name, collection_name):
-    global slide_limit_reached, processed_video_ids
-    processed_video_ids = load_processed_video_ids()
-    client = MongoClient(uri)
-    db = client[db_name]
-    collection = db[collection_name]
-    fs = gridfs.GridFS(db)
+def extract_data_from_all_videos(dowload_path, LLAMA_TOKEN):
 
-    config_data = json.load(open("config.json"))
-    LLAMA_TOKEN = config_data["LLAMA-CLOUD"]
 
-    embed_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    embed_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     parser = LlamaParse(api_key=LLAMA_TOKEN, result_type="text")
 
-    for video_record in collection.find():
-        if slide_limit_reached:
-            print("Slide limit reached. Skipping video processing.")
-            break
-            
-        video_id = video_record['video_id']
-        course_id = video_record['course_id']
+    with open('../scrapers/video_scraper/own_course_ids.json', 'r', encoding='utf-8') as f:
+        courses_data = json.load(f)
 
-        course_data = load_course_data('course_ids.json')
-        course_name, institute_name = find_course_and_institute(course_data, course_id)
-        if course_name is None or institute_name is None:
-            print(f"Course ID {course_id} not found in the JSON file.")
-            continue
+    all_course_ids = []
+    all_course_names = []
+    all_institut_names = []
 
-        # Check if video ID is already processed
-        if video_id in processed_video_ids:
-            print(f"Video {video_id} already processed. Skipping.")
-            continue
+    for institute in courses_data:
+        for course in institute['courses']:
+            all_course_ids.append(course['course_id'])
+            all_course_names.append(course['course_name'])
+            all_institut_names.append(institute['name'])
 
-        video_path = download_video(fs, video_id, f"./video_dir/{institute_name}/{course_id}/video_{video_id}.mp4")
-        
-        extract_data_from_video(video_path, institute_name, course_name, course_id, 
-                                parser, embed_model)
+    for i, course_id in enumerate(all_course_ids):
 
-# Upload the extracted json data to mongodb
-def upload_extracted_data():
-    return
-    #TODO...
+        institut_dir = os.path.join(dowload_path, all_institut_names[i])
+        course_dir = os.path.join(institut_dir, course_id)
+        course_name = all_course_names[i]
+        institute_name = all_institut_names[i]
+
+        video_dirs = [os.path.join(course_dir, f) for f in os.listdir(course_dir) if os.path.isdir(os.path.join(course_dir, f))]
 
 
+        for video_dir in video_dirs:
+            print(f"Starting processing: {video_dir}")
+            extract_data_from_video(video_dir, institute_name, course_name, course_id, parser, embed_model)
+            print(f"Process finished {video_dir}!")
 
-if __name__ == "__main__":
-    config_data = json.load(open("config.json"))
-    LLAMA_TOKEN = config_data["LLAMA-CLOUD"]
-    mongo_uri = config_data["MONGO_URI"]
-
-    database_name = "BigBrother"
-    collection_name = ""
-
-    process_videos_from_mongodb(mongo_uri, database_name, collection_name)
-
-    
