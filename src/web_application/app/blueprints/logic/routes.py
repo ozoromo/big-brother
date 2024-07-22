@@ -126,6 +126,7 @@ def recognizing_gestures(data):
 
 
 @logic.route('/action_control', methods=['GET', 'POST'])
+@flask_login.login_required
 def action_control():
     if request.method == 'POST':
         for gesture in Gesture_Script_Map.keys():
@@ -133,22 +134,27 @@ def action_control():
             Gesture_Script_Map[gesture] = selected_script_id
         return redirect(url_for('logic.action_control'))
     #['standart_like', 'standart_rock', 'standart_closed_first', 'standart_call', 'standart_ok', 'standart_dislike', 'standart_italy']
-    user_id = request.args.get("usr", default=None, type=str)
+    user_id = flask_login.current_user.get_id()
     accessible_scripts = db.get_accessible_scripts(user_id)  # Assume 'user1' for now
-    return render_template('action_control.html', gesture_script_map=Gesture_Script_Map, accessible_scripts=accessible_scripts)
+    private_scripts = db.get_private_scripts(user_id)  # Fetch private scripts separately if needed
+
+
+    return render_template('action_control.html', gesture_script_map=Gesture_Script_Map, accessible_scripts=accessible_scripts,
+                           private_scripts= private_scripts)
 
 @logic.route('/upload_script', methods=['POST'])
+@flask_login.login_required
 def upload_script(): 
     script_name = request.form.get('script_name')
     script_file = request.files.get('script_file')
     is_private = request.form.get('is_private') == 'on'
-    username = 'user1'  # Assume 'user1' for now
+    userid = flask_login.current_user.get_id()
 
     if script_file and script_file.filename.endswith('.lua'):
         script_content = script_file.read().decode('utf-8')
         
         # Save the new script
-        db.save_lua_script(username, script_name, script_content, is_private)
+        db.save_lua_script(userid, script_name, script_content, is_private)
         return redirect(url_for('logic.action_control'))
     else:
         return "Invalid file type. Only Lua files are allowed.", 400
