@@ -117,6 +117,7 @@ def create():
         image_index = 0
         encodings_saved = False
         face_encodings = []
+        image_data_list = []
         for storage in pictures:
             image_index += 1
             # TODO: This should be removable. Ask egain!
@@ -128,10 +129,10 @@ def create():
                                        title="Reject", form=form)
 
             im_bytes = storage.stream.read()
+            image_data_list.append(im_bytes)
             image = Image.open(io.BytesIO(im_bytes))
             array = np.array(image)
             image.close()
-            storage.close()
 
             try:
                 img = cv2.cvtColor(array, cv2.COLOR_BGR2RGB)
@@ -173,13 +174,11 @@ def create():
         picture_database.update_user_enc(user_uuid, face_encodings[0])
         encodings_saved = True
 
-        for storage in pictures:
+        for im_bytes in image_data_list:
             image_index += 1
-            im_bytes = storage.stream.read()
             image = Image.open(io.BytesIO(im_bytes))
             array = np.array(image)
             image.close()
-            storage.close()
 
             # TODO: Avoid magic numbers: (98, 116)
             pic_resized = cv2.resize(
