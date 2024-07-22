@@ -39,6 +39,14 @@
             <button type="submit">Upload Script</button>
         </form>
         
+        <!-- List of Private Scripts -->
+        <h2>Your Private Scripts</h2>
+        <ul>
+            {% for script in private_scripts %}
+                <li>{{ script }}</li>
+            {% endfor %}
+        </ul>
+        
         <!-- Button to go back to Gesture Recognition -->
         <br>
         <button onclick="location.href='{{ url_for('logic.gestureReco') }}'">Back to Gesture Recognition</button>
