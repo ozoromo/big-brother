@@ -33,6 +33,22 @@ class FaceReco:
         faceDis = face_recognition.face_distance([image_encoding], encodeimg2)  #distance between two photos, measure of comparsion in range [0,1], the closer to 0, the greater similarity
         return (results, faceDis)
 
+    def encoding_to_encoding(self, image_encoding1, image_encoding2):
+        '''
+        We want to campare, if the photos match
+        If it's the same person on two different photos
+        If True: - the given photos are from same person
+        If False: - the given photos includes different person
+        Arguments:
+            image_encoding1 = encoding of the first photo,
+            image_encoding2 = encoding of the second photo
+        '''
+        results = face_recognition.compare_faces([image_encoding1], image_encoding2)
+        faceDis = face_recognition.face_distance([image_encoding1], image_encoding2)
+
+        return (results, faceDis)
+
+
 
     def _findEncodings(self, images):
         encodeList = []
