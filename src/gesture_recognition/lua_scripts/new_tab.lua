@@ -1,2 +1,2 @@
-open_webpage("https://www.apple.com")
+open_webpage("https://www.google.com")
 return "Webpage should open in browser"
