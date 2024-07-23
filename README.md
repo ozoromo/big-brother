@@ -64,3 +64,11 @@ the codebase.
     - [PyTorch](https://pytorch.org/)
     - [TensorFlow](https://www.tensorflow.org/learn)
 - Database: [MongoDB](https://www.mongodb.com/)
+
+# Benchmark
+## Gesture Recognition
+The Benchmark loads the trained model from checkpoint and evaluate it. You can also use it to finetune the model.   
+Go to benchmarks/gesture_recognition and RUN: 
+` docker build -t gesture-recognition .`
+`docker run --gpus all -v $(pwd):/app -it gesture-recognition`
+`python benchmark2.py`

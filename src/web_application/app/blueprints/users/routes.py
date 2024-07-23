@@ -13,9 +13,11 @@ import uuid
 from flask import render_template, request, flash, Blueprint
 from flask_login import login_required, logout_user
 
-# Math
+# Math and facerecognition libraries
 import numpy as np
 import face_recognition
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "face_recog"))
+import face_recognition_lib.FaceReco_class as LogikFaceRec
 
 # Dealing with images
 from imageio import imread
@@ -114,6 +116,8 @@ def create():
         user_uuid = picture_database.register_user(user["username"], None)
         image_index = 0
         encodings_saved = False
+        face_encodings = []
+        image_data_list = []
         for storage in pictures:
             image_index += 1
             # TODO: This should be removable. Ask egain!
@@ -125,19 +129,56 @@ def create():
                                        title="Reject", form=form)
 
             im_bytes = storage.stream.read()
+            image_data_list.append(im_bytes)
             image = Image.open(io.BytesIO(im_bytes))
             array = np.array(image)
-            if not encodings_saved:
-                try:
-                    img = cv2.cvtColor(array, cv2.COLOR_BGR2RGB)
-                    encodings = face_recognition.face_encodings(img)
-
-                    picture_database.update_user_enc(user_uuid, encodings[0])
-                    encodings_saved = True
-                except:
-                    print("Error while calculating encodings")
             image.close()
-            storage.close()
+
+            try:
+                img = cv2.cvtColor(array, cv2.COLOR_BGR2RGB)
+                encodings = face_recognition.face_encodings(img)
+                if not encodings:
+                    rejectionDict["reason"] = f"No face detected in Image {image_index}"
+                    picture_database.delete_user_with_id(user_uuid)
+                    return render_template("rejection.html",
+                                           rejectionDict=rejectionDict,
+                                           title="Reject", form=form)
+                if len(encodings) > 1:
+                    rejectionDict["reason"] = f"Multiple faces detected in Image {image_index}. Please choose a more clear photo"
+                    picture_database.delete_user_with_id(user_uuid)
+                    return render_template("rejection.html",
+                                           rejectionDict=rejectionDict,
+                                           title="Reject", form=form)
+                face_encodings.append(encodings[0])
+            except Exception as e:
+                print("Error while calculating encodings:", e)
+                rejectionDict["reason"] = "Error processing image"
+                picture_database.delete_user_with_id(user_uuid)
+                return render_template("rejection.html",
+                                       rejectionDict=rejectionDict,
+                                       title="Reject", form=form)
+            
+        if len(face_encodings) >= 2:
+            for i in range(1, len(face_encodings)):
+                logik = LogikFaceRec.FaceReco()
+                (results, dists) = logik.encoding_to_encoding(face_encodings[0], face_encodings[i])
+                result = results[0]
+                if not result:
+                    rejectionDict["reason"] = "Faces in provided images do not match"
+                    picture_database.delete_user_with_id(user_uuid)
+                    return render_template("rejection.html",
+                                        rejectionDict=rejectionDict,
+                                        title="Reject", form=form)
+
+
+        picture_database.update_user_enc(user_uuid, face_encodings[0])
+        encodings_saved = True
+
+        for im_bytes in image_data_list:
+            image_index += 1
+            image = Image.open(io.BytesIO(im_bytes))
+            array = np.array(image)
+            image.close()
 
             # TODO: Avoid magic numbers: (98, 116)
             pic_resized = cv2.resize(
