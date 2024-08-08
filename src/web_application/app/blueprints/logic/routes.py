@@ -1,6 +1,7 @@
 import os
 import sys
 import io
+import json
 
 from flask import (render_template, request, Blueprint, url_for, send_from_directory, redirect, Response, jsonify)
 import flask_login
@@ -10,6 +11,7 @@ from PIL import Image, UnidentifiedImageError
 import numpy as np
 import base64
 import gridfs
+import MongoClient
 from bson import ObjectId
 
 # Tells python where to search for modules
@@ -27,7 +29,7 @@ import question_answering.qa_algo_core as qa
 from base_database import BaseDatabase
 from lua_sandbox_runner import run_lua_in_sandbox
 
-from mongo_vs import vector_search
+from mongo_vs import search
 
 db = BaseDatabase()
 fs = gridfs.GridFS(db)
@@ -293,44 +295,30 @@ def old_eduVid():
 @logic.route("/eduVid", methods=["GET", "POST"])
 @flask_login.login_required
 def eduVid():
-    collection_name = "thumbnails"
-    form = QueryForm()
-    recommended_videos = []
-    if form.validate_on_submit():
-        query = form.query.data
-
-        new_recommendations = vector_search(query)
-        recommended_videos.extend(new_recommendations)
-
-        if len(recommended_videos) > 10:
-            recommended_videos = recommended_videos[-10:]
-            
-        # Convert base64 thumbnails to image URLs
-        for video in recommended_videos:
-            if 'thumbnail_id' in video:
-                thumbnail_id = video['thumbnail_id']
-                fs = gridfs.GridFS(db, collection=collection_name)
-                if isinstance(thumbnail_id, str):
-                    thumbnail_id = ObjectId(thumbnail_id)
-                thumbnail_data = fs.get(thumbnail_id).read()
-
-                thumbnail_base64 = base64.b64encode(thumbnail_data).decode('utf-8')
-                # Add base64 thumbnail to video object
-                video['thumbnail'] = f"data:image/jpeg;base64,{thumbnail_base64}"
-
-    return render_template("eduVid.html", form=form, videos=recommended_videos)
+    return render_template("eduVid.html")
 
 
-@logic.route('/video/<video_id>', methods=['GET'])
-def serve_video(video_id):
-    try:
-        # Retrieve the video file from GridFS
-        file = fs.get(ObjectId(video_id))
+@logic.route('/search', methods=['POST'])
+def search_videos():
+    data = request.get_json()
+    query = data.get('query', '')
 
-        # Set content type as video/mp4 assuming it's an MP4 file
-        response = Response(file, content_type='video/mp4')
-        return response
+    config_data = json.load(open("../config.json"))
+    mongodb_uri = config_data['MONGO_URI2']
 
-    except Exception as e:
-        print(f"Error serving video: {e}")
-        return "Video not found", 404
+    database_name = "BigBrother"
+    collection_name = "extracted_data"
+    thumbnail_collection = "thumbnails"
+
+    client = MongoClient(mongodb_uri)
+    db = client[database_name]
+    collection = db[collection_name]
+
+    videos = search(query, collection, db, thumbnail_collection)
+    return jsonify(videos)
+
+@logic.route('/courses', methods=['GET'])
+def get_courses():
+    with open('./available_courses.json', 'r', encoding='utf-8') as f:
+        courses_data = json.load(f)
+    return jsonify(courses_data)

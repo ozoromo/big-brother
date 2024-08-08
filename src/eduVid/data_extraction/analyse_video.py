@@ -1,14 +1,13 @@
 import os
 import sys
 import json
-import requests
 import shutil
 
 from llama_parse import LlamaParse
 from llama_index.core import SimpleDirectoryReader
 from sentence_transformers import SentenceTransformer
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from nltk.corpus import stopwords
 from langdetect import detect
 import nltk
@@ -17,45 +16,13 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 import cv2
 from pymongo import MongoClient
 import gridfs
-from gridfs import GridFSBucket
-import numpy as np
-import matplotlib.pyplot as plt
-from bson import ObjectId
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "handle_presentation"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "question_answering"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "handle_presentation"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "question_answering"))
 
 from slides_extractor import SlideExtractor
 from qa_algo_core import HelperFN, SpeechRecog
 
-
-def merge_clusters(data):
-    merged_tags = []
-    current_start = data['tags'][0][0]
-    current_end = data['tags'][0][1]
-    current_text = data['tags'][0][2]
-
-    # Merge not ending sentences
-    for i in range(1, len(data['tags'])):
-        start, end, text = data['tags'][i]
-        
-        if not current_text.endswith('.'):
-            current_end = end
-            current_text += text
-        else:
-            merged_tags.append([current_start, current_end, current_text])
-            current_start = start
-            current_end = end
-            current_text = text
-
-    # Append the last cluster
-    merged_tags.append([current_start, current_end, current_text])
-    
-    # Update the data
-    data['tags'] = merged_tags
-    return data
-
-# Preprocess the text before encoding
 def preprocess_text(text):
     # Detect language
     try:
@@ -198,7 +165,7 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
         print("This video is already analysed.")
         return
     config_data = json.load(open("../config.json"))
-    uri = config_data["MONGO_URI"]
+    uri = config_data["MONGO_URI2"]
 
     def process_segment(start_time, end_time, segment_number):
         with ThreadPoolExecutor() as executor:
@@ -209,7 +176,7 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
             slides_info = future_slides.result()
 
         thumbnail_id = extract_thumbnail(video_file, start_time, uri)
-
+        
         segment_data = {
             "institute_name": institute_name,
             "course_id": course_id,
@@ -220,8 +187,6 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
             "video_skript": context,
             "slides": slides_info,
         }
-
-        #segment_data = merge_clusters(segment_data)
 
         # Text embedding
         print("Started text encoding for segment", segment_number)
@@ -263,7 +228,7 @@ def extract_data_from_all_videos(dowload_path, LLAMA_TOKEN):
     embed_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     parser = LlamaParse(api_key=LLAMA_TOKEN, result_type="text")
 
-    with open('../scrapers/video_scraper/own_course_ids.json', 'r', encoding='utf-8') as f:
+    with open('../scrapers/video_scraper/course_ids_selbst.json', 'r', encoding='utf-8') as f:
         courses_data = json.load(f)
 
     all_course_ids = []
@@ -291,3 +256,10 @@ def extract_data_from_all_videos(dowload_path, LLAMA_TOKEN):
             extract_data_from_video(video_dir, institute_name, course_name, course_id, parser, embed_model)
             print(f"Process finished {video_dir}!")
 
+
+if __name__ == "__main__":
+    DOWNLOAD_PATH = "../scrapers/video_scraper/video_dir"
+    config_data = json.load(open("../config.json"))
+    LLAMA_TOKEN = config_data["LLAMA-CLOUD"]
+
+    extract_data_from_all_videos(DOWNLOAD_PATH, LLAMA_TOKEN)

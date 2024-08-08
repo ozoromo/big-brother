@@ -3,9 +3,31 @@
 {% block head %}
     {{ super() }}
     <style>
-        .video-thumbnail {
-            max-width: 320px; /* Adjust as needed */
-            max-height: 240px; /* Adjust as needed */
+        .card {
+            cursor: pointer;
+        }
+        .video-script {
+            display: none;
+        }
+        .title-section {
+            display: flex;
+            align-items: center;
+        }
+        .title-section img {
+            margin-right: 15px;
+        }
+        .spinner-border {
+            display: none;
+        }
+        .toggle-section {
+            cursor: pointer;
+        }
+        #courses {
+            display: none;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 {% endblock %}
@@ -15,47 +37,111 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
-                    <div class="card-body">
-                        <form method="POST" id="search-form" role="form">
-                            {{ form.hidden_tag() }}
-                            <div class="form-group">
-                                {{ form.query.label(class="form-label") }}
-                                {{ form.query(class="form-control", id="query") }}
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-outline-info" id="search-button">Search</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div id="recommended-videos">
-                    {% if videos %}
-                        {% for video in videos %}
-                            <div class="video-item list-group-item">
-                                <img src="{{ video.thumbnail_url }}" alt="{{ video.course_id }} thumbnail" class="video-thumbnail">
-                                <div>{{ video.course_id }}</div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>No recommended videos available.</p>
-                    {% endif %}
-                </div>
-            </div>
+    <div class="container mt-5">
+        <div class="title-section mb-4">
+            <img src="/static/img/BigBrotherIcon.jpg" alt="Big Brother Icon" width="50" height="50">
+            <h1>Search Educational Videos - with BigBrother</h1>
         </div>
-        <div class="row">
-            <div id="video-player" class="col-md-12 embed-responsive embed-responsive-16by9">
-                <video id="main-video" class="embed-responsive-item" controls></video>
+        <form id="search-form">
+            <div class="form-group">
+                <input type="text" id="query" class="form-control" placeholder="Enter your query">
+                <div id="error-message" class="error-message" style="display: none;">Please enter a query.</div>
             </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <div class="spinner-border text-primary ml-2" role="status" id="loading-spinner">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </form>
+        <div class="mt-5" id="results-container" style="display: none;">
+            <h2 class="mb-4">Here are some video recommendations about your question:</h2>
+            <div class="row" id="results"></div>
+        </div>
+        <div class="mt-5">
+            <h2 class="mb-4 toggle-section" id="toggle-courses">Available Courses</h2>
+            <div id="courses"></div>
         </div>
     </div>
 {% endblock %}
 
 {% block js %}
     {{ super() }}
+    <script>
+        $(document).ready(function(){
+            // Fetch and display available courses
+            $.ajax({
+                url: '/courses',
+                type: 'GET',
+                success: function(response) {
+                    response.forEach(institute => {
+                        const instituteSection = `<div class="mb-3">
+                            <h5>${institute.name}</h5>
+                            <ul class="list-group">
+                                ${institute.courses.map(course => `<li class="list-group-item">${course.course_name}</li>`).join('')}
+                            </ul>
+                        </div>`;
+                        $('#courses').append(instituteSection);
+                    });
+                }
+            });
+
+            // Toggle course list visibility
+            $('#toggle-courses').on('click', function() {
+                $('#courses').toggle();
+            });
+
+            $('#search-form').on('submit', function(e){
+                e.preventDefault();
+                const query = $('#query').val().trim();
+
+                if (query === '') {
+                    $('#error-message').show();
+                    return;
+                } else {
+                    $('#error-message').hide(); 
+                }
+
+                $('#loading-spinner').show(); // Show the spinner
+
+                $.ajax({
+                    url: '/search',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ query: query }),
+                    success: function(response) {
+                        $('#loading-spinner').hide(); // Hide the spinner
+                        $('#results').empty();
+                        if (response.length > 0) {
+                            $('#results-container').show();
+                            response.forEach(video => {
+                                const card = `
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card" data-video-id="${video.video_id}">
+                                            <img src="${video.thumbnail}" class="card-img-top" alt="Thumbnail">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${video.course}</h5>
+                                                <p class="card-text video-script">${video.video_script}</p>
+                                                <p class="card-text"><small class="text-muted">Segment ${video.segment} of Video ${video.video_id}</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('#results').append(card);
+                            });
+
+                            $('.card').on('click', function() {
+                                $(this).find('.video-script').toggle();
+                            });
+                        } else {
+                            $('#results-container').hide();
+                            alert('No videos found for your query.');
+                        }
+                    },
+                    error: function() {
+                        $('#loading-spinner').hide(); 
+                        alert('An error occurred while processing your request. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

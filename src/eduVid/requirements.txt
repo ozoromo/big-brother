@@ -2,6 +2,7 @@ transformers
 torch
 faster-whisper
 moviepy
+cv2
 
 selenium
 requests
@@ -13,3 +14,4 @@ gridfs
 llama_index
 llama_parse
 sentence_transformers
+matplotlib

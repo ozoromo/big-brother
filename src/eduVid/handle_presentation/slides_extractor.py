@@ -7,7 +7,7 @@ class SlideExtractor:
     def __init__(self, video_path: str, output_folder: str, start_time: float = None, end_time: float = None, threshold: int = 5.0):
         """
         Arguments:
-        video_path --  The path to the input video file (in mp4 format).
+        video_data --  The video.
         slides_folder -- The path to directory where extracted slides will be saved.
         """
         self.video_path = video_path
@@ -30,7 +30,7 @@ class SlideExtractor:
 
         Usage:
         ```
-        slide_extractor_ = SlideExtractor(video_path, slides_folder)
+        slide_extractor_ = SlideExtractor(video_data, slides_folder)
         slide_extractor_.extract_slides_from_video()
         ```
         """
