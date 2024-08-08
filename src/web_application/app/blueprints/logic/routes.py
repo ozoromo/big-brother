@@ -19,6 +19,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid/vector_search"))
+available_courses_json = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid", "scrapers", "video_scrapers", "available_courses.json")
 
 from app.blueprints.logic.forms import VideoUploadForm, QueryForm
 from app import application, socketio
@@ -319,6 +320,6 @@ def search_videos():
 
 @logic.route('/courses', methods=['GET'])
 def get_courses():
-    with open('./available_courses.json', 'r', encoding='utf-8') as f:
+    with open(available_courses_json, 'r', encoding='utf-8') as f:
         courses_data = json.load(f)
     return jsonify(courses_data)
