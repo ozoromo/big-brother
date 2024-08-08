@@ -165,7 +165,7 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
         print("This video is already analysed.")
         return
     config_data = json.load(open("../config.json"))
-    uri = config_data["MONGO_URI2"]
+    uri = config_data["MONGO_URI"]
 
     def process_segment(start_time, end_time, segment_number):
         with ThreadPoolExecutor() as executor:

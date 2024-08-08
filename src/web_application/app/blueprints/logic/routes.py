@@ -20,6 +20,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid/vector_search"))
 available_courses_json = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid", "scrapers", "video_scrapers", "available_courses.json")
+config_data = 
 
 from app.blueprints.logic.forms import VideoUploadForm, QueryForm
 from app import application, socketio
@@ -305,7 +306,7 @@ def search_videos():
     query = data.get('query', '')
 
     config_data = json.load(open("../config.json"))
-    mongodb_uri = config_data['MONGO_URI2']
+    mongodb_uri = config_data['MONGO_URI']
 
     database_name = "BigBrother"
     collection_name = "extracted_data"
