@@ -10,8 +10,16 @@ from langdetect import detect
 
 from sentence_transformers import SentenceTransformer
 
-# Preprocessing function as defined above
 def preprocess_text(text):
+    """
+    Processes the input text by detecting its language, removing stop words, and tokenizing.
+
+    Arguments:
+    text -- string, the text to be processed.
+
+    Returns:
+    processed_text -- string, the processed text with stop words removed.
+    """
     # Detect language
     try:
         language = detect(text)
@@ -34,6 +42,15 @@ def preprocess_text(text):
     return processed_text
 
 def embed_query(query):
+    """
+    Converts the input query into an embedding vector using a pre-trained model.
+
+    Arguments:
+    query -- string, the query to be embedded.
+
+    Returns:
+    embedding -- list, the embedding vector of the query.
+    """
     embed_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     query = preprocess_text(query)
     embedding = embed_model.encode(query).tolist()
@@ -41,6 +58,16 @@ def embed_query(query):
     return embedding
 
 def find_similar_embeddings(embedding, collection):
+    """
+    Finds similar embeddings in the database collection using the provided embedding vector.
+
+    Arguments:
+    embedding -- list, the embedding vector to search for.
+    collection -- MongoDB collection object where the embeddings are stored.
+
+    Returns:
+    found_videos -- list of dictionaries, each containing details of a found video with similar embeddings.
+    """
     results = collection.aggregate([
         {"$vectorSearch": {
             "queryVector":embedding,
@@ -85,6 +112,18 @@ def find_similar_embeddings(embedding, collection):
 
 
 def search(query, collection, db, collection_name):
+    """
+    Searches for similar videos in the collection based on the query, then filters it with a threshold.
+
+    Arguments:
+    query -- string, the query to search for.
+    collection -- MongoDB collection object where the embeddings are stored.
+    db -- MongoDB database object.
+    collection_name -- string, the name of the collection containing video thumbnails.
+
+    Returns:
+    controlled_videos -- list of dictionaries, each containing details of videos with scores above a threshold.
+    """
     query = preprocess_text(query)
     embedding = embed_query(query)
 
@@ -98,6 +137,17 @@ def search(query, collection, db, collection_name):
 
 
 def fetch_thumbnails(videos, db, collection_name):
+    """
+    Fetches and embeds thumbnails for the given videos from the GridFS collection.
+
+    Arguments:
+    videos -- list of dictionaries, each containing video details including thumbnail IDs.
+    db -- MongoDB database object.
+    collection_name -- string, the name of the GridFS collection for thumbnails.
+
+    Returns:
+    videos -- list of dictionaries, each containing video details with embedded thumbnail images.
+    """
     fs = gridfs.GridFS(db, collection=collection_name)
     
     for video in videos:

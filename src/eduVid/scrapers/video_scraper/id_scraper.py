@@ -14,17 +14,45 @@ import time
 from getpass import getpass
 
 class IdScraper():
+    """
+    A class to scrape course IDs from the TU Berlin ISIS platform.
+
+    Methods:
+    __init__ -- Initializes the WebDriver and WebDriverWait objects.
+    capture_screenshot -- Captures a screenshot of the current browser window (for debugging).
+    login -- Logs in to the ISIS platform using provided credentials.
+    logout -- Logs out from the ISIS platform.
+    scrap_ids -- Scrapes course IDs and names from a specified directory on the ISIS platform.
+    """
     def __init__(self) -> None:
+        """
+        Initializes the IdScraper class with WebDriver and WebDriverWait objects.
+        """
         self.driver = webdriver.Chrome()
         self.wait = WebDriverWait(self.driver, 10)
         self.wait_long = WebDriverWait(self.driver, 20)
 
     # For Debugging...
     def capture_screenshot(driver, filename):
+        """
+        Captures a screenshot of the current browser window.
+
+        Arguments:
+        driver -- WebDriver object controlling the browser.
+        filename -- string, the path where the screenshot will be saved.
+
+        """
         driver.save_screenshot(filename)
 
     def login(self, username, password):
+        """
+        Logs in to the ISIS platform using provided username and password.
 
+        Arguments:
+        username -- string, the username for logging in.
+        password -- string, the password for logging in.
+
+        """
         print("Navigating to login page...")
         self.driver.get("https://isis.tu-berlin.de/login/index.php")
 
@@ -46,12 +74,23 @@ class IdScraper():
         print("Login complete.")
 
     def logout(self):
+        """
+        Logs out from the ISIS platform.
+
+        """
         self.driver.set_page_load_timeout(5)
         logout_button = self.wait.until(EC.presence_of_element_located((By.LINK_TEXT, 'Logout')))
         logout_button.click()
         print("Logout complete.")
 
     def scrap_ids(self, directory):
+        """
+        Scrapes course IDs and names from a specified directory on the ISIS platform.
+
+        Arguments:
+        directory -- string, the path where the scraped data will be saved.
+
+        """
         chrome_options = Options()
         #chrome_options.add_argument("--headless")  
         chrome_options.add_argument("--no-sandbox")

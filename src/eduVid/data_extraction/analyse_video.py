@@ -24,7 +24,15 @@ from slides_extractor import SlideExtractor
 from qa_algo_core import HelperFN, SpeechRecog
 
 def preprocess_text(text):
-    # Detect language
+    """
+    Preprocesses the input text by detecting its language, removing stop words, and tokenizing the text.
+
+    Arguments:
+    text -- string, the input text to be processed.
+
+    Returns:
+    string -- the processed text with stop words removed.
+    """
     try:
         language = detect(text)
     except:
@@ -47,6 +55,17 @@ def preprocess_text(text):
 
 # Mp4 Video -> Mp3 Wav *-> Txt Text *[s2t Algorithm]
 def extract_audio_and_script(video_file, start_time, end_time):
+    """
+    Extracts audio from a video file and transcribes it into text.
+
+    Arguments:
+    video_file -- string, the path to the video file.
+    start_time -- float, the start time for the audio extraction in seconds.
+    end_time -- float, the end time for the audio extraction in seconds.
+
+    Returns:
+    tuple -- a tuple containing the transcribed text and a list of timing tags for the transcriptions.
+    """
     audio_file = video_file.replace('.mp4', f'_segment_{start_time}_{end_time}.wav')
     print("Started extraction of audio...")
     helper = HelperFN()
@@ -71,7 +90,19 @@ def extract_audio_and_script(video_file, start_time, end_time):
 
 # Mp4 Video -> Png Slide
 def extract_and_parse_slides(video_file, start_time, end_time, segment_number, file_extractor):
+    """
+    Extracts and parses slides from a video segment.
 
+    Arguments:
+    video_file -- string, the path to the video file.
+    start_time -- float, the start time for the slide extraction in seconds.
+    end_time -- float, the end time for the slide extraction in seconds.
+    segment_number -- int, the segment number of the video.
+    file_extractor -- dict, a dictionary containing file extension keys and corresponding document parser.
+
+    Returns:
+    list -- a list of dictionaries containing slide information, including file names and parsed text.
+    """
     slides_dir = video_file.replace('.mp4', f'_slides_segment_{segment_number}')
     print("Started extraction of slides...")
     extractor = SlideExtractor(video_file, slides_dir, start_time, end_time)
@@ -116,6 +147,18 @@ def extract_and_parse_slides(video_file, start_time, end_time, segment_number, f
 
 # Extract thumbnail
 def extract_thumbnail(video_file, start_time, uri, thumbnail_size = (640, 480)):
+    """
+    Extracts a thumbnail from a video file and stores it in MongoDB.
+
+    Arguments:
+    video_file -- string, the path to the video file.
+    start_time -- float, the time in the video to capture the thumbnail in seconds.
+    uri -- string, the MongoDB URI for storing the thumbnail.
+    thumbnail_size -- tuple, the size of the thumbnail (default is (640, 480)).
+
+    Returns:
+    ObjectId -- the MongoDB ObjectId of the stored thumbnail, or None if extraction fails.
+    """
     db_name = "BigBrother"
     collection_name = "thumbnails"
     client = MongoClient(uri)
@@ -147,7 +190,14 @@ def extract_thumbnail(video_file, start_time, uri, thumbnail_size = (640, 480)):
 
 # Upload the extracted json data to mongodb
 def upload_extracted_data(json_data, uri):
+    """
+    Uploads extracted JSON data to MongoDB.
 
+    Arguments:
+    json_data -- dict, the extracted data to be uploaded.
+    uri -- string, the MongoDB URI for storing the data.
+
+    """
     db_name = "BigBrother"
     collection_name = "extracted_data"
     client = MongoClient(uri)
@@ -160,7 +210,18 @@ def upload_extracted_data(json_data, uri):
     collection.insert_one(data)
 
 def extract_data_from_video(video_dir, institute_name, course_name, course_id, parser, embed_model):
+    """
+    Extracts and processes data from a video file, including audio, slides, and thumbnails.
 
+    Arguments:
+    video_dir -- string, the directory containing the video files.
+    institute_name -- string, the name of the institute offering the course.
+    course_name -- string, the name of the course.
+    course_id -- string, the unique identifier of the course.
+    parser -- object, the parser used for extracting and parsing slide information.
+    embed_model -- object, the model used for encoding the extracted text.
+
+    """
     if len(os.listdir(video_dir)) < 1:
         print("This video is already analysed.")
         return
@@ -223,8 +284,14 @@ def extract_data_from_video(video_dir, institute_name, course_name, course_id, p
 
 
 def extract_data_from_all_videos(dowload_path, LLAMA_TOKEN):
+    """
+    Extracts data from all video files in the specified download path and processes each video using the LLaMA model.
 
+    Arguments:
+    dowload_path -- string, the directory path where the video files are stored.
+    LLAMA_TOKEN -- string, the API token for accessing the Llama-Parser.
 
+    """
     embed_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     parser = LlamaParse(api_key=LLAMA_TOKEN, result_type="text")
 

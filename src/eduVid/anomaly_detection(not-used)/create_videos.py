@@ -8,6 +8,12 @@ import pygame
 
 class PygameDrawApp:
     def __init__(self, data_structure_name):
+        """
+        Initializes the Pygame drawing application.
+
+        Arguments:
+        data_structure_name -- string, name used to create a directory for saving the video files.
+        """
         pygame.init()
         self.screen = pygame.display.set_mode((1024, 768))
         pygame.display.set_caption('Draw and Record')
@@ -31,11 +37,21 @@ class PygameDrawApp:
         self.video_writer = imageio.get_writer(self.video_filename, fps=30)
 
     def draw(self, pos):
+        """
+        Draws a line on the Pygame screen from the last position to the current position.
+
+        Arguments:
+        pos -- tuple of int, the current position where the mouse is located.
+        """
         if self.last_pos is not None:
             pygame.draw.line(self.screen, self.draw_color, self.last_pos, pos, self.radius)
         self.last_pos = pos
 
     def run(self):
+        """
+        Runs the main loop of the Pygame application. Handles user input, drawing, and video recording. Whenever
+        the pygame app is closed, the video is saved under 'train/data_videos/{self.data_structure_name}'.
+        """
         running = True
         while running:
             for event in pygame.event.get():
@@ -50,8 +66,10 @@ class PygameDrawApp:
                     if self.drawing:
                         self.draw(event.pos)
                 elif event.type == pygame.KEYDOWN:
+                    # Press key c to clear the page
                     if event.key == pygame.K_c:
                         self.screen.fill((255, 255, 255))
+                    # Press key s to save a screenshot of the page
                     elif event.key == pygame.K_s:
                         pygame.image.save(self.screen, "drawing.png")
                 
@@ -68,6 +86,12 @@ class PygameDrawApp:
         pygame.quit()
 
 def run_draw_app(data_structure_name):
+    """
+    Creates and runs an instance of PygameDrawApp.
+
+    Arguments:
+    data_structure_name -- string, name used to create a directory for saving the video files.
+    """
     app = PygameDrawApp(data_structure_name)
     app.run()
 
