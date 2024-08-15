@@ -21,6 +21,9 @@ def team():
 def team2():
     return render_template("team23.html")
 
+@main.route("/team24")
+def team3():
+    return render_template("team24.html")
 
 @main.route("/algorithms")
 def algorithms():
