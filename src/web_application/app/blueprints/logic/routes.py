@@ -12,13 +12,14 @@ from PIL import Image, UnidentifiedImageError
 import numpy as np
 import base64
 import gridfs
-import MongoClient
+from pymongo import MongoClient
 from bson import ObjectId
 
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid/vector_search"))
 available_courses_json = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid", "scrapers", "video_scrapers", "available_courses.json")
 configure_json = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid", "config.json")
@@ -35,7 +36,6 @@ from lua_sandbox_runner import run_lua_in_sandbox
 from mongo_vs import search
 
 db = BaseDatabase()
-fs = gridfs.GridFS(db)
 
 last_executed_lua_script = datetime.now()
 
