@@ -96,7 +96,7 @@ def run_draw_app(data_structure_name):
     app.run()
 
 def main():
-    data_structure_name = "..." # Data Structure to Draw
+    data_structure_name = "..." # Enter data structure to Draw
     run_draw_app(data_structure_name)
 
 if __name__ == "__main__":
