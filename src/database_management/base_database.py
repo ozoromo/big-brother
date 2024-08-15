@@ -28,7 +28,7 @@ class BaseDatabase:
 
         
         if not mongo_client:
-            new_mongo = "mongodb+srv://trieuduongdc:bigbrother2024!@cluster0.rd6xjc9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            new_mongo = "mongodb+srv://newUser:cqReClwAc21LFdHu@bigbrother.zrhmwhf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
             new_mongo = os.getenv("MONGO_URI") # use this line instead of the line above to use the .env file
             self.cluster = pymongo.MongoClient(new_mongo,
                                                connectTimeoutMS=30000,
