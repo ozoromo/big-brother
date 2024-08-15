@@ -19,20 +19,20 @@ The goal of this project is to significantly enhance the learning process by eff
 **Description:** The process begins with scraping educational videos from TU-Berlin university website 'ISIS'. The videos are then analyzed to extract key  content and generate recommendations based on student queries. This workflow ensures that students receive relevant and focused educational material. 
 
 ## Scraping Videos
-**Course IDs:** The first step is collecting course IDs from the university website. An automated Selenium scraper extracts course IDs, course names, and institute names, storing this metadata for further processing.
-**Course Videos:** After collecting the course IDs, the next step is to scrape the associated videos. These videos are downloaded and stored in a structured format for analysis.
+- **Course IDs:** The first step is collecting course IDs from the university website. An automated Selenium scraper extracts course IDs, course names, and institute names, storing this metadata for further processing.
+- **Course Videos:** After collecting the course IDs, the next step is to scrape the associated videos. These videos are downloaded and stored in a structured format for analysis.
 
 ## Analyzing Videos
-**Audio and Script:** The audio track is extracted from each video using 'VideoFileClip'. The extracted audio is then transcribed using 'faster-whisper' to generate a text script. This script allows for text-based analysis of the video content.
-**Slide and Text:** The visual content of the videos, particularly slides, is analyzed. Slide changes are detected using OpenCV, with frames being compared to identify significant changes. Once the slide changes are identified, Llama-Parse is used to extract text from each slide, enabling detailed analysis of the visual content.
-**Thumbnail:** For each video, a thumbnail is created by capturing a screenshot from the first second of the video. This thumbnail is then stored in a database with a unique object ID.
-**Text Preprocessing:** The transcribed text and the text extracted from slides are pre-processed to remove stopwords and other non-essential elements. The cleaned text is then converted into embeddings using SentenceTransformer and the 'all-mpnet-base-v2' model, enabling efficient and accurate text-based search.
+- **Audio and Script:** The audio track is extracted from each video using 'VideoFileClip'. The extracted audio is then transcribed using 'faster-whisper' to generate a text script. This script allows for text-based analysis of the video content.
+- **Slide and Text:** The visual content of the videos, particularly slides, is analyzed. Slide changes are detected using OpenCV, with frames being compared to identify significant changes. Once the slide changes are identified, Llama-Parse is used to extract text from each slide, enabling detailed analysis of the visual content.
+- **Thumbnail:** For each video, a thumbnail is created by capturing a screenshot from the first second of the video. This thumbnail is then stored in a database with a unique object ID.
+- **Text Preprocessing:** The transcribed text and the text extracted from slides are pre-processed to remove stopwords and other non-essential elements. The cleaned text is then converted into embeddings using SentenceTransformer and the 'all-mpnet-base-v2' model, enabling efficient and accurate text-based search.
 ![workflow_analyse](../images/Flowchart-Analyse.png)
-**Vector Search and Recommendations:** The processed text is indexed using vector search with cosine similarity. This allows students to input queries and receive recommendations based on the most relevant video segments, providing a tailored learning experience.
+- **Vector Search and Recommendations:** The processed text is indexed using vector search with cosine similarity. This allows students to input queries and receive recommendations based on the most relevant video segments, providing a tailored learning experience.
 ![workflow_analyse](../images/Flowchart-Recommend.png)
 
 ## Before using the Educational Functionality
-**Config.json:** To use the educational videos functionality, under eduVid-Directory a config.json file, including a MONGO_URI to our Database must be created. {"MONGO_URI": "..." }
+- **Config.json:** To use the educational videos functionality, under eduVid-Directory a config.json file, including a MONGO_URI to our Database must be created. {"MONGO_URI": "..." }
 
 ### Subteam members
 
