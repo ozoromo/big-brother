@@ -2,6 +2,34 @@
 {% block title %}EduVid{% endblock %}
 {% block head %}
     {{ super() }}
+    <style>
+        .card {
+            cursor: pointer;
+        }
+        .video-script {
+            display: none;
+        }
+        .title-section {
+            display: flex;
+            align-items: center;
+        }
+        .title-section img {
+            margin-right: 15px;
+        }
+        .spinner-border {
+            display: none;
+        }
+        .toggle-section {
+            cursor: pointer;
+        }
+        #courses {
+            display: none;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 {% endblock %}
 
 {% block navbar %}
@@ -9,90 +37,111 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card text-center" style="margin-right: 35%; margin-left: 35%;margin-top: 0%">
-        <div class="card-body">
-            <h3 class="card-title">Video Upload</h3>
-            <form action="" id="submit-form" method="post" role="form" enctype='multipart/form-data'>
-                {{ form.csrf_token }}
-                <fieldset class="form-group">
-                    <div class="form-group">
-                        {{ form.name.label(class="form-control-label") }}
-
-                        {% if form.name.errors %}
-                            {{ form.name(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.name(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.video.label(class="form-control-label") }}
-
-                        {% if form.video.errors %}
-                            {{ form.video(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.video.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.video(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.segments.label(class="form-control-label") }}
-
-                        {% if form.segments.errors %}
-                            {{ form.segments(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.segments.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.segments(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.question.label(class="form-control-label") }}
-
-                        {% if form.question.errors %}
-                            {{ form.question(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.question.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.question(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-                </fieldset>
-                <div class="form-group">
-                    {{ form.submit(class="btn btn-outline-info", id="upload-button") }}
-                </div>
-            </form>
-
-        <div class="upload-info" id="upload-info" style="display: none">
-            <h5>This operation might take a while</h5>
-
-            <div class="spinner-container">
-                <div class="spinner"></div>
-                </div>
-            </div>
+    <div class="container mt-5">
+        <div class="title-section mb-4">
+            <img src="/static/img/BigBrotherIcon.jpg" alt="Big Brother Icon" width="50" height="50">
+            <h1>Search Educational Videos - with BigBrother</h1>
         </div>
-
+        <form id="search-form">
+            <div class="form-group">
+                <input type="text" id="query" class="form-control" placeholder="Enter your query">
+                <div id="error-message" class="error-message" style="display: none;">Please enter a query.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <div class="spinner-border text-primary ml-2" role="status" id="loading-spinner">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </form>
+        <div class="mt-5" id="results-container" style="display: none;">
+            <h2 class="mb-4">Here are some video recommendations about your question:</h2>
+            <div class="row" id="results"></div>
+        </div>
+        <div class="mt-5">
+            <h2 class="mb-4 toggle-section" id="toggle-courses">Available Courses</h2>
+            <div id="courses"></div>
+        </div>
     </div>
 {% endblock %}
 
 {% block js %}
-    <script src="{{ url_for('static', filename='js/eduVid.js') }}"></script>
     {{ super() }}
+    <script>
+        $(document).ready(function(){
+            // Fetch and display available courses
+            $.ajax({
+                url: '/courses',
+                type: 'GET',
+                success: function(response) {
+                    response.forEach(institute => {
+                        const instituteSection = `<div class="mb-3">
+                            <h5>${institute.name}</h5>
+                            <ul class="list-group">
+                                ${institute.courses.map(course => `<li class="list-group-item">${course.course_name}</li>`).join('')}
+                            </ul>
+                        </div>`;
+                        $('#courses').append(instituteSection);
+                    });
+                }
+            });
+
+            // Toggle course list visibility
+            $('#toggle-courses').on('click', function() {
+                $('#courses').toggle();
+            });
+
+            $('#search-form').on('submit', function(e){
+                e.preventDefault();
+                const query = $('#query').val().trim();
+
+                if (query === '') {
+                    $('#error-message').show();
+                    return;
+                } else {
+                    $('#error-message').hide(); 
+                }
+
+                $('#loading-spinner').show(); // Show the spinner
+
+                $.ajax({
+                    url: '/search',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ query: query }),
+                    success: function(response) {
+                        $('#loading-spinner').hide(); // Hide the spinner
+                        $('#results').empty();
+                        if (response.length > 0) {
+                            $('#results-container').show();
+                            response.forEach(video => {
+                                const card = `
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card" data-video-id="${video.video_id}">
+                                            <img src="${video.thumbnail}" class="card-img-top" alt="Thumbnail">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${video.course}</h5>
+                                                <p class="card-text video-script">${video.video_script}</p>
+                                                <p class="card-text"><small class="text-muted">Segment ${video.segment} of Video ${video.video_id}</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('#results').append(card);
+                            });
+
+                            $('.card').on('click', function() {
+                                $(this).find('.video-script').toggle();
+                            });
+                        } else {
+                            $('#results-container').hide();
+                            alert('No videos found for your query.');
+                        }
+                    },
+                    error: function() {
+                        $('#loading-spinner').hide(); 
+                        alert('An error occurred while processing your request. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

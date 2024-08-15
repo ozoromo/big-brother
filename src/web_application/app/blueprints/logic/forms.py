@@ -20,3 +20,8 @@ class VideoUploadForm(FlaskForm):
         ])
     question = TextField("Question:", validators=[DataRequired()])
     submit = SubmitField("Upload")
+
+
+class QueryForm(FlaskForm):
+    query = TextField("Query", validators=[DataRequired()])
+    submit = SubmitField("Search")

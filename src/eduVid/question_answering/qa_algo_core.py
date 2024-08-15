@@ -117,7 +117,7 @@ class HelperFN:
 
         return matching_segments
 
-    def extract_audio_from_mp4(input_file, output_file):
+    def extract_audio_from_mp4(self, input_file, output_file, start_time, end_time):
         """
         Extracts .wav file from .mp4
 
@@ -126,11 +126,9 @@ class HelperFN:
         output_file - path where .wav file will be saved
         """
         try:
-            video_clip = VideoFileClip(input_file)
-            audio_clip = video_clip.audio
-            audio_clip.write_audiofile(output_file, codec="pcm_s16le")
-            audio_clip.close()
-            video_clip.close()
+            with VideoFileClip(input_file) as video_clip:
+                with video_clip.subclip(start_time, end_time).audio as audio_clip:
+                    audio_clip.write_audiofile(output_file, codec="pcm_s16le")
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 

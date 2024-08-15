@@ -1,23 +1,29 @@
 import os
 import sys
 import io
+import json
 from datetime import datetime, timedelta
 
-from flask import (render_template, request, Blueprint, url_for, send_from_directory, redirect)
+from flask import (render_template, request, Blueprint, url_for, send_from_directory, redirect, Response, jsonify)
 import flask_login
 from flask_socketio import emit
 import cv2
 from PIL import Image, UnidentifiedImageError
 import numpy as np
 import base64
+import gridfs
+import MongoClient
+from bson import ObjectId
 
 # Tells python where to search for modules
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "database_management"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "gesture_recognition/user_scripts"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid/vector_search"))
+available_courses_json = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid", "scrapers", "video_scrapers", "available_courses.json")
+configure_json = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "eduVid", "config.json")
 
-from app.blueprints.logic.forms import VideoUploadForm
+from app.blueprints.logic.forms import VideoUploadForm, QueryForm
 from app import application, socketio
 
 from gesture_recognizer import GestureRecognizer
@@ -26,7 +32,10 @@ import question_answering.qa_algo_core as qa
 from base_database import BaseDatabase
 from lua_sandbox_runner import run_lua_in_sandbox
 
+from mongo_vs import search
+
 db = BaseDatabase()
+fs = gridfs.GridFS(db)
 
 last_executed_lua_script = datetime.now()
 
@@ -224,9 +233,9 @@ def serve_video(filename):
     return send_from_directory(application.config["TMP_VIDEO_FOLDER"], filename)
 
 
-@logic.route("/eduVid", methods=["GET", "POST"])
+@logic.route("/old_eduVid", methods=["GET", "POST"])
 @flask_login.login_required
-def eduVid():
+def old_eduVid():
     form = VideoUploadForm()
 
     if form.validate_on_submit():
@@ -291,4 +300,37 @@ def eduVid():
 
         return render_template("eduVidPlayer.html", video_info=video_info)
 
-    return render_template("eduVid.html", form=form)
+    return render_template("eduVid_old.html", form=form)
+
+
+@logic.route("/eduVid", methods=["GET", "POST"])
+@flask_login.login_required
+def eduVid():
+    return render_template("eduVid.html")
+
+
+@logic.route('/search', methods=['POST'])
+def search_videos():
+    data = request.get_json()
+    query = data.get('query', '')
+
+    with open(configure_json, 'r', encoding='utf-8') as f:
+        config_data = json.load(f)
+    mongodb_uri = config_data['MONGO_URI']
+
+    database_name = "BigBrother"
+    collection_name = "extracted_data"
+    thumbnail_collection = "thumbnails"
+
+    client = MongoClient(mongodb_uri)
+    db = client[database_name]
+    collection = db[collection_name]
+
+    videos = search(query, collection, db, thumbnail_collection)
+    return jsonify(videos)
+
+@logic.route('/courses', methods=['GET'])
+def get_courses():
+    with open(available_courses_json, 'r', encoding='utf-8') as f:
+        courses_data = json.load(f)
+    return jsonify(courses_data)
