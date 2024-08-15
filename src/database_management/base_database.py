@@ -379,7 +379,7 @@ class BaseDatabase:
             raise ScriptExistException("Script with same Name already exsists!")
         
         document = {
-            'user_id': user_id,
+            'user_id': str(user_id),
             'script_name': script_name,
             'script_content': script_content,
             'is_private': is_private
@@ -405,7 +405,20 @@ class BaseDatabase:
         except Exception as e:
             raise ScriptSearchError("An error occured while searching for scripts")
         return [(script['script_name']) for script in scripts]
+    
+    def get_private_scripts(self, user_id):
+        query = {
+            'user_id': str(user_id),
+            'is_private': True
+        }
         
+        try:
+            scripts = list(self._lua_scripts.find(query))
+        except Exception as e:
+            raise ScriptSearchError("An error occurred while searching for private scripts")
+        
+        return [(script['script_name']) for script in scripts]
+    
     def get_lua_script_by_id(self, script_name):
         try:
             script = self._lua_scripts.find_one({'script_name': script_name})

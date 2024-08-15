@@ -1,0 +1,1 @@
+return stop_timer("my_timer")

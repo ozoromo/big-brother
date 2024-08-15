@@ -1,0 +1,23 @@
+None
+Epoch 1/10
+30457/30457 [==============================] - 84s 3ms/step - loss: 0.7084 - categorical_accuracy: 0.7126 - val_loss: 0.3322 - val_categorical_accuracy: 0.8702 - lr: 0.0010
+Epoch 2/10
+30457/30457 [==============================] - 80s 3ms/step - loss: 0.6456 - categorical_accuracy: 0.7398 - val_loss: 0.3374 - val_categorical_accuracy: 0.8755 - lr: 9.9000e-04
+Epoch 3/10
+30457/30457 [==============================] - 76s 2ms/step - loss: 0.6353 - categorical_accuracy: 0.7429 - val_loss: 0.3533 - val_categorical_accuracy: 0.8743 - lr: 9.8010e-04
+Epoch 4/10
+30457/30457 [==============================] - 62s 2ms/step - loss: 0.6288 - categorical_accuracy: 0.7443 - val_loss: 0.3713 - val_categorical_accuracy: 0.8706 - lr: 9.7030e-04
+Epoch 5/10
+30457/30457 [==============================] - 69s 2ms/step - loss: 0.6247 - categorical_accuracy: 0.7458 - val_loss: 0.3846 - val_categorical_accuracy: 0.8712 - lr: 9.6060e-04
+Epoch 6/10
+30457/30457 [==============================] - 85s 3ms/step - loss: 0.6204 - categorical_accuracy: 0.7468 - val_loss: 0.3904 - val_categorical_accuracy: 0.8768 - lr: 9.5099e-04
+Epoch 7/10
+30457/30457 [==============================] - 61s 2ms/step - loss: 0.6170 - categorical_accuracy: 0.7474 - val_loss: 0.3941 - val_categorical_accuracy: 0.8769 - lr: 9.4148e-04
+Epoch 8/10
+30457/30457 [==============================] - 70s 2ms/step - loss: 0.6143 - categorical_accuracy: 0.7486 - val_loss: 0.4066 - val_categorical_accuracy: 0.8815 - lr: 9.3207e-04
+Epoch 9/10
+30457/30457 [==============================] - 84s 3ms/step - loss: 0.6119 - categorical_accuracy: 0.7496 - val_loss: 0.4151 - val_categorical_accuracy: 0.8817 - lr: 9.2274e-04
+Epoch 10/10
+30457/30457 [==============================] - 80s 3ms/step - loss: 0.6108 - categorical_accuracy: 0.7503 - val_loss: 0.4298 - val_categorical_accuracy: 0.8783 - lr: 9.1352e-04
+7615/7615 [==============================] - 18s 1ms/step - loss: 0.4404 - categorical_accuracy: 0.8779
+Test loss:0.4403994679450989, Test accuracy:0.87787264585495
