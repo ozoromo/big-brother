@@ -1,0 +1,28 @@
+[
+    {
+        "name": "Institut für Softwaretechnik und Theoretische Informatik",
+        "courses": [
+            {
+                "course_id": "28792",
+                "course_name": "[SoSe 2022] Formale Sprachen und Automaten"
+            },
+            {
+                "course_id": "33475",
+                "course_name": "[SoSe 2023] Diskrete Strukturen"
+            },
+            {
+                "course_id": "36003",
+                "course_name": "[WiSe 22/23] Berechenbarkeit und Komplexität"
+            }
+        ]
+    },
+    {
+        "name": "Institut für Telekommunikationssysteme",
+        "courses": [
+            {
+                "course_id": "30146",
+                "course_name": "TKN Rechnernetze und Verteilte Systeme 2022w"
+            }
+        ]
+    }
+]

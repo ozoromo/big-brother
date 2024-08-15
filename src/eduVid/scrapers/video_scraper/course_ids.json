@@ -1,0 +1,2928 @@
+[
+    {
+        "name": "Institut für Energie- und Automatisierungstechnik",
+        "courses": [
+            {
+                "course_id": "39268",
+                "course_name": "[WiSe 2024/25] Material Grundlagen der Lichttechnik für Abschlussarbeiten"
+            },
+            {
+                "course_id": "39267",
+                "course_name": "[SoSe 2024] Material Grundlagen der Lichttechnik für Abschlussarbeiten"
+            },
+            {
+                "course_id": "39166",
+                "course_name": "[SoSe 2024] Mustererkennung und technische Diagnose 2024 Praktikum"
+            },
+            {
+                "course_id": "39132",
+                "course_name": "[SoSe 2024] Seminar Mess- und Diagnosetechnik SS24"
+            },
+            {
+                "course_id": "39088",
+                "course_name": "[SoSe 2024] Secure Operational Control of Large-Scale Renewable Energy Systems and Power Grids"
+            },
+            {
+                "course_id": "39059",
+                "course_name": "[SoSe 2024] Mustererkennung und technische Diagnose 2024"
+            },
+            {
+                "course_id": "38984",
+                "course_name": "[SoSe 2024] Renewable Energy Integration"
+            },
+            {
+                "course_id": "38827",
+                "course_name": "[SoSe 2024] Projekt Energieversorgung mit erneuerbaren Energien"
+            },
+            {
+                "course_id": "38796",
+                "course_name": "[SoSe 2024] Vorlesung Messdatenverarbeitung"
+            },
+            {
+                "course_id": "38795",
+                "course_name": "[SoSe 2024] Praktikum Messdatenverarbeitung"
+            },
+            {
+                "course_id": "38792",
+                "course_name": "[SoSe 2024] Schwerpunktprojekte Meta-Seite"
+            },
+            {
+                "course_id": "38641",
+                "course_name": "[SoSe 2024] IV Maschinelles Lernen für die Fehlerdiagnose und -Prognose"
+            },
+            {
+                "course_id": "38632",
+                "course_name": "[SoSe 2024] Elektrische Netzwerke"
+            },
+            {
+                "course_id": "38299",
+                "course_name": "[SoSe 2024] Mikroprozessortechnik"
+            },
+            {
+                "course_id": "38291",
+                "course_name": "[SoSe 2024 & WiSe 2024/25] Medizinische Signalverarbeitung"
+            },
+            {
+                "course_id": "38218",
+                "course_name": "[SoSe 2024] Elektrische Antriebe II"
+            },
+            {
+                "course_id": "38204",
+                "course_name": "[SoSe 2024] Hybrid Systems"
+            },
+            {
+                "course_id": "38182",
+                "course_name": "[SoSe 2024] Grundlagen der Elektrotechnik (Service)"
+            },
+            {
+                "course_id": "38180",
+                "course_name": "[SoSe 2024] Projekte Leistungselektronik"
+            },
+            {
+                "course_id": "38158",
+                "course_name": "[SoSe 2024] Nonlinear Control Systems"
+            },
+            {
+                "course_id": "38157",
+                "course_name": "[SoSe 2024] Systemidentifikation und Regelung in der Medizin"
+            },
+            {
+                "course_id": "38156",
+                "course_name": "[SoSe 2024] Projekt Synthese und Analyse von Regelungssystemen / Projektpraktikum Automatisierung (Project Lab Automation)"
+            },
+            {
+                "course_id": "38130",
+                "course_name": "[SoSe 2024] Leistungselektronik für erneuerbare Energien und Anwendungen der Energieversorgung"
+            },
+            {
+                "course_id": "38128",
+                "course_name": "[SoSe 2024] Grundlagen der Regelungstechnik (Fakultät IV)"
+            },
+            {
+                "course_id": "37691",
+                "course_name": "Seminar Hochspannungstechnik und Energieübertragung SoSe24"
+            },
+            {
+                "course_id": "37690",
+                "course_name": "Hochspannungstechnik II PR SoSe24"
+            },
+            {
+                "course_id": "37689",
+                "course_name": "Hochspannungstechnik II VL SoSe24"
+            },
+            {
+                "course_id": "37688",
+                "course_name": "Funktionswerkstoffe der Elektrotechnik SoSe24"
+            },
+            {
+                "course_id": "37687",
+                "course_name": "Betriebsmittel hochspannungstechnischer Anlagen SoSe24"
+            },
+            {
+                "course_id": "37686",
+                "course_name": "Elektrische Isolierstoffe SoSe24"
+            },
+            {
+                "course_id": "37361",
+                "course_name": "Schwerpunktprojekt Hochspannungstechnik SS24"
+            },
+            {
+                "course_id": "37305",
+                "course_name": "Schaltungstechnik 2024"
+            },
+            {
+                "course_id": "37257",
+                "course_name": "Wind Power Generation (SoSe 24)"
+            },
+            {
+                "course_id": "37244",
+                "course_name": "Elektrische Maschinen (SoSe 24)"
+            },
+            {
+                "course_id": "37060",
+                "course_name": "Anmeldekurs - IV Medizinische Signalverarbeitung"
+            },
+            {
+                "course_id": "37053",
+                "course_name": "Modellierung und Simulation von Batterien SS24"
+            },
+            {
+                "course_id": "37051",
+                "course_name": "Grundlagen Batterietechnik SoSe 2024"
+            },
+            {
+                "course_id": "37050",
+                "course_name": "Energy Storage Technologies SoSe 2024"
+            },
+            {
+                "course_id": "37049",
+                "course_name": "Projekt Batterien und Masterprojekt Batterien SoSe 2024"
+            },
+            {
+                "course_id": "37048",
+                "course_name": "Bau und Vermessung von Batterien SoSe 2024"
+            },
+            {
+                "course_id": "36983",
+                "course_name": "Elektrische Antriebe für Straßenfahrzeuge (SoSe 24)"
+            },
+            {
+                "course_id": "32764",
+                "course_name": "VL Physiologische Optik SoSe 2024"
+            },
+            {
+                "course_id": "32766",
+                "course_name": "Übungen zu VL Grundlagen der Lichttechnik SoSe 2024"
+            },
+            {
+                "course_id": "32763",
+                "course_name": "VL Beleuchtungstechnik I SoSe 2024"
+            },
+            {
+                "course_id": "32739",
+                "course_name": "PIV Tageslichttechnik und Solarstrahlung SoSe 2024"
+            },
+            {
+                "course_id": "32754",
+                "course_name": "VL Licht- und Strahlungsmesstechnik SoSe 2024"
+            },
+            {
+                "course_id": "32765",
+                "course_name": "IV Grundlagen der Lichttechnik SoSe 2024"
+            },
+            {
+                "course_id": "36077",
+                "course_name": "SPJ Schwerpunktprojekt Lichttechnik SoSe 24"
+            },
+            {
+                "course_id": "36073",
+                "course_name": "PR Praktikum Lichttechnik I SoSe24"
+            },
+            {
+                "course_id": "19939",
+                "course_name": "Projekte@mdt"
+            },
+            {
+                "course_id": "32753",
+                "course_name": "IV Grundzüge der Technischen Optik SoSe 2024"
+            },
+            {
+                "course_id": "30017",
+                "course_name": "Projekt Elektrische Antriebe"
+            },
+            {
+                "course_id": "13844",
+                "course_name": "Lichttechnik Organisation"
+            },
+            {
+                "course_id": "37052",
+                "course_name": "Aktuelle Forschung an Energiewandlern und Energiespeichern SoSe 2024"
+            },
+            {
+                "course_id": "36973",
+                "course_name": "Maschinelles Lernen für die Fehlerdetektion WiSe 23/24 -"
+            },
+            {
+                "course_id": "36810",
+                "course_name": "GEM Praktikum Donnerstags 14-16 ab 20.11.23 in Raum E-N 440"
+            },
+            {
+                "course_id": "36809",
+                "course_name": "GEM Praktikum Donnerstags 14-16 ab 20.11.23 in Raum E-N 403"
+            },
+            {
+                "course_id": "36808",
+                "course_name": "GEM Praktikum Donnerstags 14-16 ab 20.11.23 in Raum E-N 401"
+            },
+            {
+                "course_id": "36807",
+                "course_name": "GEM Praktikum Donnerstags 14-16 ab 13.11.23 in Raum E-N 440"
+            },
+            {
+                "course_id": "36806",
+                "course_name": "GEM Praktikum Donnerstags 14-16 ab 13.11.23 in Raum E-N 403"
+            },
+            {
+                "course_id": "36805",
+                "course_name": "GEM Praktikum Donnerstags 14-16 ab 13.11.23 in Raum E-N 401"
+            },
+            {
+                "course_id": "36804",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 20.11.23 in Raum E-N 442"
+            },
+            {
+                "course_id": "36803",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 20.11.23 in Raum E-N 440"
+            },
+            {
+                "course_id": "36802",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 20.11.23 in Raum E-N 403"
+            },
+            {
+                "course_id": "36801",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 20.11.23 in Raum E-N 401"
+            },
+            {
+                "course_id": "36800",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 13.11.23 in Raum E-N 442"
+            },
+            {
+                "course_id": "36799",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 13.11.23 in Raum E-N 440"
+            },
+            {
+                "course_id": "36798",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 13.11.23 in Raum E-N 403"
+            },
+            {
+                "course_id": "36797",
+                "course_name": "GEM Praktikum Donnerstags 10-12 ab 13.11.23 in Raum E-N 401"
+            },
+            {
+                "course_id": "36796",
+                "course_name": "GEM Praktikum Mittwochs 14-16 ab 13.11.23 in Raum E-N 440"
+            },
+            {
+                "course_id": "36795",
+                "course_name": "GEM Praktikum Mittwochs 14-16 ab 13.11.23 in Raum E-N 403"
+            },
+            {
+                "course_id": "36794",
+                "course_name": "GEM Praktikum Mittwochs 14-16 ab 20.11.23 in Raum E-N 440"
+            },
+            {
+                "course_id": "36793",
+                "course_name": "GEM Praktikum Mittwochs 14-16 ab 20.11.23 in Raum E-N 403"
+            },
+            {
+                "course_id": "36792",
+                "course_name": "GEM Praktikum Mittwochs 14-16 ab 20.11.23 in Raum E-N 401"
+            },
+            {
+                "course_id": "36776",
+                "course_name": "GEM Praktikum Mittwochs 14-16 ab 13.11.23 in Raum E-N 401"
+            },
+            {
+                "course_id": "36620",
+                "course_name": "Leistungselektronik - Schaltungstechnik, Entwurf und Anwendungen Wintersemester 2023/2024"
+            },
+            {
+                "course_id": "36579",
+                "course_name": "Projekte Leistungselektronik Wintersemester 2023/2024"
+            },
+            {
+                "course_id": "36361",
+                "course_name": "CMOS Biosensors 23/24"
+            },
+            {
+                "course_id": "36359",
+                "course_name": "Smart Sensors and Actuators 23/24"
+            },
+            {
+                "course_id": "36278",
+                "course_name": "Elektrische Antriebe I WS23/24"
+            },
+            {
+                "course_id": "36277",
+                "course_name": "Computer Modeling, Simulation, and Control of Renewable Energy Systems WS23/24"
+            },
+            {
+                "course_id": "36207",
+                "course_name": "Projekt Energieversorgung mit erneuerbaren Energien WS23/24"
+            },
+            {
+                "course_id": "36179",
+                "course_name": "Physics and Technology of Semiconductor Devices WS23/24"
+            },
+            {
+                "course_id": "36116",
+                "course_name": "Praktikum Modellbildung und Steuergeräteoptimierung WiSe 23/24"
+            },
+            {
+                "course_id": "36115",
+                "course_name": "Vorlesung Einführung in die Automobilelektronik WiSe 23/24"
+            },
+            {
+                "course_id": "36113",
+                "course_name": "IV Regelung und Steuerung in der Kraftfahrzeugmechatronik WiSe 23/24"
+            },
+            {
+                "course_id": "36109",
+                "course_name": "Integrierte Veranstaltung Modellbildung und Simulation mechatronischer Systeme WiSe 23/24"
+            },
+            {
+                "course_id": "36075",
+                "course_name": "VL Lampen und Leuchten WiSe 23/24"
+            },
+            {
+                "course_id": "36074",
+                "course_name": "VL Höhere Farbmetrik WiSe 23/24"
+            },
+            {
+                "course_id": "36072",
+                "course_name": "UE zur VL Einführung in die Lichttechnik WiSe 23/24"
+            },
+            {
+                "course_id": "36071",
+                "course_name": "VL Einführung in die Lichttechnik WiSe 23/24"
+            },
+            {
+                "course_id": "36047",
+                "course_name": "IV Beleuchtungstechnik II WiSe 23/24"
+            },
+            {
+                "course_id": "35997",
+                "course_name": "Elektronik WS23/24"
+            },
+            {
+                "course_id": "35989",
+                "course_name": "Grundlagen der elektronischen Messtechnik WS 23/24"
+            },
+            {
+                "course_id": "35988",
+                "course_name": "Speech and Audio Technology in Medicine WS 23/24"
+            },
+            {
+                "course_id": "35896",
+                "course_name": "Grundlagen der Elektrotechnik - WiSe 23/24"
+            },
+            {
+                "course_id": "35821",
+                "course_name": "Grundlagen der Elektrotechnik (Service) - Wintersemester 2023/2024"
+            },
+            {
+                "course_id": "35820",
+                "course_name": "Mikrocontrollersteuerung eines Wechselrichters - Wintersemester 2023-2024"
+            },
+            {
+                "course_id": "35721",
+                "course_name": "Grundlagen der automatischen Spracherkennung WS 23/24"
+            },
+            {
+                "course_id": "35606",
+                "course_name": "Grundlagen der Hochspannungstechnik PR Hochspannungslabor I WiSe 23/24"
+            },
+            {
+                "course_id": "35602",
+                "course_name": "Grundlagen der Hochspannungstechnik VL WiSe 23/24"
+            },
+            {
+                "course_id": "35601",
+                "course_name": "Hochspannungsprüf- und -messtechnik WiSe 23/24"
+            },
+            {
+                "course_id": "35587",
+                "course_name": "Seminar Wissenschaftliches Arbeiten in der Elektrotechnik. Eine Einführung WiSe 23/24"
+            },
+            {
+                "course_id": "35586",
+                "course_name": "Betrieb elektrischer Energienetze WiSe 23/24"
+            },
+            {
+                "course_id": "34302",
+                "course_name": "EET Abschlussarbeiten SoSe23"
+            },
+            {
+                "course_id": "34294",
+                "course_name": "Mustererkennung und technische Diagnose 2023 Praktikum"
+            },
+            {
+                "course_id": "34290",
+                "course_name": "Mustererkennung und technische Diagnose 2023"
+            },
+            {
+                "course_id": "34225",
+                "course_name": "Schaltungstechnik 2023"
+            },
+            {
+                "course_id": "34216",
+                "course_name": "Secure Operational Control of Large-Scale Renewable Energy Systems and Power Grids SS2023"
+            },
+            {
+                "course_id": "34210",
+                "course_name": "Elektrische Antriebe II SS23"
+            },
+            {
+                "course_id": "34141",
+                "course_name": "Praktikum Messdatenverarbeitung 2023"
+            },
+            {
+                "course_id": "34140",
+                "course_name": "Vorlesung Messdatenverarbeitung 2023"
+            },
+            {
+                "course_id": "34021",
+                "course_name": "Projekt Energieversorgung mit erneuerbaren Energien SS23"
+            },
+            {
+                "course_id": "34020",
+                "course_name": "Elektrische Netzwerke SS23"
+            },
+            {
+                "course_id": "33875",
+                "course_name": "Hybrid Systems SoSe 2023"
+            },
+            {
+                "course_id": "33776",
+                "course_name": "Projekt Synthese und Analyse von Regelungssystemen / Projektpraktikum Automatisierung (Project Lab Automation) (SoSe 2023)"
+            },
+            {
+                "course_id": "33775",
+                "course_name": "Nonlinear Control Systems – SoSe 2023"
+            },
+            {
+                "course_id": "33773",
+                "course_name": "Systemidentifikation und Regelung in der Medizin – SoSe 2023"
+            },
+            {
+                "course_id": "33727",
+                "course_name": "Steuerung und Regelung leistungselektronischer Systeme - Sommersemester 2023"
+            },
+            {
+                "course_id": "33591",
+                "course_name": "Grundlagen der Elektrotechnik (Service) - Sommersemester 2023"
+            },
+            {
+                "course_id": "33399",
+                "course_name": "Elektrische Antriebe für Straßenfahrzeuge SoSe23"
+            },
+            {
+                "course_id": "33396",
+                "course_name": "Wind Power Generation SoSe23"
+            },
+            {
+                "course_id": "33388",
+                "course_name": "Seminar Hochspannungstechnik / Energieübertragung SoSe 23"
+            },
+            {
+                "course_id": "33332",
+                "course_name": "Programmierpraktikum Leistungselektronik SoSe 2023"
+            },
+            {
+                "course_id": "33331",
+                "course_name": "Projekte zur Leistungselektronik SoSe 2023"
+            },
+            {
+                "course_id": "33235",
+                "course_name": "Grundlagen der Regelungstechnik (Fakultät IV) - SoSe 2023"
+            },
+            {
+                "course_id": "33135",
+                "course_name": "Seminar Mess- und Diagnosetechnik 2023"
+            },
+            {
+                "course_id": "33109",
+                "course_name": "Leistungselektronik für erneuerbare Energien und Anwendungen der Energieversorgung SoSe23"
+            },
+            {
+                "course_id": "33059",
+                "course_name": "Modellierung und Simulation von Batterien SS23"
+            },
+            {
+                "course_id": "33058",
+                "course_name": "Energy Storage Technologies SoSe 2023"
+            },
+            {
+                "course_id": "33056",
+                "course_name": "Projekt Batterien und Masterprojekt Batterien SoSe 2023"
+            },
+            {
+                "course_id": "33055",
+                "course_name": "Grundlagen Batterietechnik SoSe 2023"
+            },
+            {
+                "course_id": "33053",
+                "course_name": "Bau und Vermessung von Batterien SoSe 2023"
+            },
+            {
+                "course_id": "32993",
+                "course_name": "Betriebsmittel hochspannungstechnischer Anlagen SS23"
+            },
+            {
+                "course_id": "32992",
+                "course_name": "Elektrische Isolierstoffe SS23"
+            },
+            {
+                "course_id": "32990",
+                "course_name": "Funktionswerkstoffe der Elektrotechnik SS23"
+            },
+            {
+                "course_id": "32989",
+                "course_name": "Hochspannungstechnik VL + PR SS23"
+            },
+            {
+                "course_id": "32987",
+                "course_name": "Schwerpunktprojekt Hochspannungstechnik SS23"
+            },
+            {
+                "course_id": "32803",
+                "course_name": "Renewable Energy Integration - SS23"
+            },
+            {
+                "course_id": "32746",
+                "course_name": "Praktikum Lichttechnik I SoSe 2023"
+            },
+            {
+                "course_id": "32742",
+                "course_name": "Projekt Beleuchtungstechnik SoSe 2023"
+            },
+            {
+                "course_id": "32629",
+                "course_name": "Aktuelle Forschung an Energiewandlern und Energiespeichern SoSe 2023"
+            },
+            {
+                "course_id": "32628",
+                "course_name": "Programmierpraktikum Batterien SoSe 2023"
+            },
+            {
+                "course_id": "32358",
+                "course_name": "Elektrische Maschinen (SoSe 23)"
+            }
+        ]
+    },
+    {
+        "name": "Institut für Hochfrequenztechnik- und Halbleiter-Systemtechnologien",
+        "courses": [
+            {
+                "course_id": "39380",
+                "course_name": "[WiSe 2024/25] Seminar \"Ausgewählte Kapitel der Photovoltaik\""
+            },
+            {
+                "course_id": "39207",
+                "course_name": "[SoSe 2024] Vorlesung Technologie der Dünnschicht-Bauelemente"
+            },
+            {
+                "course_id": "39161",
+                "course_name": "[SoSe 2024] Industrial Plasma and Surface Technolgies"
+            },
+            {
+                "course_id": "39137",
+                "course_name": "[SoSe 2024] Fundamentals of Vacuum and Plasma Process Technologies"
+            },
+            {
+                "course_id": "39092",
+                "course_name": "[SoSe 2024] Schwerpunktprojekt: Halbleiterbauelemente und Schaltungsentwurf integrierter Schaltungen"
+            },
+            {
+                "course_id": "39078",
+                "course_name": "[SoSe 2024] Integrated High-Frequency Systems and Applications"
+            },
+            {
+                "course_id": "39020",
+                "course_name": "[SoSe 2024] Einführung in die Optische Nachrichtentechnik (Fundamentals of Optical Communications)"
+            },
+            {
+                "course_id": "39016",
+                "course_name": "[SoSe 2024] HFT Praktikum"
+            },
+            {
+                "course_id": "38958",
+                "course_name": "[SoSe 2024] Projekt Funksysteme"
+            },
+            {
+                "course_id": "38957",
+                "course_name": "[SoSe 2024] Projekt Funktechnik"
+            },
+            {
+                "course_id": "38956",
+                "course_name": "[SoSe 2024] Antennen und Funksysteme"
+            },
+            {
+                "course_id": "38920",
+                "course_name": "[SoSe 2024] Measurement of Non-Electrical Quantities"
+            },
+            {
+                "course_id": "38839",
+                "course_name": "[SoSe 2024] Umweltgerechtes Design elektronischer Systeme 2024"
+            },
+            {
+                "course_id": "38824",
+                "course_name": "[SoSe 2024] Zuverlässigkeit integrierter Elektroniksysteme"
+            },
+            {
+                "course_id": "38820",
+                "course_name": "[SoSe 2024] Werkstoffe der Systemintegration"
+            },
+            {
+                "course_id": "38665",
+                "course_name": "[SoSe 2024] Seminar \"Ausgewählte Kapitel der Photovoltaik\""
+            },
+            {
+                "course_id": "38664",
+                "course_name": "[SoSe 2024] PV2- Dünnschichtphotovoltaik und neue Konzepte"
+            },
+            {
+                "course_id": "38373",
+                "course_name": "[SoSe 2024] Anmeldung Photovoltaikpraktikum"
+            },
+            {
+                "course_id": "38365",
+                "course_name": "[SoSe 2024] Elektromagnetische Felder (TET1) 2024"
+            },
+            {
+                "course_id": "38183",
+                "course_name": "[SoSe 2024] Quality and Reliability in Semiconductor Engineering 2024"
+            },
+            {
+                "course_id": "36266",
+                "course_name": "Marching Band FREQUENZGANG"
+            },
+            {
+                "course_id": "36775",
+                "course_name": "Silicon Photonics"
+            },
+            {
+                "course_id": "36720",
+                "course_name": "Vorlesung Technologie der Dünnschicht-Bauelemente WS 23/24"
+            },
+            {
+                "course_id": "36719",
+                "course_name": "Seminar Technologie der Dünnschicht-Bauelemente WS 23/24"
+            },
+            {
+                "course_id": "36718",
+                "course_name": "GLET Service (BT, BGT, LMT) WS 23/24"
+            },
+            {
+                "course_id": "36715",
+                "course_name": "Vorlesung Surfaces for Energy Technologies WS 23/24"
+            },
+            {
+                "course_id": "36643",
+                "course_name": "Anmeldung Photovoltaikpraktikum WS23/24"
+            },
+            {
+                "course_id": "36637",
+                "course_name": "Microelectronics for Wireless Communications (WiSe23/24)"
+            },
+            {
+                "course_id": "36512",
+                "course_name": "Projekt Funksysteme (WiSe 2023/24)"
+            },
+            {
+                "course_id": "36510",
+                "course_name": "Projekt Funktechnik (WiSe 2023/24)"
+            },
+            {
+                "course_id": "36475",
+                "course_name": "Vorlesung Antennen und Funksysteme/WiSe 2023/24"
+            },
+            {
+                "course_id": "36462",
+                "course_name": "HLB - Praktikum WS23/24"
+            },
+            {
+                "course_id": "36457",
+                "course_name": "Halbleiterbauelemente - WS 23/24"
+            },
+            {
+                "course_id": "36425",
+                "course_name": "Angewandte Feldtheorie (TET 2) WS 2023-24"
+            },
+            {
+                "course_id": "36132",
+                "course_name": "Hochfrequenztechnik - WiSe 23/24"
+            },
+            {
+                "course_id": "36086",
+                "course_name": "Photovoltaik - Grundlagen und kristalline Silizium-Solarzellen (PV1) - WS23/24"
+            },
+            {
+                "course_id": "35818",
+                "course_name": "Photovoltaik - Grundlagen und kristalline Silizium-Solarzellen (PV1) - WS23/24 - Informationen"
+            },
+            {
+                "course_id": "35016",
+                "course_name": "Herstellungstechnologien von Halbleitersensoren 23/24"
+            },
+            {
+                "course_id": "35014",
+                "course_name": "Praktikum: Technologien und Werkstoffe der Mikrosystemtechnik 23/24"
+            },
+            {
+                "course_id": "34997",
+                "course_name": "Technologien der Systemintegration 2023/2024"
+            },
+            {
+                "course_id": "34466",
+                "course_name": "Aspects of Material Science in Thin Film Technologies"
+            },
+            {
+                "course_id": "34454",
+                "course_name": "[HFS] Projekt Funktechnik (SoSe 23)"
+            },
+            {
+                "course_id": "34434",
+                "course_name": "Grundlagen der Feldsimulation SoSe23"
+            },
+            {
+                "course_id": "34428",
+                "course_name": "Vorlesung: Antennen und Funksysteme"
+            },
+            {
+                "course_id": "34392",
+                "course_name": "Industrial Plasma and Surface Technolgies SoSe 2023"
+            },
+            {
+                "course_id": "34390",
+                "course_name": "Seminar Dünnschichttechnologie"
+            },
+            {
+                "course_id": "34389",
+                "course_name": "Technologie für Dünnschicht-Bauelemente SoSe 2023"
+            },
+            {
+                "course_id": "34384",
+                "course_name": "HFT Praktikum - SoSe2023"
+            },
+            {
+                "course_id": "34361",
+                "course_name": "Fundamentals of Vacuum and Plasma Process Technologies SoSe 2023"
+            },
+            {
+                "course_id": "34348",
+                "course_name": "Einführung in die Optische Nachrichtentechnik (Fundamentals of Optical Communications) - SoSe2023"
+            },
+            {
+                "course_id": "34213",
+                "course_name": "Measurement of Non-Electrical Quantities II"
+            },
+            {
+                "course_id": "34023",
+                "course_name": "Microelectronics for Wireless Communications"
+            },
+            {
+                "course_id": "33998",
+                "course_name": "Seminar \"Ausgewählte Kapitel der Photovoltaik\" - SoSe23"
+            },
+            {
+                "course_id": "33983",
+                "course_name": "PV2- Dünnschichtphotovoltaik und neue Konzepte - SoSe 2023"
+            },
+            {
+                "course_id": "33385",
+                "course_name": "Elektromagnetische Felder (TET1) SS 2023"
+            },
+            {
+                "course_id": "33077",
+                "course_name": "Quality and Reliability in Semiconductor Engineering 2023"
+            },
+            {
+                "course_id": "33072",
+                "course_name": "Schwerpunktprojekt: Halbleiterbauelemente und Schaltungsentwurf integrierter Schaltungen"
+            },
+            {
+                "course_id": "33070",
+                "course_name": "Schwerpunktprojekt: Halbleiterbauelemente und Schaltungsentwurf integrierter Schaltungen - Sose2023"
+            },
+            {
+                "course_id": "32711",
+                "course_name": "[SoSe 2023] Umweltgerechtes Design elektronischer Systeme 2023"
+            },
+            {
+                "course_id": "32710",
+                "course_name": "Zuverlässigkeit integrierter Elektroniksysteme"
+            },
+            {
+                "course_id": "32705",
+                "course_name": "Werkstoffe der Systemintegration"
+            },
+            {
+                "course_id": "32416",
+                "course_name": "Anmeldung Photovoltaikpraktikum SoSe23"
+            }
+        ]
+    },
+    {
+        "name": "Institut für Softwaretechnik und Theoretische Informatik",
+        "courses": [
+            {
+                "course_id": "39392",
+                "course_name": "[WiSe 2024/25] Programmierpraktikum Meta-Seite"
+            },
+            {
+                "course_id": "39270",
+                "course_name": "[SoSe 2024] PyML test"
+            },
+            {
+                "course_id": "39260",
+                "course_name": "[SoSe 2024 & WiSe 2024/25] Mentoring Fakultät IV"
+            },
+            {
+                "course_id": "39235",
+                "course_name": "[SoSe 2024] Reading Group: Quantum Chemistry"
+            },
+            {
+                "course_id": "39164",
+                "course_name": "[SoSe 2024] Deep Learning on Graphs - Seminar"
+            },
+            {
+                "course_id": "39163",
+                "course_name": "[SoSe 2024] Study Project - Chatbot Challenge \"Chatbots to Strengthen Democracy\""
+            },
+            {
+                "course_id": "39122",
+                "course_name": "[SoSe 2024] Internet and Network Security - INET"
+            },
+            {
+                "course_id": "39106",
+                "course_name": "[SoSe 2024] Quality and Usability Seminar: Exploring Political Biases and Disinformation Detection through HCI Experiments"
+            },
+            {
+                "course_id": "39093",
+                "course_name": "[SoSe 2024] Responsible Artificial Intelligence 2"
+            },
+            {
+                "course_id": "39079",
+                "course_name": "[SoSe 2024] Randomized Algorithmics"
+            },
+            {
+                "course_id": "39040",
+                "course_name": "[SoSe 2024] Neurocolloquium"
+            },
+            {
+                "course_id": "39002",
+                "course_name": "[SoSe 2024] Bayesian Inference"
+            },
+            {
+                "course_id": "38996",
+                "course_name": "[SoSe 2024] MTV Project: Research at Work"
+            },
+            {
+                "course_id": "38986",
+                "course_name": "[SoSe 2024] Vertiefende Themen der Mensch-Computer-Interaktion (HCI)"
+            },
+            {
+                "course_id": "38983",
+                "course_name": "[SoSe 2024] Mathematical Foundations for Machine Learning"
+            },
+            {
+                "course_id": "38962",
+                "course_name": "[SoSe 2024] Bachelorarbeiten am Fachgebiet Neurotechnologie"
+            },
+            {
+                "course_id": "38945",
+                "course_name": "[SoSe 2024] Algebraic Process Calculi"
+            },
+            {
+                "course_id": "38926",
+                "course_name": "[SoSe 2024] Old regulations (PyML)"
+            },
+            {
+                "course_id": "38906",
+                "course_name": "[SoSe 2024] Current trends in graph theory and combinatorics"
+            },
+            {
+                "course_id": "38867",
+                "course_name": "[SoSe 2024] Cognitive Algorithms Seminar"
+            },
+            {
+                "course_id": "38859",
+                "course_name": "[SoSe 2024] [DMH SoSe-24] Data Management on Modern Hardware"
+            },
+            {
+                "course_id": "38845",
+                "course_name": "[SoSe 2024] Machine Learning 2"
+            },
+            {
+                "course_id": "38840",
+                "course_name": "[SoSe 2024] Diskrete Strukturen"
+            },
+            {
+                "course_id": "38677",
+                "course_name": "[SoSe 2024] Projekt Medienerstellung, QU, PJ"
+            },
+            {
+                "course_id": "38636",
+                "course_name": "[SoSe 2024] Natural Language Processing, QU, IV"
+            },
+            {
+                "course_id": "38625",
+                "course_name": "[SoSe 2024] Embedded Systems Security Lab"
+            },
+            {
+                "course_id": "38595",
+                "course_name": "[SoSe 2024] Advanced Projects at the Quality and Usability Lab, QU, VL+UE"
+            },
+            {
+                "course_id": "38558",
+                "course_name": "[SoSe 2024] Lab Course Machine Learning"
+            },
+            {
+                "course_id": "38553",
+                "course_name": "[SoSe 2024] Logische Methoden der Informatik"
+            },
+            {
+                "course_id": "38504",
+                "course_name": "[SoSe 2024] Biometric Identification and Verification, QU, SEM"
+            },
+            {
+                "course_id": "38481",
+                "course_name": "[SoSe 2024] Seminar Generative Models"
+            },
+            {
+                "course_id": "38479",
+                "course_name": "[SoSe 2024] Algorithmen und Datenstrukturen"
+            },
+            {
+                "course_id": "38465",
+                "course_name": "[SoSe 2024] Programmierpraktium: Programming Language Design and Implementation"
+            },
+            {
+                "course_id": "38448",
+                "course_name": "[SoSe 2024] Current Research Topics in Programming Languages and Compilers (Seminar)"
+            },
+            {
+                "course_id": "38441",
+                "course_name": "[SoSe 2024] Compiling Techniques"
+            },
+            {
+                "course_id": "38415",
+                "course_name": "[SoSe 2024] Hot Topics in Computer Vision - Seminar - Foundation Models for Earth Observation Imagery"
+            },
+            {
+                "course_id": "38288",
+                "course_name": "[SoSe 2024] Computer Security Seminar"
+            },
+            {
+                "course_id": "38287",
+                "course_name": "[SoSe 2024] Quantum Computing"
+            },
+            {
+                "course_id": "38286",
+                "course_name": "[SoSe 2024] International Information Security Contest"
+            },
+            {
+                "course_id": "38285",
+                "course_name": "[SoSe 2024] Secure Cryptography"
+            },
+            {
+                "course_id": "38283",
+                "course_name": "[SoSe 2024] Einführung in die IT-Sicherheit"
+            },
+            {
+                "course_id": "38274",
+                "course_name": "[SoSe 2024] Usability Engineering"
+            },
+            {
+                "course_id": "38273",
+                "course_name": "[SoSe 2024] Multimodal Interaction"
+            },
+            {
+                "course_id": "38265",
+                "course_name": "[SoSe 2024] Computational modeling: A practical course"
+            },
+            {
+                "course_id": "38261",
+                "course_name": "[SoSe 2024] Digitale Systeme, QU, VL+UE"
+            },
+            {
+                "course_id": "38175",
+                "course_name": "[SoSe 2024] Aktuelle Themen zu Software and Embedded Systems Engineering"
+            },
+            {
+                "course_id": "38172",
+                "course_name": "[SoSe 2024] Projekt Entwurf Eingebetteter Systeme + Master Project Software Engineering of Embedded Systems"
+            },
+            {
+                "course_id": "38120",
+                "course_name": "[SoSe 2024] Databases Project (DBPRO)"
+            },
+            {
+                "course_id": "38075",
+                "course_name": "[SoSe 2024] Seminar: Machine Learning for Biomedical Signal Analysis"
+            },
+            {
+                "course_id": "37999",
+                "course_name": "[SoSe 2024] Modelle zur Informationsverarbeitung im _Gehirn"
+            },
+            {
+                "course_id": "37981",
+                "course_name": "[SoSe 2024] Parameterized Algorithmics"
+            },
+            {
+                "course_id": "37952",
+                "course_name": "[SoSe 2024] Deep Learning 2"
+            },
+            {
+                "course_id": "37947",
+                "course_name": "[SoSe 2024] IMSEM Seminar on Hot Topics in Information Management"
+            },
+            {
+                "course_id": "37927",
+                "course_name": "[SoSe 2024] Theoretische Grundlagen der Informatik"
+            },
+            {
+                "course_id": "37912",
+                "course_name": "[SoSe 2024] Machine Intelligence II: Unsupervised Methods"
+            },
+            {
+                "course_id": "37909",
+                "course_name": "[SoSe 2024] Communicating Hot Topics in Intelligence Research (Science of Intelligence: Distilling Discourse into Outreach)"
+            },
+            {
+                "course_id": "37892",
+                "course_name": "[SoSe 2024] Seminar: Machine Learning and Data Management Systems"
+            },
+            {
+                "course_id": "37889",
+                "course_name": "[SoSe 2024] Programmierpraktikum Modelle Dynamischer Systeme"
+            },
+            {
+                "course_id": "37840",
+                "course_name": "[SoSe 2024] Cognitive Algorithms"
+            },
+            {
+                "course_id": "37815",
+                "course_name": "[SoSe 2024] Informationssysteme und Datenanalyse (E-Prüfung)"
+            },
+            {
+                "course_id": "37805",
+                "course_name": "[SoSe 2024] Informationssysteme und Datenanalyse"
+            },
+            {
+                "course_id": "37800",
+                "course_name": "[SoSe 2024] Algorithmentheorie"
+            },
+            {
+                "course_id": "37785",
+                "course_name": "[SoSe 2024] Machine Learning in Neuroscience"
+            },
+            {
+                "course_id": "37776",
+                "course_name": "[SoSe 2024] Seminar: Aktuelle Themen der Algorithmik"
+            },
+            {
+                "course_id": "37775",
+                "course_name": "[SoSe 2024] Algorithm Engineering II"
+            },
+            {
+                "course_id": "37750",
+                "course_name": "[SoSe 2024] World of Proofcraft"
+            },
+            {
+                "course_id": "37748",
+                "course_name": "[SoSe 2024] Formale Sprachen und Automaten"
+            },
+            {
+                "course_id": "37747",
+                "course_name": "[SoSe 2024] Einführung in das interaktive Theorembeweisen (Isabelle-Lab)"
+            },
+            {
+                "course_id": "37745",
+                "course_name": "[SoSe 24] Programming Lab: Quality Data Science"
+            },
+            {
+                "course_id": "37743",
+                "course_name": "[SoSe 24] Uncertainty in Machine Learning"
+            },
+            {
+                "course_id": "37695",
+                "course_name": "[SoSe24] Classical Topics in Machine Learning"
+            },
+            {
+                "course_id": "37694",
+                "course_name": "[SoSe 24] Seminar: Explainable Machine Learning"
+            },
+            {
+                "course_id": "37693",
+                "course_name": "Machine Learning for Quantum Chemistry SoSe24"
+            },
+            {
+                "course_id": "37692",
+                "course_name": "Seminar Hot Topics in ML SS24"
+            },
+            {
+                "course_id": "37645",
+                "course_name": "[SoSe 2024] BDSPRO - Big Data Systems Project"
+            },
+            {
+                "course_id": "37588",
+                "course_name": "[SoSe 24] Julia Programming for Machine Learning"
+            },
+            {
+                "course_id": "37571",
+                "course_name": "[SoSe 2024] Programmierpraktikum Datensysteme: Data Systems Coding Club (FG DIMA)"
+            },
+            {
+                "course_id": "37519",
+                "course_name": "Current Topics in Intelligence Research: Quantitative Approaches to Behavior"
+            },
+            {
+                "course_id": "37511",
+                "course_name": "[SoSe24] Datenbankpraktikum"
+            },
+            {
+                "course_id": "37510",
+                "course_name": "Data Science for Cognitive Neuroscience"
+            },
+            {
+                "course_id": "37508",
+                "course_name": "[SoSe 2024] BDASEM Big Data Analytics Seminar"
+            },
+            {
+                "course_id": "37507",
+                "course_name": "[SS 2024] DBSEM Seminar on Advanced Topics in Database and Information Systems (Data Stream Management)"
+            },
+            {
+                "course_id": "37506",
+                "course_name": "[SS 2024] Master’s Thesis Colloquium in Data Management Systems"
+            },
+            {
+                "course_id": "37500",
+                "course_name": "[SS 2024] Bachelor's Thesis Colloquium in Data Management Systems"
+            },
+            {
+                "course_id": "37443",
+                "course_name": "Large-scale Data Engineering (SoSe 2024)"
+            },
+            {
+                "course_id": "37405",
+                "course_name": "[2024-SoSe] Programmierpraktikum Algorithmen und Datenstrukturen"
+            },
+            {
+                "course_id": "37400",
+                "course_name": "[Summer 24] Python for Machine Learning"
+            },
+            {
+                "course_id": "37390",
+                "course_name": "Bachelorarbeiten am FG NEURO - AlgoGames"
+            },
+            {
+                "course_id": "37360",
+                "course_name": "[SoSe 24] Programmierpraktikum Meta-Seite"
+            },
+            {
+                "course_id": "37355",
+                "course_name": "Programmierpraktikum: Datensysteme (SoSe 24)"
+            },
+            {
+                "course_id": "37354",
+                "course_name": "Architecture of Machine Learning Systems (SoSe 24)"
+            },
+            {
+                "course_id": "37266",
+                "course_name": "[SoSe 24] Programmierpraktikum Cyber-Physical Systems"
+            },
+            {
+                "course_id": "37239",
+                "course_name": "[SoSe 2024] Seminar Quality and Usability"
+            },
+            {
+                "course_id": "37217",
+                "course_name": "[SoSe24] Neural Information Processing Projects"
+            },
+            {
+                "course_id": "37212",
+                "course_name": "[SoSe 24] IT-SecLab: Vulnerability Assessment"
+            },
+            {
+                "course_id": "37162",
+                "course_name": "[SoSe24] Praktisches Programmieren und Rechneraufbau"
+            },
+            {
+                "course_id": "37077",
+                "course_name": "[2024-SoSe] Ausgewählte Themen zu Algorithmen und Datenstrukturen"
+            },
+            {
+                "course_id": "37008",
+                "course_name": "[SoSe 24] Lecture: Machine Learning for Computer Security"
+            },
+            {
+                "course_id": "37007",
+                "course_name": "[SoSe 24] Lab: Applied Security Lab"
+            },
+            {
+                "course_id": "27927",
+                "course_name": "SESE Thesis Lab"
+            },
+            {
+                "course_id": "37013",
+                "course_name": "[SoSe 24] Seminar: Mobile Privacy and Security"
+            },
+            {
+                "course_id": "37009",
+                "course_name": "[SoSe 24] Project: Security Playground for Generative Agents"
+            },
+            {
+                "course_id": "37010",
+                "course_name": "[SoSe 24] Project: Steganography with Language Models"
+            },
+            {
+                "course_id": "37012",
+                "course_name": "[SoSe 24] Seminar: Privacy and Security in Learning"
+            },
+            {
+                "course_id": "37141",
+                "course_name": "[WS2324] Blockkurs Betriebssystempraktikum"
+            },
+            {
+                "course_id": "37076",
+                "course_name": "[Wise23/24] SECT Exams"
+            },
+            {
+                "course_id": "36816",
+                "course_name": "Neurocolloquium"
+            },
+            {
+                "course_id": "36768",
+                "course_name": "Foundations of Probability Theory for Machine Learning"
+            },
+            {
+                "course_id": "36642",
+                "course_name": "[SoSe 2024] Data Science & Engineering Master's Track"
+            },
+            {
+                "course_id": "36636",
+                "course_name": "[WiSe 23/24] Responsible Artificial Intelligence 1"
+            },
+            {
+                "course_id": "36590",
+                "course_name": "[WiSe 2023/24] Graph Minors"
+            },
+            {
+                "course_id": "36418",
+                "course_name": "[WS 23/24] Software Engineering cyber-physischer/eingebetteter Systeme"
+            },
+            {
+                "course_id": "36352",
+                "course_name": "[WiSe 23/24] Quantum Cryptography"
+            },
+            {
+                "course_id": "36347",
+                "course_name": "[WiSe 23/24] Betriebssystempraktikum"
+            },
+            {
+                "course_id": "36288",
+                "course_name": "[23/24 WiSe] Lambda Calculus and Type Systems"
+            },
+            {
+                "course_id": "36271",
+                "course_name": "[WiSe 23/24] Cryptography for Security"
+            },
+            {
+                "course_id": "36270",
+                "course_name": "[WiSe 23/24] Dependable Systems"
+            },
+            {
+                "course_id": "36269",
+                "course_name": "[WiSe 23/24] Embedded Systems Security Lab"
+            },
+            {
+                "course_id": "36261",
+                "course_name": "DBT: Database Technology [WiSe 2023/24]"
+            },
+            {
+                "course_id": "36244",
+                "course_name": "[WiSe 23/24] Seminar Entwicklung verteilter eingebetteter Systeme"
+            },
+            {
+                "course_id": "36236",
+                "course_name": "Quality and Usability: Topic \"NLP4Health\", QU, SEM, WS 2023/24"
+            },
+            {
+                "course_id": "36235",
+                "course_name": "Einführung in die Medieninformatik, QU, IV, WS 2023/24"
+            },
+            {
+                "course_id": "36234",
+                "course_name": "Computer-supported Interaction, QU, VL, WS 2023/24"
+            },
+            {
+                "course_id": "36233",
+                "course_name": "Advanced Projects at the Quality and Usability Lab, QU, VL+UE, WS 2023/24"
+            },
+            {
+                "course_id": "36211",
+                "course_name": "[WiSe 23/24] Communication Acoustics, QU, IV (MOOC)"
+            },
+            {
+                "course_id": "36112",
+                "course_name": "[WiSe 23/24] Theoretische Grundlagen der Informatik"
+            },
+            {
+                "course_id": "36028",
+                "course_name": "[WiSe 23/24] Machine Learning 1"
+            },
+            {
+                "course_id": "36004",
+                "course_name": "[WiSe 23/24] Advanced Algorithmics"
+            },
+            {
+                "course_id": "36003",
+                "course_name": "[WiSe 23/24] Berechenbarkeit und Komplexität"
+            },
+            {
+                "course_id": "35986",
+                "course_name": "[WiSe 2023/24] BDSPRO - Big Data Systems Project"
+            },
+            {
+                "course_id": "35979",
+                "course_name": "[WiSe 2023/24] DBTLAB: Database Technology Lab"
+            },
+            {
+                "course_id": "35958",
+                "course_name": "[WiSe 23/24] Softwaretechnik und Programmierparadigmen"
+            },
+            {
+                "course_id": "35828",
+                "course_name": "[WiSe 23/24] Programmierpraktikum Cyber-Physical Systems"
+            },
+            {
+                "course_id": "35709",
+                "course_name": "[WiSe 2023/24] MDS Management of Data Streams"
+            },
+            {
+                "course_id": "35658",
+                "course_name": "[WiSe 23/24] DBPRO: Database Project"
+            },
+            {
+                "course_id": "35637",
+                "course_name": "[WS23/24] Praktisches Programmieren und Rechneraufbau"
+            },
+            {
+                "course_id": "35595",
+                "course_name": "[WiSe 23/24] Speech Communication, QU, IV"
+            },
+            {
+                "course_id": "35533",
+                "course_name": "[WiSe 23/24] Julia Programming for Machine Learning"
+            },
+            {
+                "course_id": "35440",
+                "course_name": "[WiSe2023/24] Logik"
+            },
+            {
+                "course_id": "35340",
+                "course_name": "[WiSe 23/24] The Software Horror Picture Show"
+            },
+            {
+                "course_id": "35308",
+                "course_name": "[WiSe 23/24] Computer Security Seminar"
+            },
+            {
+                "course_id": "35303",
+                "course_name": "[WiSe 2324] Technische Grundlagen der Informatik"
+            },
+            {
+                "course_id": "35278",
+                "course_name": "[WiSe 23/24] MTV Research at Work"
+            },
+            {
+                "course_id": "35238",
+                "course_name": "[WiSe 23/24] Hardware Security"
+            },
+            {
+                "course_id": "35236",
+                "course_name": "[WiSe 23/24] Reaktive Systeme"
+            },
+            {
+                "course_id": "35233",
+                "course_name": "[WiSe 2023/24] Machine Intelligence I: Supervised Methods"
+            },
+            {
+                "course_id": "35039",
+                "course_name": "Large-scale Data Engineering (WiSe 2023/24)"
+            },
+            {
+                "course_id": "35038",
+                "course_name": "Programmierpraktikum: Datensysteme (WiSe 23/24)"
+            },
+            {
+                "course_id": "35037",
+                "course_name": "Data Integration and Large-scale Analysis (WiSe 23/24)"
+            },
+            {
+                "course_id": "35018",
+                "course_name": "[WiSe 2023/2024] Research Oriented Course (ROC) on the Foundations for Graduate Research in Data Management and Machine Learning Systems"
+            },
+            {
+                "course_id": "35012",
+                "course_name": "[WiSe 2023/2024] Datenbankpraktikum"
+            },
+            {
+                "course_id": "35004",
+                "course_name": "[WiSe 23/24] Programming Lab: Quality Data Science"
+            },
+            {
+                "course_id": "35000",
+                "course_name": "[WiSe 23/24] Topics in Biomedical Data Science"
+            },
+            {
+                "course_id": "34999",
+                "course_name": "[WiSe 23/24] Uncertainty in Machine Learning"
+            },
+            {
+                "course_id": "34770",
+                "course_name": "Written Test MMI 2023"
+            },
+            {
+                "course_id": "34665",
+                "course_name": "SECT Exams"
+            },
+            {
+                "course_id": "34534",
+                "course_name": "Seminar Selective Topics in Natural Language Processing"
+            },
+            {
+                "course_id": "34525",
+                "course_name": "[SoSe 23] Seminar Machine Learning and Data Management Systems"
+            },
+            {
+                "course_id": "34508",
+                "course_name": "[SoSe 23] Probabilistic Modeling and Inference"
+            },
+            {
+                "course_id": "34498",
+                "course_name": "[SoSe 2023] SP Quantitative Erhebung von Erfahrungen in der Studieneingangsphase"
+            },
+            {
+                "course_id": "34443",
+                "course_name": "[SoSe 23] Advanced Algorithmics"
+            },
+            {
+                "course_id": "34432",
+                "course_name": "[SuSe23] Seminar Generative Models"
+            },
+            {
+                "course_id": "34431",
+                "course_name": "[SuSe23] Seminar Cognitive Algorithms"
+            },
+            {
+                "course_id": "34345",
+                "course_name": "Internet Security [SS23]"
+            },
+            {
+                "course_id": "34327",
+                "course_name": "Modelle zur Informationsverarbeitung im _Gehirn"
+            },
+            {
+                "course_id": "34303",
+                "course_name": "[SoSe 23] Machine Learning 2"
+            },
+            {
+                "course_id": "34292",
+                "course_name": "[SoSe 23] Julia Programming for Machine Learning"
+            },
+            {
+                "course_id": "25487",
+                "course_name": "Thesis with Thomas"
+            },
+            {
+                "course_id": "34230",
+                "course_name": "[SoSe 2023] Einführung in das interaktive Theorembeweisen (Isabelle-Lab)"
+            },
+            {
+                "course_id": "34228",
+                "course_name": "[DMH SoSe-23] Data Management on Modern Hardware"
+            },
+            {
+                "course_id": "34211",
+                "course_name": "[SoSe 2023] BDSPRO - Big Data Systems Project"
+            },
+            {
+                "course_id": "34207",
+                "course_name": "[SoSe 23] Computer Security Seminar"
+            },
+            {
+                "course_id": "34038",
+                "course_name": "[SoSe 2023] Study Project - Chatbot Challenge \"Escape Room\""
+            },
+            {
+                "course_id": "34029",
+                "course_name": "[SoSe23] Praktisches Programmieren und Rechneraufbau"
+            },
+            {
+                "course_id": "34004",
+                "course_name": "[SoSe 23] IT-SecLab: Vulnerability Assessment"
+            },
+            {
+                "course_id": "33962",
+                "course_name": "[SoSe 2023] Algorithm Engineering"
+            },
+            {
+                "course_id": "33915",
+                "course_name": "Biometric Identification and Verification, QU, SEM, SS 2023"
+            },
+            {
+                "course_id": "33914",
+                "course_name": "Natural Language Processing, QU, IV, SS 2023"
+            },
+            {
+                "course_id": "33913",
+                "course_name": "Advanced Projects at the Quality and Usability Lab, QU, PJ, SS 2023"
+            },
+            {
+                "course_id": "33912",
+                "course_name": "Projekt Medienerstellung, QU, PJ, SS 2023"
+            },
+            {
+                "course_id": "33911",
+                "course_name": "Digitale Systeme, QU, VL+UE, SS 2023"
+            },
+            {
+                "course_id": "33874",
+                "course_name": "[SoSe23] Neural Information Processing Projects"
+            },
+            {
+                "course_id": "33873",
+                "course_name": "[SoSe 23] Quantum Computing"
+            },
+            {
+                "course_id": "33872",
+                "course_name": "[SoSe 23] Embedded Operating Systems"
+            },
+            {
+                "course_id": "33871",
+                "course_name": "[SoSe 23] Einführung in die IT-Sicherheit"
+            },
+            {
+                "course_id": "33866",
+                "course_name": "[SoSe 2023] Algorithmic Graph Structure Theory"
+            },
+            {
+                "course_id": "33865",
+                "course_name": "[SoSe 2023] Current trends in graph theory and combinatorics"
+            },
+            {
+                "course_id": "33864",
+                "course_name": "[SoSe 2023] Logische Methoden der Informatik"
+            },
+            {
+                "course_id": "33854",
+                "course_name": "Large-scale Data Engineering (SoSe 2023)"
+            },
+            {
+                "course_id": "33853",
+                "course_name": "Architecture of Machine Learning Systems (SoSe 23)"
+            },
+            {
+                "course_id": "33845",
+                "course_name": "[SoSe 2023] Algorithmentheorie"
+            },
+            {
+                "course_id": "33838",
+                "course_name": "[SoSe 23] Algorithmic Bioinformatics"
+            },
+            {
+                "course_id": "33835",
+                "course_name": "[22/23 Summer] Algebraic Process Calculi"
+            },
+            {
+                "course_id": "33813",
+                "course_name": "[SoSe 2023] Theoretische Grundlagen der Informatik"
+            },
+            {
+                "course_id": "33807",
+                "course_name": "[SoSe 23] Programmierpraktikum Cyber-Physical Systems"
+            },
+            {
+                "course_id": "33798",
+                "course_name": "[SoSe 2023] Multimodal Interaction"
+            },
+            {
+                "course_id": "33679",
+                "course_name": "[SoSe 2023] World of Proofcraft"
+            },
+            {
+                "course_id": "33662",
+                "course_name": "[SoSe23] Seminar Hot Topics Machine Learning"
+            },
+            {
+                "course_id": "33635",
+                "course_name": "[2023-SoSe] Brain-Computer Interfacing - From Neurons to Data"
+            },
+            {
+                "course_id": "33631",
+                "course_name": "[SoSe 23] Mathematical Foundations for Machine Learning"
+            },
+            {
+                "course_id": "33590",
+                "course_name": "[SoSe 23] Public Key Cryptography"
+            },
+            {
+                "course_id": "33589",
+                "course_name": "[SoSe 23] International Information Security Contest"
+            },
+            {
+                "course_id": "33557",
+                "course_name": "[SoSe23] Cognitive Algorithms"
+            },
+            {
+                "course_id": "33513",
+                "course_name": "[SoSe 2023] Seminar Machine Learning for Quantum Chemistry"
+            }
+        ]
+    },
+    {
+        "name": "Institut für Technische Informatik und Mikroelektronik",
+        "courses": [
+            {
+                "course_id": "39305",
+                "course_name": "[WiSe 2024/25] Computer Graphics 1"
+            },
+            {
+                "course_id": "39304",
+                "course_name": "[WiSe 2024/25] Computer Graphics Seminar A"
+            },
+            {
+                "course_id": "39303",
+                "course_name": "[WiSe 2024/25] Klassische Algorithmen der Computer-Graphik (Bachelor-Seminar)"
+            },
+            {
+                "course_id": "39302",
+                "course_name": "[WiSe 2024/25] Wissenschaftliches Rechnen"
+            },
+            {
+                "course_id": "39301",
+                "course_name": "[WiSe 2024/25] Computer Graphics Projekt"
+            },
+            {
+                "course_id": "39274",
+                "course_name": "[WiSe 2024/25] Stereo Image Processing"
+            },
+            {
+                "course_id": "39192",
+                "course_name": "[SoSe 2024] Applied Embedded Systems Project"
+            },
+            {
+                "course_id": "39086",
+                "course_name": "[SoSe 2024] Machine and Behavior"
+            },
+            {
+                "course_id": "39036",
+                "course_name": "[SoSe 2024 & WiSe 2024/25] MMIC4U Microwave Chip Project"
+            },
+            {
+                "course_id": "39006",
+                "course_name": "[SoSe 2024] Event-based Robot Vision"
+            },
+            {
+                "course_id": "39005",
+                "course_name": "[SoSe 2024] Event-based Robot Vision PROJECT"
+            },
+            {
+                "course_id": "39004",
+                "course_name": "[SoSe 2024] Seminar: Introduction to Camera Geometry"
+            },
+            {
+                "course_id": "38901",
+                "course_name": "[SoSe 2024] KI & Robotik BSc Seminar"
+            },
+            {
+                "course_id": "38900",
+                "course_name": "[SoSe 2024] Robot Learning"
+            },
+            {
+                "course_id": "23634",
+                "course_name": "Learning and Intelligent Systems: MSc/BSc Requests"
+            },
+            {
+                "course_id": "38866",
+                "course_name": "[SoSe 2024] Hardwarepraktikum"
+            },
+            {
+                "course_id": "38858",
+                "course_name": "[SoSe 2024] Microwave and Radar Remote Sensing"
+            },
+            {
+                "course_id": "38821",
+                "course_name": "[SoSe 2024] Medical Image Processing"
+            },
+            {
+                "course_id": "38761",
+                "course_name": "[SoSe 2024] High Frequency Data Converters"
+            },
+            {
+                "course_id": "38648",
+                "course_name": "[SoSe 2024] Automatic Image Analysis 2024"
+            },
+            {
+                "course_id": "38414",
+                "course_name": "[SoSe 2024] HTCV - Project"
+            },
+            {
+                "course_id": "38410",
+                "course_name": "[SoSe 2024] Image Processing for Remote Sensing"
+            },
+            {
+                "course_id": "38352",
+                "course_name": "[SoSe 2024] Programming Project: Data Science in Python and R - 2"
+            },
+            {
+                "course_id": "38347",
+                "course_name": "[SoSe 2024] Programming Project: Data Science in Python and R - 1"
+            },
+            {
+                "course_id": "38222",
+                "course_name": "[SoSe 2024] Project Computer Vision for Remote Sensing"
+            },
+            {
+                "course_id": "38211",
+                "course_name": "[SoSe 2024] Advanced Analog Integrated Circuits"
+            },
+            {
+                "course_id": "38197",
+                "course_name": "[SoSe 2024] Projektorientiertes Praktikum (Projektlabor)"
+            },
+            {
+                "course_id": "38098",
+                "course_name": "[SoSe 2024] Seminar: Recent Trends in Deep Learning for Computer Vision"
+            },
+            {
+                "course_id": "37453",
+                "course_name": "[SoSe 2024] System-on-Chip (SoC) + RISC-V Lab"
+            },
+            {
+                "course_id": "37292",
+                "course_name": "[SoSe 2024] Aktuelle Forschung zu Visueller Wahrnehmung I"
+            },
+            {
+                "course_id": "37286",
+                "course_name": "[SoSe 2024] Aktuelle Forschung zu Visueller Wahrnehmung II"
+            },
+            {
+                "course_id": "37254",
+                "course_name": "View Synthesis [SoSe 2024]"
+            },
+            {
+                "course_id": "37252",
+                "course_name": "[SoSe24] Robotics: Current Topics"
+            },
+            {
+                "course_id": "37251",
+                "course_name": "[SoSe 2024] Robotics: Fundamentals"
+            },
+            {
+                "course_id": "37169",
+                "course_name": "[SoSe 2024] Klassische Algorithmen der Computer-Graphik (Bachelor Seminar)"
+            },
+            {
+                "course_id": "37167",
+                "course_name": "[SoSe 2024] Computer Graphics Seminar B"
+            },
+            {
+                "course_id": "37165",
+                "course_name": "[SoSe 2024] Computer Graphics Project"
+            },
+            {
+                "course_id": "37164",
+                "course_name": "[SoSe 2024] Computer Graphics 2"
+            },
+            {
+                "course_id": "37080",
+                "course_name": "Einführung in die Informatik - Vertiefung [SoSe 2024] [Modul-Nummer 40014]"
+            },
+            {
+                "course_id": "37061",
+                "course_name": "[SoSe 24] Metaseite der Seminare"
+            },
+            {
+                "course_id": "37034",
+                "course_name": "[S24] Multi-Robot Systems"
+            },
+            {
+                "course_id": "37033",
+                "course_name": "[S24] Motion Planning"
+            },
+            {
+                "course_id": "33668",
+                "course_name": "Robotics Interest Group"
+            },
+            {
+                "course_id": "20578",
+                "course_name": "Computer Vision and Remote Sensing - Theses"
+            },
+            {
+                "course_id": "36614",
+                "course_name": "Causal Inference"
+            },
+            {
+                "course_id": "36581",
+                "course_name": "Analog Layout Seminar WS2324"
+            },
+            {
+                "course_id": "36580",
+                "course_name": "Digital Integrated Circuits - Integrierte Schaltungen - WS2324"
+            },
+            {
+                "course_id": "36482",
+                "course_name": "Compiler Design WS 23/24"
+            },
+            {
+                "course_id": "36343",
+                "course_name": "[W23] AI & Robotics: Research"
+            },
+            {
+                "course_id": "36341",
+                "course_name": "[W23] Optimization Algorithms"
+            },
+            {
+                "course_id": "36297",
+                "course_name": "Event-based Robot Vision PROJECT [WS 23/24]"
+            },
+            {
+                "course_id": "36296",
+                "course_name": "State Estimation for Robotics [WS 23/24]"
+            },
+            {
+                "course_id": "36293",
+                "course_name": "Event-based Robot Vision [WS 23/24]"
+            },
+            {
+                "course_id": "36229",
+                "course_name": "Rechnerorganisation Praktikum WS 23/24"
+            },
+            {
+                "course_id": "35960",
+                "course_name": "[WiSe 2023/24] Programming Project: Data Science in Python and R"
+            },
+            {
+                "course_id": "35862",
+                "course_name": "[23/24 WiSe] AES Bachelor-Projekt"
+            },
+            {
+                "course_id": "35785",
+                "course_name": "Rechnerorganisation WS 23/24"
+            },
+            {
+                "course_id": "35734",
+                "course_name": "Photogrammetric Computer Vision WS23/24"
+            },
+            {
+                "course_id": "35731",
+                "course_name": "Digital Image Processing [WT23/24]"
+            },
+            {
+                "course_id": "35717",
+                "course_name": "Stereo Image Processing [WS 2023/2024]"
+            },
+            {
+                "course_id": "35651",
+                "course_name": "Analog Integrated Circuits WiSe 23/24"
+            },
+            {
+                "course_id": "35053",
+                "course_name": "Machine Learning in Medical Image Processing WS23/24"
+            },
+            {
+                "course_id": "34950",
+                "course_name": "[WiSe 2023/24] Informatik Propädeutikum"
+            },
+            {
+                "course_id": "34949",
+                "course_name": "Projektorientiertes Praktikum (Projektlabor) WiSe2324"
+            },
+            {
+                "course_id": "34889",
+                "course_name": "Project Computer Vision for Remote Sensing WS2023/24"
+            },
+            {
+                "course_id": "34888",
+                "course_name": "Seminar: Machine Learning for Remote Sensing Data Analysis WS23/24"
+            },
+            {
+                "course_id": "34741",
+                "course_name": "[23/24 WiSe] Computer Graphics 1"
+            },
+            {
+                "course_id": "34740",
+                "course_name": "[23/24 WiSe] Computer Graphics Projekt"
+            },
+            {
+                "course_id": "34739",
+                "course_name": "[23/24 WiSe] Computer Graphics Seminar A"
+            },
+            {
+                "course_id": "34738",
+                "course_name": "[WiSe 2023/24] Wissenschaftliches Rechnen"
+            },
+            {
+                "course_id": "34734",
+                "course_name": "[23/24 WiSe] Klassische Algorithmen der Computer-Graphik (Bachelor-Seminar)"
+            },
+            {
+                "course_id": "34667",
+                "course_name": "[WiSe 23/24] Metaseite der Seminare"
+            },
+            {
+                "course_id": "34654",
+                "course_name": "Einführung in die Informatik WS 2023/2024"
+            },
+            {
+                "course_id": "34638",
+                "course_name": "[WS23/24] Robotics Project"
+            },
+            {
+                "course_id": "34637",
+                "course_name": "[WS23/24] Robotics"
+            },
+            {
+                "course_id": "33177",
+                "course_name": "MMIC4U Microwave Chip Project 23/24"
+            },
+            {
+                "course_id": "34314",
+                "course_name": "Event-based Robot Vision PROJECT [SS 23]"
+            },
+            {
+                "course_id": "34313",
+                "course_name": "Seminar: Introduction to Camera Geometry [SoSe 23]"
+            },
+            {
+                "course_id": "34312",
+                "course_name": "Event-based Robot Vision [SS 23]"
+            },
+            {
+                "course_id": "34110",
+                "course_name": "[S23] Einführung in die Künstliche Intelligenz"
+            },
+            {
+                "course_id": "34006",
+                "course_name": "Hardwarepraktikum SoSe 2023"
+            },
+            {
+                "course_id": "34003",
+                "course_name": "Applied Embedded Systems Project SS23"
+            },
+            {
+                "course_id": "33918",
+                "course_name": "High Frequency Data Converters - SoSe23"
+            },
+            {
+                "course_id": "33917",
+                "course_name": "Advanced Analog Integrated Circuits - SoSe23"
+            },
+            {
+                "course_id": "33806",
+                "course_name": "[S23] AI & Robotics: Lab Course"
+            },
+            {
+                "course_id": "33805",
+                "course_name": "Aktuelle Themen zu eingebetteten Systemen - SS2023"
+            },
+            {
+                "course_id": "33704",
+                "course_name": "[S23] KI & Robotik Seminar"
+            },
+            {
+                "course_id": "33667",
+                "course_name": "[S23] Motion Planning"
+            },
+            {
+                "course_id": "33657",
+                "course_name": "Einführung in die Informatik - Vertiefung - Sommersemester 2023"
+            },
+            {
+                "course_id": "33586",
+                "course_name": "[SoSe 2023] System-on-Chip (SoC) + RISC-V Lab"
+            },
+            {
+                "course_id": "33401",
+                "course_name": "Applied Computer Vision [SoSe 2023]"
+            },
+            {
+                "course_id": "33400",
+                "course_name": "HTCV - Project 1 [SoSe 2023]"
+            },
+            {
+                "course_id": "33380",
+                "course_name": "Hot Topics in Computer Vision - Project 2 SoSe 2023"
+            },
+            {
+                "course_id": "33379",
+                "course_name": "Automatic Image Analysis 2023"
+            },
+            {
+                "course_id": "33326",
+                "course_name": "Microwave and Radar Remote Sensing [SoSe 2023]"
+            },
+            {
+                "course_id": "33249",
+                "course_name": "Project Computer Vision for Remote Sensing SS23"
+            },
+            {
+                "course_id": "33248",
+                "course_name": "Image Processing for Remote Sensing SS23"
+            },
+            {
+                "course_id": "33149",
+                "course_name": "Projektorientiertes Praktikum (Projektlabor) SoSe2023"
+            },
+            {
+                "course_id": "32771",
+                "course_name": "Seminar: Recent Trends in Deep Learning for Computer Vision [SoSe 2023]"
+            },
+            {
+                "course_id": "32756",
+                "course_name": "View Synthesis [SoSe 2023]"
+            },
+            {
+                "course_id": "32712",
+                "course_name": "Medical Image Processing SS23"
+            },
+            {
+                "course_id": "32677",
+                "course_name": "[SoSe 2023] Praktikum: Programming Project: Data Science in Python and R"
+            },
+            {
+                "course_id": "32673",
+                "course_name": "[SoSe 2023] Seminar: Aktuelle Themen in Visueller Wahrnehmungsforschung"
+            },
+            {
+                "course_id": "32554",
+                "course_name": "[23 SoSe] Computer Graphics 2"
+            },
+            {
+                "course_id": "32553",
+                "course_name": "[23 SoSe] Computer Graphics Seminar B"
+            },
+            {
+                "course_id": "32552",
+                "course_name": "[23 SoSe] Klassische Algorithmen der Computer-Graphik (Bachelor-Seminar)"
+            },
+            {
+                "course_id": "32551",
+                "course_name": "[23 SoSe] Computergraphik Projekt"
+            },
+            {
+                "course_id": "32540",
+                "course_name": "[SoSe 23] Metaseite der Seminare"
+            },
+            {
+                "course_id": "32300",
+                "course_name": "Hot Topics in Computer Vision - Seminar 1 [SoSe 2023]"
+            }
+        ]
+    },
+    {
+        "name": "Institut für Telekommunikationssysteme",
+        "courses": [
+            {
+                "course_id": "39312",
+                "course_name": "[WiSe 2024/25] TKN Seminar Selected Areas of Telecommunication Networks 2024"
+            },
+            {
+                "course_id": "39121",
+                "course_name": "[SoSe 2024] [CommIT] Advanced Wireless Communications"
+            },
+            {
+                "course_id": "39102",
+                "course_name": "[SoSe 2024] Ethics, Data Science, and Networked AI 2024"
+            },
+            {
+                "course_id": "39051",
+                "course_name": "[SoSe 2024] TKN Exams 2024s"
+            },
+            {
+                "course_id": "38642",
+                "course_name": "[SoSe 2024] [CommIT] Foundations of Statistical Inference, Detection, and Estimation"
+            },
+            {
+                "course_id": "38638",
+                "course_name": "[SoSe 2024] [CommIT] Information Theory and Applications"
+            },
+            {
+                "course_id": "38606",
+                "course_name": "[SoSe 2024] [CommIT] Implementierung digitaler Systeme zur Echtzeit-Signalverarbeitung"
+            },
+            {
+                "course_id": "38571",
+                "course_name": "[SoSe 2024] SNET: Internet of Services Lab (Seminar)"
+            },
+            {
+                "course_id": "38406",
+                "course_name": "[SoSe 2024] SNET: Internet of Services Lab (Project)"
+            },
+            {
+                "course_id": "38349",
+                "course_name": "[SoSe 2024] SNET: Programmieren II"
+            },
+            {
+                "course_id": "38206",
+                "course_name": "[SoSe 2024] SNET: Programmierpraktikum Neue Webtechnologien"
+            },
+            {
+                "course_id": "38205",
+                "course_name": "[SoSe 2024] SNET: PW Projektorientierte App- und Web-Entwicklung"
+            },
+            {
+                "course_id": "38049",
+                "course_name": "[SoSe 2024] Advanced Research Data Infrastructures"
+            },
+            {
+                "course_id": "37998",
+                "course_name": "[SoSe 2024] Image & Video Coding"
+            },
+            {
+                "course_id": "37994",
+                "course_name": "[SoSe 2024] Modern Signal Processing for Communications"
+            },
+            {
+                "course_id": "37990",
+                "course_name": "[SoSe 2024] Selected Topics in Wireless Communications and Networking"
+            },
+            {
+                "course_id": "37963",
+                "course_name": "[SoSe 2024] AV: 5G / 6G Software Networks"
+            },
+            {
+                "course_id": "37962",
+                "course_name": "[SoSe 2024] AV: Campus Networks - 5G Evolution/6G (Project)"
+            },
+            {
+                "course_id": "37940",
+                "course_name": "[SoSe 2024] Master Project Network Information Systems"
+            },
+            {
+                "course_id": "37856",
+                "course_name": "[SoSe 2024] Projektwerkstatt Aufbau eines 3D-Druckers und einer Extrusionsstrecke zum Kunststoffrecycling"
+            },
+            {
+                "course_id": "37820",
+                "course_name": "[INET] Multimedia and Wireless Lab [SoSe 2024]"
+            },
+            {
+                "course_id": "37793",
+                "course_name": "[SoSe 24] Programmierpraktikum: Plattformdaten und NLP"
+            },
+            {
+                "course_id": "37662",
+                "course_name": "[SoSe24] Programmierpraktikum: Skalierbare Systeme"
+            },
+            {
+                "course_id": "37661",
+                "course_name": "[SoSe 2024] Master Project: Distributed Systems"
+            },
+            {
+                "course_id": "37660",
+                "course_name": "Seminar: Operating Complex IT-Systems SoSe 24"
+            },
+            {
+                "course_id": "37659",
+                "course_name": "Systemprogrammierung SoSe 2024"
+            },
+            {
+                "course_id": "37656",
+                "course_name": "Verteilte Systeme SoSe 2024"
+            },
+            {
+                "course_id": "37632",
+                "course_name": "SoSe 2024 ODS Grundlagen des Softwaretestens"
+            },
+            {
+                "course_id": "37631",
+                "course_name": "[SoSe 2024] Theory and Algorithms of Machine Learning for Communication"
+            },
+            {
+                "course_id": "37630",
+                "course_name": "[INET] Network Architecture Projects [SoSe 24]"
+            },
+            {
+                "course_id": "37628",
+                "course_name": "SoSe 24 ODS Das AMOS Seminar Scrum Master"
+            },
+            {
+                "course_id": "37627",
+                "course_name": "SoSe 24 ODS Das AMOS Projekt Product Owner Role"
+            },
+            {
+                "course_id": "37626",
+                "course_name": "SoSe 24 ODS Das AMOS Projekt Software Developer Role"
+            },
+            {
+                "course_id": "37625",
+                "course_name": "SoSe 2024 ODS Grundlagen Digitaler Vernetzung Vorlesung"
+            },
+            {
+                "course_id": "37624",
+                "course_name": "SoSe 2024 ODS Grundlagen Digitaler Vernetzung Seminar"
+            },
+            {
+                "course_id": "37623",
+                "course_name": "SoSe 24 ODS Project Advanced Web Technologies"
+            },
+            {
+                "course_id": "37622",
+                "course_name": "SoSe 24 ODS PJ System Quality Engineering"
+            },
+            {
+                "course_id": "37563",
+                "course_name": "SoSe 24 - SNET: Geschäftsprozesse"
+            },
+            {
+                "course_id": "37471",
+                "course_name": "TKN Vehicular Networking and Cooperative Driving 2024s"
+            },
+            {
+                "course_id": "37470",
+                "course_name": "TKN Wireless Networking Technologies 2024s"
+            },
+            {
+                "course_id": "37469",
+                "course_name": "TKN Molecular Communications and Nanonetworks 2024s"
+            },
+            {
+                "course_id": "37468",
+                "course_name": "TKN Programmierpraktikum Kommunikationstechnologien 2024s"
+            },
+            {
+                "course_id": "37467",
+                "course_name": "TKN Seminar Selected Areas of Telecommunication Networks 2024s"
+            },
+            {
+                "course_id": "37466",
+                "course_name": "TKN Projekt Angewandte Netzwerktechnologien / (Research) Project Advanced Network Technologies 2024s"
+            },
+            {
+                "course_id": "37429",
+                "course_name": "[INET] Datacenter Networking and Software-Defined Networks [SoSe 23/24]"
+            },
+            {
+                "course_id": "37116",
+                "course_name": "[INET] Cryptocurrency and Blockchain Networks Seminar [SoSe 2024]"
+            },
+            {
+                "course_id": "37115",
+                "course_name": "[INET] Advanced Topics in Networked and Distributed Systems [SoSe 2024]"
+            },
+            {
+                "course_id": "37039",
+                "course_name": "SoSe 24 ODS PR Programmierpraktikum: Moderne verteilte Anwendungen (0432 L 701)"
+            },
+            {
+                "course_id": "36920",
+                "course_name": "[SoSe 2024] Blockchain Technology and Decentralized Applications"
+            },
+            {
+                "course_id": "34507",
+                "course_name": "[INET] Algorithms for Networked Systems [SoSe 2024]"
+            },
+            {
+                "course_id": "37042",
+                "course_name": "[SoSe 2024] Open Distributed Systems - Seminar"
+            },
+            {
+                "course_id": "37067",
+                "course_name": "[SoSe 2024] ODS Open Distributed Systems - Project"
+            },
+            {
+                "course_id": "1037",
+                "course_name": "NÜ: Adaptive Filter"
+            },
+            {
+                "course_id": "2550",
+                "course_name": "NÜ: Quellencodierung"
+            },
+            {
+                "course_id": "1038",
+                "course_name": "NÜ: Projekte und Seminare"
+            },
+            {
+                "course_id": "2552",
+                "course_name": "NÜ: Digitale Nachrichtenübertragung"
+            },
+            {
+                "course_id": "36996",
+                "course_name": "[AV] Open Source Mobile Network Technologies Workshop Series"
+            },
+            {
+                "course_id": "36733",
+                "course_name": "Ethics, Data Science, and Networked AI - Winter semester 2023/24"
+            },
+            {
+                "course_id": "36725",
+                "course_name": "Analyse von (Online) Social Data: methodologische Herausforderungen, soziale Folgen und Grenzen WiSe 23/24"
+            },
+            {
+                "course_id": "36586",
+                "course_name": "[INET] Network Protocols and Architectures WS 23/24"
+            },
+            {
+                "course_id": "36310",
+                "course_name": "[CommIT] Foundations of Stochastic Processes (WS23-24)"
+            },
+            {
+                "course_id": "36232",
+                "course_name": "Image & Video Coding"
+            },
+            {
+                "course_id": "36231",
+                "course_name": "[CommIT] Grundlagen der Elektrotechnik für Medientechnik (WS23/24)"
+            },
+            {
+                "course_id": "36159",
+                "course_name": "[WiSe 23/24] AV: 5G Evolution/6G (Project) - Campus Networks"
+            },
+            {
+                "course_id": "36065",
+                "course_name": "WiSe 23/24 - SNET: Webtechnologien"
+            },
+            {
+                "course_id": "36062",
+                "course_name": "WiSe 23/24 - SNET: PW Projektorientierte App- und Web-Entwicklung"
+            },
+            {
+                "course_id": "36050",
+                "course_name": "WiSe 23/24 - SNET: Electronic Commerce"
+            },
+            {
+                "course_id": "36018",
+                "course_name": "WiSe 23/24 - SNET: Internet of Services Lab (Seminar)"
+            },
+            {
+                "course_id": "36015",
+                "course_name": "WiSe 23/24 - SNET: Internet of Services Lab (Project)"
+            },
+            {
+                "course_id": "36002",
+                "course_name": "WS 23/24 ODS PJ Open Distributed Systems"
+            },
+            {
+                "course_id": "35948",
+                "course_name": "[CommIT] Wireless Digital Communications Lab I (WiSe 2023-24)"
+            },
+            {
+                "course_id": "35947",
+                "course_name": "[CommIT] Implementierung digitaler Systeme zur Echtzeit-Signalverarbeitung (WiSe 2023-24)"
+            },
+            {
+                "course_id": "35732",
+                "course_name": "WS 23/24 ODS AMOS Seminar: Scrum Master"
+            },
+            {
+                "course_id": "35730",
+                "course_name": "WS 23/24 ODS Das AMOS Projekt"
+            },
+            {
+                "course_id": "35649",
+                "course_name": "WiSe 23/24 ODS Modellgetriebene Software-Entwicklung"
+            },
+            {
+                "course_id": "35622",
+                "course_name": "[CommIT] Wireless Communication Systems (WS23/24)"
+            },
+            {
+                "course_id": "35567",
+                "course_name": "[WS23] Cloud Service Benchmarking"
+            },
+            {
+                "course_id": "35566",
+                "course_name": "[WS23/24] Programmieren 1 (WINF)"
+            },
+            {
+                "course_id": "35553",
+                "course_name": "Betrieb Komplexer IT-Systeme WS23/24"
+            },
+            {
+                "course_id": "35532",
+                "course_name": "WS 23/24 ODS Einführung in die Programmierung"
+            },
+            {
+                "course_id": "35494",
+                "course_name": "Cloud Computing WS23/24"
+            },
+            {
+                "course_id": "35453",
+                "course_name": "[WS23/24] Grundlagen der Rechnersicherheit"
+            },
+            {
+                "course_id": "35302",
+                "course_name": "WiSe 23/24 ODS Vorlesung Advanced Web Technologies"
+            },
+            {
+                "course_id": "35292",
+                "course_name": "WiSe 23/24 ODS Project Advanced Web Technologies"
+            },
+            {
+                "course_id": "35281",
+                "course_name": "Projektwerkstatt Aufbau eines 3D-Druckers und einer Extrusionsstrecke zum Kunststoffrecycling WiSe 23/24"
+            },
+            {
+                "course_id": "35273",
+                "course_name": "Programmierpraktikum: Verteilte Systeme WS 23/24"
+            },
+            {
+                "course_id": "35211",
+                "course_name": "[INET] Applied Networking Lab WS 23/24"
+            },
+            {
+                "course_id": "35159",
+                "course_name": "Master Project: Distributed Systems WiSe 23/24"
+            },
+            {
+                "course_id": "35117",
+                "course_name": "Seminar Operating Complex IT-Systems WiSe 23/24"
+            },
+            {
+                "course_id": "35071",
+                "course_name": "[INET] Algorithms for Distributed Systems WS 23/24"
+            },
+            {
+                "course_id": "35015",
+                "course_name": "[INET] Advanced topics in networking and distributed systems seminar [WS 23/24]"
+            },
+            {
+                "course_id": "34762",
+                "course_name": "Master Project Network Information Systems"
+            },
+            {
+                "course_id": "34761",
+                "course_name": "Mathematical Introduction to Machine Learning"
+            },
+            {
+                "course_id": "34760",
+                "course_name": "Fundamentals of Digital Wireless Network and Communications"
+            },
+            {
+                "course_id": "34756",
+                "course_name": "TKN Programmierpraktikum Kommunikationstechnologien 2023w"
+            },
+            {
+                "course_id": "34755",
+                "course_name": "TKN Projekt Angewandte Netzwerktechnologien / (Research) Project Advanced Network Technologies 2023w"
+            },
+            {
+                "course_id": "34754",
+                "course_name": "TKN History of Computer Systems 2023w"
+            },
+            {
+                "course_id": "34752",
+                "course_name": "TKN Networked Embedded Systems 2023w"
+            },
+            {
+                "course_id": "34751",
+                "course_name": "TKN Seminar Selected Areas of Telecommunication Networks 2023w"
+            },
+            {
+                "course_id": "34750",
+                "course_name": "TKN Kommunikationsnetze 2023w (auch Rechnernetze-Ergänzung)"
+            },
+            {
+                "course_id": "34749",
+                "course_name": "TKN Rechnernetze und verteilte Systeme 2023w"
+            },
+            {
+                "course_id": "34743",
+                "course_name": "WS 23/24 - SNET: Programmierpraktikum Neue Webtechnologien"
+            },
+            {
+                "course_id": "34696",
+                "course_name": "[INET] Cryptocurrency and Blockchain Networks Seminar WS 23/24"
+            },
+            {
+                "course_id": "34378",
+                "course_name": "Research Project Intelligent Robotic Systems WS 23/24"
+            },
+            {
+                "course_id": "20538",
+                "course_name": "NÜ: Sprachsignalverarbeitung"
+            },
+            {
+                "course_id": "3715",
+                "course_name": "NÜ: Signale und Systeme (Bachelor, WiSe)"
+            },
+            {
+                "course_id": "35937",
+                "course_name": "Klausur \"Grundlagen des Software Testens\" SS 2023 / II"
+            },
+            {
+                "course_id": "35109",
+                "course_name": "Klausur \"Grundlagen des Software Testens\" SS 2023"
+            },
+            {
+                "course_id": "34849",
+                "course_name": "Test eKL SS 23 GDST"
+            },
+            {
+                "course_id": "34610",
+                "course_name": "TKN Exams 2023s"
+            },
+            {
+                "course_id": "34415",
+                "course_name": "Ethics, data science, and networked AI 2023"
+            },
+            {
+                "course_id": "34404",
+                "course_name": "Image & Video Coding SS 2023"
+            },
+            {
+                "course_id": "34385",
+                "course_name": "SoSe 2023 ODS Grundlagen des Softwaretestens"
+            },
+            {
+                "course_id": "34255",
+                "course_name": "[CommIT] Advanced Wireless Communications SS2023"
+            },
+            {
+                "course_id": "34159",
+                "course_name": "[CommIT] Wireless Digital Communications Lab II (SoSe 2023)"
+            },
+            {
+                "course_id": "34151",
+                "course_name": "Projektwerkstatt Aufbau eines 3D-Druckers und einer Extrusionsstrecke zum Kunststoffrecycling"
+            },
+            {
+                "course_id": "34131",
+                "course_name": "Multimedia and Wireless Lab [SoSe 2022/23]"
+            },
+            {
+                "course_id": "34050",
+                "course_name": "[CommIT] Implementierung digitaler Systeme zur Echtzeit-Signalverarbeitung (SoSe 2023)"
+            },
+            {
+                "course_id": "33999",
+                "course_name": "INET - Network Architecture Projects (SS23)"
+            },
+            {
+                "course_id": "33934",
+                "course_name": "[SoSe2023] AV: Campus Networks - 5G Evolution/6G (Project)"
+            },
+            {
+                "course_id": "33932",
+                "course_name": "[SoSe2023] AV: 5G / 6G Software Networks"
+            },
+            {
+                "course_id": "33861",
+                "course_name": "SoSe 23 – SNET: Mobile Services"
+            },
+            {
+                "course_id": "33755",
+                "course_name": "SoSe 23 - SNET: Programmieren II"
+            },
+            {
+                "course_id": "33748",
+                "course_name": "SoSe 2023 ODS Grundlagen Digitaler Vernetzung Seminar"
+            },
+            {
+                "course_id": "33744",
+                "course_name": "SoSe 2023 ODS Grundlagen Digitaler Vernetzung Vorlesung"
+            },
+            {
+                "course_id": "33678",
+                "course_name": "Seminar - Networked Systems Security"
+            },
+            {
+                "course_id": "33584",
+                "course_name": "SoSe 23 ODS Project Advanced Web Technologies"
+            },
+            {
+                "course_id": "33572",
+                "course_name": "SoSe 23 ODS PJ System Quality Engineering"
+            },
+            {
+                "course_id": "33568",
+                "course_name": "[SoSe23] Programmierpraktikum: Skalierbare Systeme"
+            },
+            {
+                "course_id": "33503",
+                "course_name": "Seminar: Operating Complex IT-Systems SoSe 23"
+            },
+            {
+                "course_id": "33424",
+                "course_name": "Programmierpraktikum: Analyse von (Online) Social Data"
+            },
+            {
+                "course_id": "33313",
+                "course_name": "SoSe 23 ODS PR Programmierpraktikum: Moderne verteilte Anwendungen (0432 L 701)"
+            },
+            {
+                "course_id": "33298",
+                "course_name": "[SoSe23] Fog Computing"
+            },
+            {
+                "course_id": "33256",
+                "course_name": "SoSe 23 ODS Das AMOS Projekt"
+            },
+            {
+                "course_id": "33254",
+                "course_name": "SoSe 23 ODS AMOS Seminar: Scrum Master"
+            },
+            {
+                "course_id": "32866",
+                "course_name": "Systemprogrammierung SoSe 2023"
+            },
+            {
+                "course_id": "32855",
+                "course_name": "Verteilte Systeme SoSe 23"
+            },
+            {
+                "course_id": "32817",
+                "course_name": "Master Project: Distributed Systems SoSe 23"
+            },
+            {
+                "course_id": "32810",
+                "course_name": "[SS23] Anwendungssysteme"
+            },
+            {
+                "course_id": "32557",
+                "course_name": "SoSe 23 ODS PJ Open Distributed Systems"
+            },
+            {
+                "course_id": "32556",
+                "course_name": "SoSe 23 ODS Open Distributed Systems - Seminar"
+            },
+            {
+                "course_id": "32501",
+                "course_name": "Master Project Network Information Systems"
+            },
+            {
+                "course_id": "32499",
+                "course_name": "Modern Signal Processing for Communications"
+            },
+            {
+                "course_id": "32498",
+                "course_name": "Selected Topics in Wireless Communications and Networking"
+            },
+            {
+                "course_id": "32497",
+                "course_name": "Teory and Algorithms of Machine Learning for Communication"
+            },
+            {
+                "course_id": "32391",
+                "course_name": "Cryptocurrency and Blockchain Networks Seminar (SoSe 2023)"
+            },
+            {
+                "course_id": "32390",
+                "course_name": "Seminar - Advanced topics in networking and distributed systems"
+            },
+            {
+                "course_id": "32352",
+                "course_name": "TKN Wireless Networking Technologies 2023s"
+            },
+            {
+                "course_id": "32351",
+                "course_name": "TKN Programmierpraktikum Kommunikationstechnologien 2023s"
+            },
+            {
+                "course_id": "32350",
+                "course_name": "TKN Seminar Selected Areas of Telecommunication Networks 2023s"
+            },
+            {
+                "course_id": "32349",
+                "course_name": "TKN Molecular Communication 2023s"
+            },
+            {
+                "course_id": "32348",
+                "course_name": "TKN Projekt Angewandte Netzwerktechnologien / (Research) Project Advanced Network Technologies 2023s"
+            },
+            {
+                "course_id": "32347",
+                "course_name": "TKN Vehicular Networks and Cooperative Driving 2023s"
+            }
+        ]
+    },
+    {
+        "name": "Institut für Wirtschaftsinformatik und Quantitative Methoden",
+        "courses": [
+            {
+                "course_id": "38062",
+                "course_name": "[SoSe 2024] Cloud-Native Architecture & Engineering"
+            },
+            {
+                "course_id": "37792",
+                "course_name": "[SoSe 2024] (Advanced) [Blockchain, Cloud, Distributed Systems, Information Systems] Prototyping Meta"
+            },
+            {
+                "course_id": "37158",
+                "course_name": "[SoSe24] Fog Computing"
+            },
+            {
+                "course_id": "37123",
+                "course_name": "[SoSe24] Hot Topics in Scalable Software Systems"
+            },
+            {
+                "course_id": "37122",
+                "course_name": "[SoSe24] Programmierpraktikum Scalable Software Systems"
+            },
+            {
+                "course_id": "37121",
+                "course_name": "[SS24] Anwendungssysteme"
+            },
+            {
+                "course_id": "37037",
+                "course_name": "[SS24] Smart Energy Systems"
+            },
+            {
+                "course_id": "37028",
+                "course_name": "[SS24] Intelligente Softwaresysteme"
+            },
+            {
+                "course_id": "37027",
+                "course_name": "[SS24] AOT-Praktikum Intelligente Softwaresysteme A"
+            },
+            {
+                "course_id": "37026",
+                "course_name": "[SS24] AOT-Praktikum Intelligente Softwaresysteme B"
+            },
+            {
+                "course_id": "37025",
+                "course_name": "[SS24] Projekt KI - symbolische Künstliche Intelligenz"
+            },
+            {
+                "course_id": "37024",
+                "course_name": "[SS24] Agententechnologien: Grundlagen und Anwendungen"
+            },
+            {
+                "course_id": "37023",
+                "course_name": "[SS24] RoboCup"
+            },
+            {
+                "course_id": "37022",
+                "course_name": "[SS24] Data Science Project"
+            },
+            {
+                "course_id": "37021",
+                "course_name": "[SS24] Applications of Robotics and Autonomous Systems"
+            },
+            {
+                "course_id": "37020",
+                "course_name": "[SoSe24] SE Autonomous Security"
+            },
+            {
+                "course_id": "37019",
+                "course_name": "[SS24] Ambient Assisted Living Bachelor"
+            },
+            {
+                "course_id": "37016",
+                "course_name": "AI and Cybersecurity"
+            },
+            {
+                "course_id": "35845",
+                "course_name": "[2023/24 WiSe] Anwendungen der Künstlichen Intelligenz"
+            },
+            {
+                "course_id": "35506",
+                "course_name": "[WS23] (Advanced) Distributed Systems Prototyping - Metaseite"
+            },
+            {
+                "course_id": "35394",
+                "course_name": "[WS23] Information Governance / Informatik und Gesellschaft"
+            },
+            {
+                "course_id": "34727",
+                "course_name": "[WS23] GKI, schriftlicher Test"
+            },
+            {
+                "course_id": "34726",
+                "course_name": "[WS23] Foundations of Data Science"
+            },
+            {
+                "course_id": "34725",
+                "course_name": "[WS23] Engineering of Digital Transformation"
+            },
+            {
+                "course_id": "34724",
+                "course_name": "[WS23] Applications of Robotics and Autonomous Systems"
+            },
+            {
+                "course_id": "34722",
+                "course_name": "[WS23] Ambient Assisted Living Bachelor"
+            },
+            {
+                "course_id": "34721",
+                "course_name": "[WS23] RoboCup"
+            },
+            {
+                "course_id": "34720",
+                "course_name": "[WiSe 2023] SE Autonomous Security"
+            },
+            {
+                "course_id": "34719",
+                "course_name": "[WiSe 2023] PJ Intelligent Cybersecurity Applications"
+            },
+            {
+                "course_id": "34718",
+                "course_name": "[WiSe 2023] IV Software Security for Autonomous Systems"
+            },
+            {
+                "course_id": "34717",
+                "course_name": "[WS23] Fundamentals of Multi-Agent Technologies / Agententechnologien in der Forschung"
+            },
+            {
+                "course_id": "34716",
+                "course_name": "[WS23] Intelligente Softwaresysteme"
+            },
+            {
+                "course_id": "34715",
+                "course_name": "[WS23] AOT-Praktikum Intelligente Softwaresysteme B"
+            },
+            {
+                "course_id": "34714",
+                "course_name": "[WS23] AOT-Praktikum Intelligente Softwaresysteme A"
+            },
+            {
+                "course_id": "34713",
+                "course_name": "[WS23] Künstliche Intelligenz: Grundlagen und Anwendungen"
+            },
+            {
+                "course_id": "647",
+                "course_name": "Kolloquium für Abschlussarbeiten am Fachgebiet AOT"
+            },
+            {
+                "course_id": "32930",
+                "course_name": "[SS23] Projekt KI - symbolische Künstliche Intelligenz"
+            },
+            {
+                "course_id": "32929",
+                "course_name": "[SS23] Intelligente Softwaresysteme"
+            },
+            {
+                "course_id": "32928",
+                "course_name": "[SS23] RoboCup"
+            },
+            {
+                "course_id": "32927",
+                "course_name": "[SoSe23] AI and Cybersecurity"
+            },
+            {
+                "course_id": "32926",
+                "course_name": "[SoSe23] SE Autonomous Security"
+            },
+            {
+                "course_id": "32925",
+                "course_name": "[SS23] Data Science Project"
+            },
+            {
+                "course_id": "32924",
+                "course_name": "[SS23] Applications of Robotics and Autonomous Systems"
+            },
+            {
+                "course_id": "32923",
+                "course_name": "[SS23] AOT-Praktikum Intelligente Softwaresysteme B"
+            },
+            {
+                "course_id": "32922",
+                "course_name": "[SS23] AOT-Praktikum Intelligente Softwaresysteme A"
+            },
+            {
+                "course_id": "32921",
+                "course_name": "[SS23] Ambient Assisted Living Bachelor"
+            },
+            {
+                "course_id": "32920",
+                "course_name": "[SS23] Agententechnologien: Grundlagen und Anwendungen"
+            },
+            {
+                "course_id": "32802",
+                "course_name": "[SS23] Cloud-Native Architecture & Engineering"
+            },
+            {
+                "course_id": "32801",
+                "course_name": "[SS23] Privacy Engineering"
+            },
+            {
+                "course_id": "32713",
+                "course_name": "[SS23] (Advanced) Distributed Systems Prototyping - Metaseite"
+            },
+            {
+                "course_id": "32690",
+                "course_name": "[SoSe23] Geschäftsprozesse"
+            }
+        ]
+    },
+    {
+        "name": "Zentrum für internationale und interkulturelle Kommunikation",
+        "courses": []
+    }
+]
